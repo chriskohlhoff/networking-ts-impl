@@ -48,18 +48,15 @@ namespace detail
     ec = std::error_code();
     std::experimental::net::detail::consuming_buffers<const_buffer,
         ConstBufferSequence, ConstBufferIterator> tmp(buffers);
-    std::size_t total_transferred = 0;
-    tmp.prepare(detail::adapt_completion_condition_result(
-          completion_condition(ec, total_transferred)));
-    while (tmp.begin() != tmp.end())
+    while (!tmp.empty())
     {
-      std::size_t bytes_transferred = s.write_some(tmp, ec);
-      tmp.consume(bytes_transferred);
-      total_transferred += bytes_transferred;
-      tmp.prepare(detail::adapt_completion_condition_result(
-            completion_condition(ec, total_transferred)));
+      if (std::size_t max_size = detail::adapt_completion_condition_result(
+            completion_condition(ec, tmp.total_consumed())))
+        tmp.consume(s.write_some(tmp.prepare(max_size), ec));
+      else
+        break;
     }
-    return total_transferred;
+    return tmp.total_consumed();;
   }
 } // namespace detail
 
@@ -225,7 +222,6 @@ namespace detail
         stream_(stream),
         buffers_(buffers),
         start_(0),
-        total_transferred_(0),
         handler_(NET_TS_MOVE_CAST(WriteHandler)(handler))
     {
     }
@@ -236,7 +232,6 @@ namespace detail
         stream_(other.stream_),
         buffers_(other.buffers_),
         start_(other.start_),
-        total_transferred_(other.total_transferred_),
         handler_(other.handler_)
     {
     }
@@ -246,7 +241,6 @@ namespace detail
         stream_(other.stream_),
         buffers_(other.buffers_),
         start_(other.start_),
-        total_transferred_(other.total_transferred_),
         handler_(NET_TS_MOVE_CAST(WriteHandler)(other.handler_))
     {
     }
@@ -255,24 +249,23 @@ namespace detail
     void operator()(const std::error_code& ec,
         std::size_t bytes_transferred, int start = 0)
     {
+      std::size_t max_size;
       switch (start_ = start)
       {
         case 1:
-        buffers_.prepare(this->check_for_completion(ec, total_transferred_));
-        for (;;)
+        max_size = this->check_for_completion(ec, buffers_.total_consumed());
+        do
         {
-          stream_.async_write_some(buffers_,
+          stream_.async_write_some(buffers_.prepare(max_size),
               NET_TS_MOVE_CAST(write_op)(*this));
           return; default:
-          total_transferred_ += bytes_transferred;
           buffers_.consume(bytes_transferred);
-          buffers_.prepare(this->check_for_completion(ec, total_transferred_));
-          if ((!ec && bytes_transferred == 0)
-              || buffers_.begin() == buffers_.end())
+          if ((!ec && bytes_transferred == 0) || buffers_.empty())
             break;
-        }
+          max_size = this->check_for_completion(ec, buffers_.total_consumed());
+        } while (max_size > 0);
 
-        handler_(ec, static_cast<const std::size_t&>(total_transferred_));
+        handler_(ec, buffers_.total_consumed());
       }
     }
 
@@ -281,489 +274,8 @@ namespace detail
     std::experimental::net::detail::consuming_buffers<const_buffer,
         ConstBufferSequence, ConstBufferIterator> buffers_;
     int start_;
-    std::size_t total_transferred_;
     WriteHandler handler_;
   };
-
-  template <typename AsyncWriteStream,
-      typename CompletionCondition, typename WriteHandler>
-  class write_op<AsyncWriteStream, std::experimental::net::mutable_buffer,
-      std::experimental::net::mutable_buffer*, CompletionCondition, WriteHandler>
-    : detail::base_from_completion_cond<CompletionCondition>
-  {
-  public:
-    write_op(AsyncWriteStream& stream,
-        const std::experimental::net::mutable_buffer& buffers,
-        CompletionCondition completion_condition,
-        WriteHandler& handler)
-      : detail::base_from_completion_cond<
-          CompletionCondition>(completion_condition),
-        stream_(stream),
-        buffer_(buffers),
-        start_(0),
-        total_transferred_(0),
-        handler_(NET_TS_MOVE_CAST(WriteHandler)(handler))
-    {
-    }
-
-#if defined(NET_TS_HAS_MOVE)
-    write_op(const write_op& other)
-      : detail::base_from_completion_cond<CompletionCondition>(other),
-        stream_(other.stream_),
-        buffer_(other.buffer_),
-        start_(other.start_),
-        total_transferred_(other.total_transferred_),
-        handler_(other.handler_)
-    {
-    }
-
-    write_op(write_op&& other)
-      : detail::base_from_completion_cond<CompletionCondition>(other),
-        stream_(other.stream_),
-        buffer_(other.buffer_),
-        start_(other.start_),
-        total_transferred_(other.total_transferred_),
-        handler_(NET_TS_MOVE_CAST(WriteHandler)(other.handler_))
-    {
-    }
-#endif // defined(NET_TS_HAS_MOVE)
-
-    void operator()(const std::error_code& ec,
-        std::size_t bytes_transferred, int start = 0)
-    {
-      std::size_t n = 0;
-      switch (start_ = start)
-      {
-        case 1:
-        n = this->check_for_completion(ec, total_transferred_);
-        for (;;)
-        {
-          stream_.async_write_some(
-              std::experimental::net::buffer(buffer_ + total_transferred_, n),
-              NET_TS_MOVE_CAST(write_op)(*this));
-          return; default:
-          total_transferred_ += bytes_transferred;
-          if ((!ec && bytes_transferred == 0)
-              || (n = this->check_for_completion(ec, total_transferred_)) == 0
-              || total_transferred_ == buffer_.size())
-            break;
-        }
-
-        handler_(ec, static_cast<const std::size_t&>(total_transferred_));
-      }
-    }
-
-  //private:
-    AsyncWriteStream& stream_;
-    std::experimental::net::mutable_buffer buffer_;
-    int start_;
-    std::size_t total_transferred_;
-    WriteHandler handler_;
-  };
-
-  template <typename AsyncWriteStream,
-      typename CompletionCondition, typename WriteHandler>
-  class write_op<AsyncWriteStream, std::experimental::net::const_buffer,
-      std::experimental::net::const_buffer*, CompletionCondition, WriteHandler>
-    : detail::base_from_completion_cond<CompletionCondition>
-  {
-  public:
-    write_op(AsyncWriteStream& stream,
-        const std::experimental::net::const_buffer& buffers,
-        CompletionCondition completion_condition,
-        WriteHandler& handler)
-      : detail::base_from_completion_cond<
-          CompletionCondition>(completion_condition),
-        stream_(stream),
-        buffer_(buffers),
-        start_(0),
-        total_transferred_(0),
-        handler_(NET_TS_MOVE_CAST(WriteHandler)(handler))
-    {
-    }
-
-#if defined(NET_TS_HAS_MOVE)
-    write_op(const write_op& other)
-      : detail::base_from_completion_cond<CompletionCondition>(other),
-        stream_(other.stream_),
-        buffer_(other.buffer_),
-        start_(other.start_),
-        total_transferred_(other.total_transferred_),
-        handler_(other.handler_)
-    {
-    }
-
-    write_op(write_op&& other)
-      : detail::base_from_completion_cond<CompletionCondition>(other),
-        stream_(other.stream_),
-        buffer_(other.buffer_),
-        start_(other.start_),
-        total_transferred_(other.total_transferred_),
-        handler_(NET_TS_MOVE_CAST(WriteHandler)(other.handler_))
-    {
-    }
-#endif // defined(NET_TS_HAS_MOVE)
-
-    void operator()(const std::error_code& ec,
-        std::size_t bytes_transferred, int start = 0)
-    {
-      std::size_t n = 0;
-      switch (start_ = start)
-      {
-        case 1:
-        n = this->check_for_completion(ec, total_transferred_);
-        for (;;)
-        {
-          stream_.async_write_some(
-              std::experimental::net::buffer(buffer_ + total_transferred_, n),
-              NET_TS_MOVE_CAST(write_op)(*this));
-          return; default:
-          total_transferred_ += bytes_transferred;
-          if ((!ec && bytes_transferred == 0)
-              || (n = this->check_for_completion(ec, total_transferred_)) == 0
-              || total_transferred_ == buffer_.size())
-            break;
-        }
-
-        handler_(ec, static_cast<const std::size_t&>(total_transferred_));
-      }
-    }
-
-  //private:
-    AsyncWriteStream& stream_;
-    std::experimental::net::const_buffer buffer_;
-    int start_;
-    std::size_t total_transferred_;
-    WriteHandler handler_;
-  };
-
-#if !defined(NET_TS_NO_DEPRECATED)
-
-  template <typename AsyncWriteStream,
-      typename CompletionCondition, typename WriteHandler>
-  class write_op<AsyncWriteStream, std::experimental::net::mutable_buffers_1,
-      std::experimental::net::mutable_buffer*, CompletionCondition, WriteHandler>
-    : detail::base_from_completion_cond<CompletionCondition>
-  {
-  public:
-    write_op(AsyncWriteStream& stream,
-        const std::experimental::net::mutable_buffers_1& buffers,
-        CompletionCondition completion_condition,
-        WriteHandler& handler)
-      : detail::base_from_completion_cond<
-          CompletionCondition>(completion_condition),
-        stream_(stream),
-        buffer_(buffers),
-        start_(0),
-        total_transferred_(0),
-        handler_(NET_TS_MOVE_CAST(WriteHandler)(handler))
-    {
-    }
-
-#if defined(NET_TS_HAS_MOVE)
-    write_op(const write_op& other)
-      : detail::base_from_completion_cond<CompletionCondition>(other),
-        stream_(other.stream_),
-        buffer_(other.buffer_),
-        start_(other.start_),
-        total_transferred_(other.total_transferred_),
-        handler_(other.handler_)
-    {
-    }
-
-    write_op(write_op&& other)
-      : detail::base_from_completion_cond<CompletionCondition>(other),
-        stream_(other.stream_),
-        buffer_(other.buffer_),
-        start_(other.start_),
-        total_transferred_(other.total_transferred_),
-        handler_(NET_TS_MOVE_CAST(WriteHandler)(other.handler_))
-    {
-    }
-#endif // defined(NET_TS_HAS_MOVE)
-
-    void operator()(const std::error_code& ec,
-        std::size_t bytes_transferred, int start = 0)
-    {
-      std::size_t n = 0;
-      switch (start_ = start)
-      {
-        case 1:
-        n = this->check_for_completion(ec, total_transferred_);
-        for (;;)
-        {
-          stream_.async_write_some(
-              std::experimental::net::buffer(buffer_ + total_transferred_, n),
-              NET_TS_MOVE_CAST(write_op)(*this));
-          return; default:
-          total_transferred_ += bytes_transferred;
-          if ((!ec && bytes_transferred == 0)
-              || (n = this->check_for_completion(ec, total_transferred_)) == 0
-              || total_transferred_ == buffer_.size())
-            break;
-        }
-
-        handler_(ec, static_cast<const std::size_t&>(total_transferred_));
-      }
-    }
-
-  //private:
-    AsyncWriteStream& stream_;
-    std::experimental::net::mutable_buffer buffer_;
-    int start_;
-    std::size_t total_transferred_;
-    WriteHandler handler_;
-  };
-
-  template <typename AsyncWriteStream,
-      typename CompletionCondition, typename WriteHandler>
-  class write_op<AsyncWriteStream, std::experimental::net::const_buffers_1,
-      std::experimental::net::const_buffer*, CompletionCondition, WriteHandler>
-    : detail::base_from_completion_cond<CompletionCondition>
-  {
-  public:
-    write_op(AsyncWriteStream& stream,
-        const std::experimental::net::const_buffers_1& buffers,
-        CompletionCondition completion_condition,
-        WriteHandler& handler)
-      : detail::base_from_completion_cond<
-          CompletionCondition>(completion_condition),
-        stream_(stream),
-        buffer_(buffers),
-        start_(0),
-        total_transferred_(0),
-        handler_(NET_TS_MOVE_CAST(WriteHandler)(handler))
-    {
-    }
-
-#if defined(NET_TS_HAS_MOVE)
-    write_op(const write_op& other)
-      : detail::base_from_completion_cond<CompletionCondition>(other),
-        stream_(other.stream_),
-        buffer_(other.buffer_),
-        start_(other.start_),
-        total_transferred_(other.total_transferred_),
-        handler_(other.handler_)
-    {
-    }
-
-    write_op(write_op&& other)
-      : detail::base_from_completion_cond<CompletionCondition>(other),
-        stream_(other.stream_),
-        buffer_(other.buffer_),
-        start_(other.start_),
-        total_transferred_(other.total_transferred_),
-        handler_(NET_TS_MOVE_CAST(WriteHandler)(other.handler_))
-    {
-    }
-#endif // defined(NET_TS_HAS_MOVE)
-
-    void operator()(const std::error_code& ec,
-        std::size_t bytes_transferred, int start = 0)
-    {
-      std::size_t n = 0;
-      switch (start_ = start)
-      {
-        case 1:
-        n = this->check_for_completion(ec, total_transferred_);
-        for (;;)
-        {
-          stream_.async_write_some(
-              std::experimental::net::buffer(buffer_ + total_transferred_, n),
-              NET_TS_MOVE_CAST(write_op)(*this));
-          return; default:
-          total_transferred_ += bytes_transferred;
-          if ((!ec && bytes_transferred == 0)
-              || (n = this->check_for_completion(ec, total_transferred_)) == 0
-              || total_transferred_ == buffer_.size())
-            break;
-        }
-
-        handler_(ec, static_cast<const std::size_t&>(total_transferred_));
-      }
-    }
-
-  //private:
-    AsyncWriteStream& stream_;
-    std::experimental::net::const_buffer buffer_;
-    int start_;
-    std::size_t total_transferred_;
-    WriteHandler handler_;
-  };
-
-#endif // !defined(NET_TS_NO_DEPRECATED)
-
-  template <typename AsyncWriteStream, typename Elem,
-      typename CompletionCondition, typename WriteHandler>
-  class write_op<AsyncWriteStream, boost::array<Elem, 2>,
-      typename boost::array<Elem, 2>::const_iterator,
-      CompletionCondition, WriteHandler>
-    : detail::base_from_completion_cond<CompletionCondition>
-  {
-  public:
-    write_op(AsyncWriteStream& stream, const boost::array<Elem, 2>& buffers,
-        CompletionCondition completion_condition, WriteHandler& handler)
-      : detail::base_from_completion_cond<
-          CompletionCondition>(completion_condition),
-        stream_(stream),
-        buffers_(buffers),
-        start_(0),
-        total_transferred_(0),
-        handler_(NET_TS_MOVE_CAST(WriteHandler)(handler))
-    {
-    }
-
-#if defined(NET_TS_HAS_MOVE)
-    write_op(const write_op& other)
-      : detail::base_from_completion_cond<CompletionCondition>(other),
-        stream_(other.stream_),
-        buffers_(other.buffers_),
-        start_(other.start_),
-        total_transferred_(other.total_transferred_),
-        handler_(other.handler_)
-    {
-    }
-
-    write_op(write_op&& other)
-      : detail::base_from_completion_cond<CompletionCondition>(other),
-        stream_(other.stream_),
-        buffers_(other.buffers_),
-        start_(other.start_),
-        total_transferred_(other.total_transferred_),
-        handler_(NET_TS_MOVE_CAST(WriteHandler)(other.handler_))
-    {
-    }
-#endif // defined(NET_TS_HAS_MOVE)
-
-    void operator()(const std::error_code& ec,
-        std::size_t bytes_transferred, int start = 0)
-    {
-      typename std::experimental::net::detail::dependent_type<Elem,
-          boost::array<std::experimental::net::const_buffer, 2> >::type bufs = {{
-        std::experimental::net::const_buffer(buffers_[0]),
-        std::experimental::net::const_buffer(buffers_[1]) }};
-      std::size_t buffer_size0 = bufs[0].size();
-      std::size_t buffer_size1 = bufs[1].size();
-      std::size_t n = 0;
-      switch (start_ = start)
-      {
-        case 1:
-        n = this->check_for_completion(ec, total_transferred_);
-        for (;;)
-        {
-          bufs[0] = std::experimental::net::buffer(bufs[0] + total_transferred_, n);
-          bufs[1] = std::experimental::net::buffer(
-              bufs[1] + (total_transferred_ < buffer_size0
-                ? 0 : total_transferred_ - buffer_size0),
-              n - bufs[0].size());
-          stream_.async_write_some(bufs, NET_TS_MOVE_CAST(write_op)(*this));
-          return; default:
-          total_transferred_ += bytes_transferred;
-          if ((!ec && bytes_transferred == 0)
-              || (n = this->check_for_completion(ec, total_transferred_)) == 0
-              || total_transferred_ == buffer_size0 + buffer_size1)
-            break;
-        }
-
-        handler_(ec, static_cast<const std::size_t&>(total_transferred_));
-      }
-    }
-
-  //private:
-    AsyncWriteStream& stream_;
-    boost::array<Elem, 2> buffers_;
-    int start_;
-    std::size_t total_transferred_;
-    WriteHandler handler_;
-  };
-
-#if defined(NET_TS_HAS_STD_ARRAY)
-
-  template <typename AsyncWriteStream, typename Elem,
-      typename CompletionCondition, typename WriteHandler>
-  class write_op<AsyncWriteStream, std::array<Elem, 2>,
-      typename std::array<Elem, 2>::const_iterator,
-      CompletionCondition, WriteHandler>
-    : detail::base_from_completion_cond<CompletionCondition>
-  {
-  public:
-    write_op(AsyncWriteStream& stream, const std::array<Elem, 2>& buffers,
-        CompletionCondition completion_condition, WriteHandler& handler)
-      : detail::base_from_completion_cond<
-          CompletionCondition>(completion_condition),
-        stream_(stream),
-        buffers_(buffers),
-        start_(0),
-        total_transferred_(0),
-        handler_(NET_TS_MOVE_CAST(WriteHandler)(handler))
-    {
-    }
-
-#if defined(NET_TS_HAS_MOVE)
-    write_op(const write_op& other)
-      : detail::base_from_completion_cond<CompletionCondition>(other),
-        stream_(other.stream_),
-        buffers_(other.buffers_),
-        start_(other.start_),
-        total_transferred_(other.total_transferred_),
-        handler_(other.handler_)
-    {
-    }
-
-    write_op(write_op&& other)
-      : detail::base_from_completion_cond<CompletionCondition>(other),
-        stream_(other.stream_),
-        buffers_(other.buffers_),
-        start_(other.start_),
-        total_transferred_(other.total_transferred_),
-        handler_(NET_TS_MOVE_CAST(WriteHandler)(other.handler_))
-    {
-    }
-#endif // defined(NET_TS_HAS_MOVE)
-
-    void operator()(const std::error_code& ec,
-        std::size_t bytes_transferred, int start = 0)
-    {
-      typename std::experimental::net::detail::dependent_type<Elem,
-          std::array<std::experimental::net::const_buffer, 2> >::type bufs = {{
-        std::experimental::net::const_buffer(buffers_[0]),
-        std::experimental::net::const_buffer(buffers_[1]) }};
-      std::size_t buffer_size0 = bufs[0].size();
-      std::size_t buffer_size1 = bufs[1].size();
-      std::size_t n = 0;
-      switch (start_ = start)
-      {
-        case 1:
-        n = this->check_for_completion(ec, total_transferred_);
-        for (;;)
-        {
-          bufs[0] = std::experimental::net::buffer(bufs[0] + total_transferred_, n);
-          bufs[1] = std::experimental::net::buffer(
-              bufs[1] + (total_transferred_ < buffer_size0
-                ? 0 : total_transferred_ - buffer_size0),
-              n - bufs[0].size());
-          stream_.async_write_some(bufs, NET_TS_MOVE_CAST(write_op)(*this));
-          return; default:
-          total_transferred_ += bytes_transferred;
-          if ((!ec && bytes_transferred == 0)
-              || (n = this->check_for_completion(ec, total_transferred_)) == 0
-              || total_transferred_ == buffer_size0 + buffer_size1)
-            break;
-        }
-
-        handler_(ec, static_cast<const std::size_t&>(total_transferred_));
-      }
-    }
-
-  //private:
-    AsyncWriteStream& stream_;
-    std::array<Elem, 2> buffers_;
-    int start_;
-    std::size_t total_transferred_;
-    WriteHandler handler_;
-  };
-
-#endif // defined(NET_TS_HAS_STD_ARRAY)
 
   template <typename AsyncWriteStream, typename ConstBufferSequence,
       typename ConstBufferIterator, typename CompletionCondition,

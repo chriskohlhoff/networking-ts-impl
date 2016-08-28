@@ -1692,6 +1692,7 @@ protected:
   {
   }
 
+private:
   // Disallow copying and assignment.
   basic_socket(const basic_socket&) NET_TS_DELETED;
   basic_socket& operator=(const basic_socket&) NET_TS_DELETED;

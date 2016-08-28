@@ -18,8 +18,10 @@
 #include <experimental/__net_ts/detail/config.hpp>
 #include <experimental/__net_ts/detail/type_traits.hpp>
 #include <experimental/__net_ts/detail/variadic_templates.hpp>
+#include <experimental/__net_ts/associated_executor.hpp>
 #include <experimental/__net_ts/associated_allocator.hpp>
 #include <experimental/__net_ts/async_result.hpp>
+#include <experimental/__net_ts/execution_context.hpp>
 #include <experimental/__net_ts/is_executor.hpp>
 #include <experimental/__net_ts/uses_executor.hpp>
 
