@@ -172,7 +172,7 @@ public:
     this->get_service().bind(this->get_implementation(), endpoint, ec);
     std::experimental::net::detail::throw_error(ec, "bind");
     this->get_service().listen(this->get_implementation(),
-        socket_base::max_connections, ec);
+        socket_base::max_listen_connections, ec);
     std::experimental::net::detail::throw_error(ec, "listen");
   }
 
@@ -488,7 +488,7 @@ public:
    *
    * @throws std::system_error Thrown on failure.
    */
-  void listen(int backlog = socket_base::max_connections)
+  void listen(int backlog = socket_base::max_listen_connections)
   {
     std::error_code ec;
     this->get_service().listen(this->get_implementation(), backlog, ec);
@@ -510,7 +510,7 @@ public:
    * std::experimental::net::ip::tcp::acceptor acceptor(io_context);
    * ...
    * std::error_code ec;
-   * acceptor.listen(std::experimental::net::socket_base::max_connections, ec);
+   * acceptor.listen(std::experimental::net::socket_base::max_listen_connections, ec);
    * if (ec)
    * {
    *   // An error occurred.

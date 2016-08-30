@@ -497,11 +497,22 @@ public:
 
   /// The maximum length of the queue of pending incoming connections.
 #if defined(GENERATING_DOCUMENTATION)
+  static const int max_listen_connections = implementation_defined;
+#else
+  NET_TS_STATIC_CONSTANT(int, max_listen_connections
+      = NET_TS_OS_DEF(SOMAXCONN));
+#endif
+
+#if !defined(NET_TS_NO_DEPRECATED)
+  /// (Deprecated: Use max_listen_connections.) The maximum length of the queue
+  /// of pending incoming connections.
+#if defined(GENERATING_DOCUMENTATION)
   static const int max_connections = implementation_defined;
 #else
   NET_TS_STATIC_CONSTANT(int, max_connections
       = NET_TS_OS_DEF(SOMAXCONN));
 #endif
+#endif // !defined(NET_TS_NO_DEPRECATED)
 
 protected:
   /// Protected destructor to prevent deletion through this type.
