@@ -22,13 +22,11 @@
 #include <streambuf>
 #include <experimental/__net_ts/basic_socket.hpp>
 #include <experimental/__net_ts/detail/array.hpp>
-#include <experimental/__net_ts/detail/deadline_timer_service.hpp>
 #include <experimental/__net_ts/detail/throw_error.hpp>
 #include <experimental/__net_ts/io_context.hpp>
-#include <experimental/__net_ts/stream_socket_service.hpp>
 
 #if defined(NET_TS_HAS_BOOST_DATE_TIME)
-# include <experimental/__net_ts/deadline_timer_service.hpp>
+# include <experimental/__net_ts/detail/deadline_timer_service.hpp>
 #else
 # include <experimental/__net_ts/steady_timer.hpp>
 #endif
@@ -67,9 +65,7 @@
 
 #endif // !defined(NET_TS_HAS_VARIADIC_TEMPLATES)
 
-#if !defined(NET_TS_ENABLE_OLD_SERVICES)
-# define NET_TS_SVC_T1 detail::deadline_timer_service<traits_helper>
-#endif // !defined(NET_TS_ENABLE_OLD_SERVICES)
+#define NET_TS_SVC_T1 detail::deadline_timer_service<traits_helper>
 
 #include <experimental/__net_ts/detail/push_options.hpp>
 
@@ -120,11 +116,7 @@ template <typename Protocol NET_TS_SVC_TPARAM,
 class basic_socket_streambuf
   : public std::streambuf,
     private detail::socket_streambuf_base,
-#if defined(NET_TS_NO_DEPRECATED) || defined(GENERATING_DOCUMENTATION)
     private basic_socket<Protocol NET_TS_SVC_TARG>
-#else // defined(NET_TS_NO_DEPRECATED) || defined(GENERATING_DOCUMENTATION)
-    public basic_socket<Protocol NET_TS_SVC_TARG>
-#endif // defined(NET_TS_NO_DEPRECATED) || defined(GENERATING_DOCUMENTATION)
 {
 private:
   // These typedefs are intended keep this class's implementation independent
@@ -152,10 +144,6 @@ public:
   /// The duration type.
   typedef typename TimeTraits::duration duration;
 #else
-# if !defined(NET_TS_NO_DEPRECATED)
-  typedef typename traits_helper::time_type time_type;
-  typedef typename traits_helper::duration_type duration_type;
-# endif // !defined(NET_TS_NO_DEPRECATED)
   typedef typename traits_helper::time_type time_point;
   typedef typename traits_helper::duration_type duration;
 #endif
@@ -268,32 +256,6 @@ public:
     return ec_;
   }
 
-#if !defined(NET_TS_NO_DEPRECATED)
-  /// (Deprecated: Use error().) Get the last error associated with the stream
-  /// buffer.
-  /**
-   * @return An \c error_code corresponding to the last error from the stream
-   * buffer.
-   */
-  const std::error_code& puberror() const
-  {
-    return error();
-  }
-
-  /// (Deprecated: Use expiry().) Get the stream buffer's expiry time as an
-  /// absolute time.
-  /**
-   * @return An absolute time value representing the stream buffer's expiry
-   * time.
-   */
-  time_point expires_at() const
-  {
-    return timer_service_
-      ? timer_service_->expires_at(timer_implementation_)
-      : time_point();
-  }
-#endif // !defined(NET_TS_NO_DEPRECATED)
-
   /// Get the stream buffer's expiry time as an absolute time.
   /**
    * @return An absolute time value representing the stream buffer's expiry
@@ -353,39 +315,6 @@ public:
 
     start_timer();
   }
-
-#if !defined(NET_TS_NO_DEPRECATED)
-  /// (Deprecated: Use expiry().) Get the stream buffer's expiry time relative
-  /// to now.
-  /**
-   * @return A relative time value representing the stream buffer's expiry time.
-   */
-  duration expires_from_now() const
-  {
-    return traits_helper::subtract(expires_at(), traits_helper::now());
-  }
-
-  /// (Deprecated: Use expires_after().) Set the stream buffer's expiry time
-  /// relative to now.
-  /**
-   * This function sets the expiry time associated with the stream. Stream
-   * operations performed after this time (where the operations cannot be
-   * completed using the internal buffers) will fail with the error
-   * std::experimental::net::error::operation_aborted.
-   *
-   * @param expiry_time The expiry time to be used for the timer.
-   */
-  void expires_from_now(const duration& expiry_time)
-  {
-    construct_timer();
-
-    std::error_code ec;
-    timer_service_->expires_from_now(timer_implementation_, expiry_time, ec);
-    std::experimental::net::detail::throw_error(ec, "expires_from_now");
-
-    start_timer();
-  }
-#endif // !defined(NET_TS_NO_DEPRECATED)
 
 protected:
   int_type underflow()
@@ -644,9 +573,7 @@ private:
 
 #include <experimental/__net_ts/detail/pop_options.hpp>
 
-#if !defined(NET_TS_ENABLE_OLD_SERVICES)
-# undef NET_TS_SVC_T1
-#endif // !defined(NET_TS_ENABLE_OLD_SERVICES)
+#undef NET_TS_SVC_T1
 
 #if !defined(NET_TS_HAS_VARIADIC_TEMPLATES)
 # undef NET_TS_PRIVATE_CONNECT_DEF

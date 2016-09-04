@@ -61,20 +61,6 @@ struct time_traits;
 
 #endif // defined(NET_TS_HAS_BOOST_DATE_TIME)
 
-#if defined(NET_TS_ENABLE_OLD_SERVICES)
-
-template <typename Clock, typename WaitTraits>
-class waitable_timer_service;
-
-#if defined(NET_TS_HAS_BOOST_DATE_TIME)
-
-template <typename TimeType, typename TimeTraits>
-class deadline_timer_service;
-
-#endif // defined(NET_TS_HAS_BOOST_DATE_TIME)
-
-#endif // defined(NET_TS_ENABLE_OLD_SERVICES)
-
 #if !defined(NET_TS_BASIC_WAITABLE_TIMER_FWD_DECL)
 #define NET_TS_BASIC_WAITABLE_TIMER_FWD_DECL
 

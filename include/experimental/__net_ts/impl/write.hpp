@@ -169,43 +169,6 @@ inline std::size_t write(SyncWriteStream& s,
   return bytes_transferred;
 }
 
-#if !defined(NET_TS_NO_IOSTREAM)
-
-template <typename SyncWriteStream, typename Allocator,
-    typename CompletionCondition>
-inline std::size_t write(SyncWriteStream& s,
-    std::experimental::net::basic_streambuf<Allocator>& b,
-    CompletionCondition completion_condition, std::error_code& ec)
-{
-  return write(s, basic_streambuf_ref<Allocator>(b), completion_condition, ec);
-}
-
-template <typename SyncWriteStream, typename Allocator>
-inline std::size_t write(SyncWriteStream& s,
-    std::experimental::net::basic_streambuf<Allocator>& b)
-{
-  return write(s, basic_streambuf_ref<Allocator>(b));
-}
-
-template <typename SyncWriteStream, typename Allocator>
-inline std::size_t write(SyncWriteStream& s,
-    std::experimental::net::basic_streambuf<Allocator>& b,
-    std::error_code& ec)
-{
-  return write(s, basic_streambuf_ref<Allocator>(b), ec);
-}
-
-template <typename SyncWriteStream, typename Allocator,
-    typename CompletionCondition>
-inline std::size_t write(SyncWriteStream& s,
-    std::experimental::net::basic_streambuf<Allocator>& b,
-    CompletionCondition completion_condition)
-{
-  return write(s, basic_streambuf_ref<Allocator>(b), completion_condition);
-}
-
-#endif // !defined(NET_TS_NO_IOSTREAM)
-
 namespace detail
 {
   template <typename AsyncWriteStream, typename ConstBufferSequence,
@@ -637,34 +600,6 @@ async_write(AsyncWriteStream& s,
 
   return init.result.get();
 }
-
-#if !defined(NET_TS_NO_IOSTREAM)
-
-template <typename AsyncWriteStream, typename Allocator, typename WriteHandler>
-inline NET_TS_INITFN_RESULT_TYPE(WriteHandler,
-    void (std::error_code, std::size_t))
-async_write(AsyncWriteStream& s,
-    std::experimental::net::basic_streambuf<Allocator>& b,
-    NET_TS_MOVE_ARG(WriteHandler) handler)
-{
-  return async_write(s, basic_streambuf_ref<Allocator>(b),
-      NET_TS_MOVE_CAST(WriteHandler)(handler));
-}
-
-template <typename AsyncWriteStream, typename Allocator,
-    typename CompletionCondition, typename WriteHandler>
-inline NET_TS_INITFN_RESULT_TYPE(WriteHandler,
-    void (std::error_code, std::size_t))
-async_write(AsyncWriteStream& s,
-    std::experimental::net::basic_streambuf<Allocator>& b,
-    CompletionCondition completion_condition,
-    NET_TS_MOVE_ARG(WriteHandler) handler)
-{
-  return async_write(s, basic_streambuf_ref<Allocator>(b),
-      completion_condition, NET_TS_MOVE_CAST(WriteHandler)(handler));
-}
-
-#endif // !defined(NET_TS_NO_IOSTREAM)
 
 } // inline namespace v1
 } // namespace net

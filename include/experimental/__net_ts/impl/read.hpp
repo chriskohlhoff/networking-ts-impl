@@ -186,43 +186,6 @@ inline std::size_t read(SyncReadStream& s,
   return bytes_transferred;
 }
 
-#if !defined(NET_TS_NO_IOSTREAM)
-
-template <typename SyncReadStream, typename Allocator,
-    typename CompletionCondition>
-inline std::size_t read(SyncReadStream& s,
-    std::experimental::net::basic_streambuf<Allocator>& b,
-    CompletionCondition completion_condition, std::error_code& ec)
-{
-  return read(s, basic_streambuf_ref<Allocator>(b), completion_condition, ec);
-}
-
-template <typename SyncReadStream, typename Allocator>
-inline std::size_t read(SyncReadStream& s,
-    std::experimental::net::basic_streambuf<Allocator>& b)
-{
-  return read(s, basic_streambuf_ref<Allocator>(b));
-}
-
-template <typename SyncReadStream, typename Allocator>
-inline std::size_t read(SyncReadStream& s,
-    std::experimental::net::basic_streambuf<Allocator>& b,
-    std::error_code& ec)
-{
-  return read(s, basic_streambuf_ref<Allocator>(b), ec);
-}
-
-template <typename SyncReadStream, typename Allocator,
-    typename CompletionCondition>
-inline std::size_t read(SyncReadStream& s,
-    std::experimental::net::basic_streambuf<Allocator>& b,
-    CompletionCondition completion_condition)
-{
-  return read(s, basic_streambuf_ref<Allocator>(b), completion_condition);
-}
-
-#endif // !defined(NET_TS_NO_IOSTREAM)
-
 namespace detail
 {
   template <typename AsyncReadStream, typename MutableBufferSequence,
@@ -680,32 +643,6 @@ async_read(AsyncReadStream& s,
 
   return init.result.get();
 }
-
-#if !defined(NET_TS_NO_IOSTREAM)
-
-template <typename AsyncReadStream, typename Allocator, typename ReadHandler>
-inline NET_TS_INITFN_RESULT_TYPE(ReadHandler,
-    void (std::error_code, std::size_t))
-async_read(AsyncReadStream& s, basic_streambuf<Allocator>& b,
-    NET_TS_MOVE_ARG(ReadHandler) handler)
-{
-  return async_read(s, basic_streambuf_ref<Allocator>(b),
-      NET_TS_MOVE_CAST(ReadHandler)(handler));
-}
-
-template <typename AsyncReadStream, typename Allocator,
-    typename CompletionCondition, typename ReadHandler>
-inline NET_TS_INITFN_RESULT_TYPE(ReadHandler,
-    void (std::error_code, std::size_t))
-async_read(AsyncReadStream& s, basic_streambuf<Allocator>& b,
-    CompletionCondition completion_condition,
-    NET_TS_MOVE_ARG(ReadHandler) handler)
-{
-  return async_read(s, basic_streambuf_ref<Allocator>(b),
-      completion_condition, NET_TS_MOVE_CAST(ReadHandler)(handler));
-}
-
-#endif // !defined(NET_TS_NO_IOSTREAM)
 
 } // inline namespace v1
 } // namespace net

@@ -283,10 +283,4 @@ private:
 
 // If both io_context.hpp and strand.hpp have been included, automatically
 // include the header file needed for the io_context::strand class.
-#if !defined(NET_TS_NO_EXTENSIONS)
-# if defined(NET_TS_IO_CONTEXT_HPP)
-#  include <experimental/__net_ts/io_context_strand.hpp>
-# endif // defined(NET_TS_IO_CONTEXT_HPP)
-#endif // !defined(NET_TS_NO_EXTENSIONS)
-
 #endif // NET_TS_STRAND_HPP

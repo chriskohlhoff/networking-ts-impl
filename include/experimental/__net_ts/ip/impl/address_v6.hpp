@@ -27,32 +27,6 @@ namespace net {
 inline namespace v1 {
 namespace ip {
 
-#if !defined(NET_TS_NO_DEPRECATED)
-
-inline address_v6 address_v6::from_string(const char* str)
-{
-  return std::experimental::net::ip::make_address_v6(str);
-}
-
-inline address_v6 address_v6::from_string(
-    const char* str, std::error_code& ec)
-{
-  return std::experimental::net::ip::make_address_v6(str, ec);
-}
-
-inline address_v6 address_v6::from_string(const std::string& str)
-{
-  return std::experimental::net::ip::make_address_v6(str);
-}
-
-inline address_v6 address_v6::from_string(
-    const std::string& str, std::error_code& ec)
-{
-  return std::experimental::net::ip::make_address_v6(str, ec);
-}
-
-#endif // !defined(NET_TS_NO_DEPRECATED)
-
 template <typename Elem, typename Traits>
 std::basic_ostream<Elem, Traits>& operator<<(
     std::basic_ostream<Elem, Traits>& os, const address_v6& addr)

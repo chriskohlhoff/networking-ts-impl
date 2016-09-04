@@ -72,26 +72,6 @@ typename Protocol::endpoint connect(
   return ec ? typename Protocol::endpoint() : *iter;
 }
 
-#if !defined(NET_TS_NO_DEPRECATED)
-template <typename Protocol NET_TS_SVC_TPARAM, typename Iterator>
-Iterator connect(basic_socket<Protocol NET_TS_SVC_TARG>& s, Iterator begin,
-    typename enable_if<!is_endpoint_sequence<Iterator>::value>::type*)
-{
-  std::error_code ec;
-  Iterator result = connect(s, begin, ec);
-  std::experimental::net::detail::throw_error(ec, "connect");
-  return result;
-}
-
-template <typename Protocol NET_TS_SVC_TPARAM, typename Iterator>
-inline Iterator connect(basic_socket<Protocol NET_TS_SVC_TARG>& s,
-    Iterator begin, std::error_code& ec,
-    typename enable_if<!is_endpoint_sequence<Iterator>::value>::type*)
-{
-  return connect(s, begin, Iterator(), detail::default_connect_condition(), ec);
-}
-#endif // !defined(NET_TS_NO_DEPRECATED)
-
 template <typename Protocol NET_TS_SVC_TPARAM, typename Iterator>
 Iterator connect(basic_socket<Protocol NET_TS_SVC_TARG>& s,
     Iterator begin, Iterator end)
@@ -137,30 +117,6 @@ typename Protocol::endpoint connect(
       s, endpoints.begin(), endpoints.end(), connect_condition, ec);
   return ec ? typename Protocol::endpoint() : *iter;
 }
-
-#if !defined(NET_TS_NO_DEPRECATED)
-template <typename Protocol NET_TS_SVC_TPARAM,
-    typename Iterator, typename ConnectCondition>
-Iterator connect(basic_socket<Protocol NET_TS_SVC_TARG>& s,
-    Iterator begin, ConnectCondition connect_condition,
-    typename enable_if<!is_endpoint_sequence<Iterator>::value>::type*)
-{
-  std::error_code ec;
-  Iterator result = connect(s, begin, connect_condition, ec);
-  std::experimental::net::detail::throw_error(ec, "connect");
-  return result;
-}
-
-template <typename Protocol NET_TS_SVC_TPARAM,
-    typename Iterator, typename ConnectCondition>
-inline Iterator connect(basic_socket<Protocol NET_TS_SVC_TARG>& s,
-    Iterator begin, ConnectCondition connect_condition,
-    std::error_code& ec,
-    typename enable_if<!is_endpoint_sequence<Iterator>::value>::type*)
-{
-  return connect(s, begin, Iterator(), connect_condition, ec);
-}
-#endif // !defined(NET_TS_NO_DEPRECATED)
 
 template <typename Protocol NET_TS_SVC_TPARAM,
     typename Iterator, typename ConnectCondition>
@@ -667,33 +623,6 @@ async_connect(basic_socket<Protocol NET_TS_SVC_TARG>& s,
   return init.result.get();
 }
 
-#if !defined(NET_TS_NO_DEPRECATED)
-template <typename Protocol NET_TS_SVC_TPARAM,
-    typename Iterator, typename IteratorConnectHandler>
-inline NET_TS_INITFN_RESULT_TYPE(IteratorConnectHandler,
-    void (std::error_code, Iterator))
-async_connect(basic_socket<Protocol NET_TS_SVC_TARG>& s,
-    Iterator begin, NET_TS_MOVE_ARG(IteratorConnectHandler) handler,
-    typename enable_if<!is_endpoint_sequence<Iterator>::value>::type*)
-{
-  // If you get an error on the following line it means that your handler does
-  // not meet the documented type requirements for a IteratorConnectHandler.
-  NET_TS_ITERATOR_CONNECT_HANDLER_CHECK(
-      IteratorConnectHandler, handler, Iterator) type_check;
-
-  async_completion<IteratorConnectHandler,
-    void (std::error_code, Iterator)> init(handler);
-
-  detail::iterator_connect_op<Protocol NET_TS_SVC_TARG, Iterator,
-    detail::default_connect_condition, NET_TS_HANDLER_TYPE(
-      IteratorConnectHandler, void (std::error_code, Iterator))>(s,
-        begin, Iterator(), detail::default_connect_condition(),
-          init.completion_handler)(std::error_code(), 1);
-
-  return init.result.get();
-}
-#endif // !defined(NET_TS_NO_DEPRECATED)
-
 template <typename Protocol NET_TS_SVC_TPARAM,
     typename Iterator, typename IteratorConnectHandler>
 inline NET_TS_INITFN_RESULT_TYPE(IteratorConnectHandler,
@@ -746,34 +675,6 @@ async_connect(basic_socket<Protocol NET_TS_SVC_TARG>& s,
 
   return init.result.get();
 }
-
-#if !defined(NET_TS_NO_DEPRECATED)
-template <typename Protocol NET_TS_SVC_TPARAM, typename Iterator,
-    typename ConnectCondition, typename IteratorConnectHandler>
-inline NET_TS_INITFN_RESULT_TYPE(IteratorConnectHandler,
-    void (std::error_code, Iterator))
-async_connect(basic_socket<Protocol NET_TS_SVC_TARG>& s,
-    Iterator begin, ConnectCondition connect_condition,
-    NET_TS_MOVE_ARG(IteratorConnectHandler) handler,
-    typename enable_if<!is_endpoint_sequence<Iterator>::value>::type*)
-{
-  // If you get an error on the following line it means that your handler does
-  // not meet the documented type requirements for a IteratorConnectHandler.
-  NET_TS_ITERATOR_CONNECT_HANDLER_CHECK(
-      IteratorConnectHandler, handler, Iterator) type_check;
-
-  async_completion<IteratorConnectHandler,
-    void (std::error_code, Iterator)> init(handler);
-
-  detail::iterator_connect_op<Protocol NET_TS_SVC_TARG, Iterator,
-    ConnectCondition, NET_TS_HANDLER_TYPE(
-      IteratorConnectHandler, void (std::error_code, Iterator))>(s,
-        begin, Iterator(), connect_condition, init.completion_handler)(
-          std::error_code(), 1);
-
-  return init.result.get();
-}
-#endif // !defined(NET_TS_NO_DEPRECATED)
 
 template <typename Protocol NET_TS_SVC_TPARAM, typename Iterator,
     typename ConnectCondition, typename IteratorConnectHandler>

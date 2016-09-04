@@ -29,18 +29,16 @@
 # include <utility>
 #endif // defined(NET_TS_HAS_MOVE)
 
-#if !defined(NET_TS_ENABLE_OLD_SERVICES)
-# if defined(NET_TS_WINDOWS_RUNTIME)
-#  include <experimental/__net_ts/detail/winrt_ssocket_service.hpp>
-#  define NET_TS_SVC_T detail::winrt_ssocket_service<Protocol>
-# elif defined(NET_TS_HAS_IOCP)
-#  include <experimental/__net_ts/detail/win_iocp_socket_service.hpp>
-#  define NET_TS_SVC_T detail::win_iocp_socket_service<Protocol>
-# else
-#  include <experimental/__net_ts/detail/reactive_socket_service.hpp>
-#  define NET_TS_SVC_T detail::reactive_socket_service<Protocol>
-# endif
-#endif // !defined(NET_TS_ENABLE_OLD_SERVICES)
+#if defined(NET_TS_WINDOWS_RUNTIME)
+# include <experimental/__net_ts/detail/winrt_ssocket_service.hpp>
+# define NET_TS_SVC_T detail::winrt_ssocket_service<Protocol>
+#elif defined(NET_TS_HAS_IOCP)
+# include <experimental/__net_ts/detail/win_iocp_socket_service.hpp>
+# define NET_TS_SVC_T detail::win_iocp_socket_service<Protocol>
+#else
+# include <experimental/__net_ts/detail/reactive_socket_service.hpp>
+# define NET_TS_SVC_T detail::reactive_socket_service<Protocol>
+#endif
 
 #include <experimental/__net_ts/detail/push_options.hpp>
 
@@ -79,11 +77,6 @@ public:
 
   /// The endpoint type.
   typedef typename Protocol::endpoint endpoint_type;
-
-#if !defined(NET_TS_NO_EXTENSIONS)
-  /// A basic_socket is always the lowest layer.
-  typedef basic_socket<Protocol NET_TS_SVC_TARG> lowest_layer_type;
-#endif // !defined(NET_TS_NO_EXTENSIONS)
 
   /// Construct a basic_socket without opening it.
   /**
@@ -243,75 +236,11 @@ public:
   }
 #endif // defined(NET_TS_HAS_MOVE) || defined(GENERATING_DOCUMENTATION)
 
-#if defined(NET_TS_ENABLE_OLD_SERVICES)
-  // These functions are provided by basic_io_object<>.
-#else // defined(NET_TS_ENABLE_OLD_SERVICES)
-#if !defined(NET_TS_NO_DEPRECATED)
-  /// (Deprecated: Use get_executor().) Get the io_context associated with the
-  /// object.
-  /**
-   * This function may be used to obtain the io_context object that the I/O
-   * object uses to dispatch handlers for asynchronous operations.
-   *
-   * @return A reference to the io_context object that the I/O object will use
-   * to dispatch handlers. Ownership is not transferred to the caller.
-   */
-  std::experimental::net::io_context& get_io_context()
-  {
-    return basic_io_object<NET_TS_SVC_T>::get_io_context();
-  }
-
-  /// (Deprecated: Use get_executor().) Get the io_context associated with the
-  /// object.
-  /**
-   * This function may be used to obtain the io_context object that the I/O
-   * object uses to dispatch handlers for asynchronous operations.
-   *
-   * @return A reference to the io_context object that the I/O object will use
-   * to dispatch handlers. Ownership is not transferred to the caller.
-   */
-  std::experimental::net::io_context& get_io_service()
-  {
-    return basic_io_object<NET_TS_SVC_T>::get_io_service();
-  }
-#endif // !defined(NET_TS_NO_DEPRECATED)
-
   /// Get the executor associated with the object.
   executor_type get_executor() NET_TS_NOEXCEPT
   {
     return basic_io_object<NET_TS_SVC_T>::get_executor();
   }
-#endif // defined(NET_TS_ENABLE_OLD_SERVICES)
-
-#if !defined(NET_TS_NO_EXTENSIONS)
-  /// Get a reference to the lowest layer.
-  /**
-   * This function returns a reference to the lowest layer in a stack of
-   * layers. Since a basic_socket cannot contain any further layers, it simply
-   * returns a reference to itself.
-   *
-   * @return A reference to the lowest layer in the stack of layers. Ownership
-   * is not transferred to the caller.
-   */
-  lowest_layer_type& lowest_layer()
-  {
-    return *this;
-  }
-
-  /// Get a const reference to the lowest layer.
-  /**
-   * This function returns a const reference to the lowest layer in a stack of
-   * layers. Since a basic_socket cannot contain any further layers, it simply
-   * returns a reference to itself.
-   *
-   * @return A const reference to the lowest layer in the stack of layers.
-   * Ownership is not transferred to the caller.
-   */
-  const lowest_layer_type& lowest_layer() const
-  {
-    return *this;
-  }
-#endif // !defined(NET_TS_NO_EXTENSIONS)
 
   /// Open the socket using the specified protocol.
   /**
@@ -832,10 +761,6 @@ public:
       }
     }
 
-#if defined(NET_TS_ENABLE_OLD_SERVICES)
-    return this->get_service().async_connect(this->get_implementation(),
-        peer_endpoint, NET_TS_MOVE_CAST(ConnectHandler)(handler));
-#else // defined(NET_TS_ENABLE_OLD_SERVICES)
     async_completion<ConnectHandler,
       void (std::error_code)> init(handler);
 
@@ -843,7 +768,6 @@ public:
         this->get_implementation(), peer_endpoint, init.completion_handler);
 
     return init.result.get();
-#endif // defined(NET_TS_ENABLE_OLD_SERVICES)
   }
 
   /// Set an option on the socket.
@@ -1668,10 +1592,6 @@ public:
     // not meet the documented type requirements for a WaitHandler.
     NET_TS_WAIT_HANDLER_CHECK(WaitHandler, handler) type_check;
 
-#if defined(NET_TS_ENABLE_OLD_SERVICES)
-    return this->get_service().async_wait(this->get_implementation(),
-        w, NET_TS_MOVE_CAST(WaitHandler)(handler));
-#else // defined(NET_TS_ENABLE_OLD_SERVICES)
     async_completion<WaitHandler,
       void (std::error_code)> init(handler);
 
@@ -1679,7 +1599,6 @@ public:
         w, init.completion_handler);
 
     return init.result.get();
-#endif // defined(NET_TS_ENABLE_OLD_SERVICES)
   }
 
 protected:
@@ -1705,8 +1624,6 @@ private:
 
 #include <experimental/__net_ts/detail/pop_options.hpp>
 
-#if !defined(NET_TS_ENABLE_OLD_SERVICES)
-# undef NET_TS_SVC_T
-#endif // !defined(NET_TS_ENABLE_OLD_SERVICES)
+#undef NET_TS_SVC_T
 
 #endif // NET_TS_BASIC_SOCKET_HPP

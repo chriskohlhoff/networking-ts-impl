@@ -12,8 +12,6 @@
 #define NET_TS_DETAIL_CONFIG_HPP
 
 #define NET_TS_STANDALONE 1
-#define NET_TS_NO_DEPRECATED 1
-#define NET_TS_NO_EXTENSIONS 1
 
 #if defined(NET_TS_STANDALONE)
 # define NET_TS_DISABLE_BOOST_ARRAY 1
@@ -69,7 +67,8 @@
 #if !defined(NET_TS_MSVC)
 # if defined(NET_TS_HAS_BOOST_CONFIG) && defined(BOOST_MSVC)
 #  define NET_TS_MSVC BOOST_MSVC
-# elif defined(_MSC_VER) && !defined(__MWERKS__) && !defined(__EDG_VERSION__)
+# elif defined(_MSC_VER) && (defined(__INTELLISENSE__) \
+      || (!defined(__MWERKS__) && !defined(__EDG_VERSION__)))
 #  define NET_TS_MSVC _MSC_VER
 # endif // defined(NET_TS_HAS_BOOST_CONFIG) && defined(BOOST_MSVC)
 #endif // defined(NET_TS_MSVC)
@@ -1185,39 +1184,19 @@
 #endif // !defined(NET_TS_DISABLE_SSIZE_T)
 
 // Helper macros to manage the transition away from the old services-based API.
-#if defined(NET_TS_ENABLE_OLD_SERVICES)
-# define NET_TS_SVC_TPARAM , typename Service
-# define NET_TS_SVC_TPARAM_DEF1(d1) , typename Service d1
-# define NET_TS_SVC_TPARAM_DEF2(d1, d2) , typename Service d1, d2
-# define NET_TS_SVC_TARG , Service
-# define NET_TS_SVC_T Service
-# define NET_TS_SVC_TPARAM1 , typename Service1
-# define NET_TS_SVC_TPARAM1_DEF1(d1) , typename Service1 d1
-# define NET_TS_SVC_TPARAM1_DEF2(d1, d2) , typename Service1 d1, d2
-# define NET_TS_SVC_TARG1 , Service1
-# define NET_TS_SVC_T1 Service1
-# define NET_TS_SVC_ACCESS public
-#else // defined(NET_TS_ENABLE_OLD_SERVICES)
-# define NET_TS_SVC_TPARAM
-# define NET_TS_SVC_TPARAM_DEF1(d1)
-# define NET_TS_SVC_TPARAM_DEF2(d1, d2)
-# define NET_TS_SVC_TARG
+#define NET_TS_SVC_TPARAM
+#define NET_TS_SVC_TPARAM_DEF1(d1)
+#define NET_TS_SVC_TPARAM_DEF2(d1, d2)
+#define NET_TS_SVC_TARG
 // NET_TS_SVC_T is defined at each point of use.
-# define NET_TS_SVC_TPARAM1
-# define NET_TS_SVC_TPARAM1_DEF1(d1)
-# define NET_TS_SVC_TPARAM1_DEF2(d1, d2)
-# define NET_TS_SVC_TARG1
+#define NET_TS_SVC_TPARAM1
+#define NET_TS_SVC_TPARAM1_DEF1(d1)
+#define NET_TS_SVC_TPARAM1_DEF2(d1, d2)
+#define NET_TS_SVC_TARG1
 // NET_TS_SVC_T1 is defined at each point of use.
-# define NET_TS_SVC_ACCESS protected
-#endif // defined(NET_TS_ENABLE_OLD_SERVICES)
+#define NET_TS_SVC_ACCESS protected
 
 // Helper macros to manage transition away from error_code return values.
-#if defined(NET_TS_NO_DEPRECATED)
-# define NET_TS_SYNC_OP_VOID void
-# define NET_TS_SYNC_OP_VOID_RETURN(e) return
-#else // defined(NET_TS_NO_DEPRECATED)
-# define NET_TS_SYNC_OP_VOID std::error_code
-# define NET_TS_SYNC_OP_VOID_RETURN(e) return e
-#endif // defined(NET_TS_NO_DEPRECATED)
-
+#define NET_TS_SYNC_OP_VOID void
+#define NET_TS_SYNC_OP_VOID_RETURN(e) return
 #endif // NET_TS_DETAIL_CONFIG_HPP

@@ -32,19 +32,15 @@
 # include <utility>
 #endif // defined(NET_TS_HAS_MOVE)
 
-#if defined(NET_TS_ENABLE_OLD_SERVICES)
-# include <experimental/__net_ts/ip/resolver_service.hpp>
-#else // defined(NET_TS_ENABLE_OLD_SERVICES)
-# if defined(NET_TS_WINDOWS_RUNTIME)
-#  include <experimental/__net_ts/detail/winrt_resolver_service.hpp>
-#  define NET_TS_SVC_T \
+#if defined(NET_TS_WINDOWS_RUNTIME)
+# include <experimental/__net_ts/detail/winrt_resolver_service.hpp>
+# define NET_TS_SVC_T \
     std::experimental::net::detail::winrt_resolver_service<InternetProtocol>
-# else
-#  include <experimental/__net_ts/detail/resolver_service.hpp>
-#  define NET_TS_SVC_T \
+#else
+# include <experimental/__net_ts/detail/resolver_service.hpp>
+# define NET_TS_SVC_T \
     std::experimental::net::detail::resolver_service<InternetProtocol>
-# endif
-#endif // defined(NET_TS_ENABLE_OLD_SERVICES)
+#endif
 
 #include <experimental/__net_ts/detail/push_options.hpp>
 
@@ -78,14 +74,6 @@ public:
 
   /// The endpoint type.
   typedef typename InternetProtocol::endpoint endpoint_type;
-
-#if !defined(NET_TS_NO_DEPRECATED)
-  /// (Deprecated.) The query type.
-  typedef basic_resolver_query<InternetProtocol> query;
-
-  /// (Deprecated.) The iterator type.
-  typedef basic_resolver_iterator<InternetProtocol> iterator;
-#endif // !defined(NET_TS_NO_DEPRECATED)
 
   /// The results type.
   typedef basic_resolver_results<InternetProtocol> results_type;
@@ -148,45 +136,11 @@ public:
   {
   }
 
-#if defined(NET_TS_ENABLE_OLD_SERVICES)
-  // These functions are provided by basic_io_object<>.
-#else // defined(NET_TS_ENABLE_OLD_SERVICES)
-#if !defined(NET_TS_NO_DEPRECATED)
-  /// (Deprecated: Use get_executor().) Get the io_context associated with the
-  /// object.
-  /**
-   * This function may be used to obtain the io_context object that the I/O
-   * object uses to dispatch handlers for asynchronous operations.
-   *
-   * @return A reference to the io_context object that the I/O object will use
-   * to dispatch handlers. Ownership is not transferred to the caller.
-   */
-  std::experimental::net::io_context& get_io_context()
-  {
-    return basic_io_object<NET_TS_SVC_T>::get_io_context();
-  }
-
-  /// (Deprecated: Use get_executor().) Get the io_context associated with the
-  /// object.
-  /**
-   * This function may be used to obtain the io_context object that the I/O
-   * object uses to dispatch handlers for asynchronous operations.
-   *
-   * @return A reference to the io_context object that the I/O object will use
-   * to dispatch handlers. Ownership is not transferred to the caller.
-   */
-  std::experimental::net::io_context& get_io_service()
-  {
-    return basic_io_object<NET_TS_SVC_T>::get_io_service();
-  }
-#endif // !defined(NET_TS_NO_DEPRECATED)
-
   /// Get the executor associated with the object.
   executor_type get_executor() NET_TS_NOEXCEPT
   {
     return basic_io_object<NET_TS_SVC_T>::get_executor();
   }
-#endif // defined(NET_TS_ENABLE_OLD_SERVICES)
 
   /// Cancel any asynchronous operations that are waiting on the resolver.
   /**
@@ -198,46 +152,6 @@ public:
   {
     return this->get_service().cancel(this->get_implementation());
   }
-
-#if !defined(NET_TS_NO_DEPRECATED)
-  /// (Deprecated.) Perform forward resolution of a query to a list of entries.
-  /**
-   * This function is used to resolve a query into a list of endpoint entries.
-   *
-   * @param q A query object that determines what endpoints will be returned.
-   *
-   * @returns A range object representing the list of endpoint entries. A
-   * successful call to this function is guaranteed to return a non-empty
-   * range.
-   *
-   * @throws std::system_error Thrown on failure.
-   */
-  results_type resolve(const query& q)
-  {
-    std::error_code ec;
-    results_type r = this->get_service().resolve(
-        this->get_implementation(), q, ec);
-    std::experimental::net::detail::throw_error(ec, "resolve");
-    return r;
-  }
-
-  /// (Deprecated.) Perform forward resolution of a query to a list of entries.
-  /**
-   * This function is used to resolve a query into a list of endpoint entries.
-   *
-   * @param q A query object that determines what endpoints will be returned.
-   *
-   * @param ec Set to indicate what error occurred, if any.
-   *
-   * @returns A range object representing the list of endpoint entries. An
-   * empty range is returned if an error occurs. A successful call to this
-   * function is guaranteed to return a non-empty range.
-   */
-  results_type resolve(const query& q, std::error_code& ec)
-  {
-    return this->get_service().resolve(this->get_implementation(), q, ec);
-  }
-#endif // !defined(NET_TS_NO_DEPRECATED)
 
   /// Perform forward resolution of a query to a list of entries.
   /**
@@ -593,56 +507,6 @@ public:
     return this->get_service().resolve(this->get_implementation(), q, ec);
   }
 
-#if !defined(NET_TS_NO_DEPRECATED)
-  /// (Deprecated.) Asynchronously perform forward resolution of a query to a
-  /// list of entries.
-  /**
-   * This function is used to asynchronously resolve a query into a list of
-   * endpoint entries.
-   *
-   * @param q A query object that determines what endpoints will be returned.
-   *
-   * @param handler The handler to be called when the resolve operation
-   * completes. Copies will be made of the handler as required. The function
-   * signature of the handler must be:
-   * @code void handler(
-   *   const std::error_code& error, // Result of operation.
-   *   resolver::results_type results // Resolved endpoints as a range.
-   * ); @endcode
-   * Regardless of whether the asynchronous operation completes immediately or
-   * not, the handler will not be invoked from within this function. Invocation
-   * of the handler will be performed in a manner equivalent to using
-   * std::experimental::net::io_context::post().
-   *
-   * A successful resolve operation is guaranteed to pass a non-empty range to
-   * the handler.
-   */
-  template <typename ResolveHandler>
-  NET_TS_INITFN_RESULT_TYPE(ResolveHandler,
-      void (std::error_code, results_type))
-  async_resolve(const query& q,
-      NET_TS_MOVE_ARG(ResolveHandler) handler)
-  {
-    // If you get an error on the following line it means that your handler does
-    // not meet the documented type requirements for a ResolveHandler.
-    NET_TS_RESOLVE_HANDLER_CHECK(
-        ResolveHandler, handler, results_type) type_check;
-
-#if defined(NET_TS_ENABLE_OLD_SERVICES)
-    return this->get_service().async_resolve(this->get_implementation(), q,
-        NET_TS_MOVE_CAST(ResolveHandler)(handler));
-#else // defined(NET_TS_ENABLE_OLD_SERVICES)
-    std::experimental::net::async_completion<ResolveHandler,
-      void (std::error_code, results_type)> init(handler);
-
-    this->get_service().async_resolve(
-        this->get_implementation(), q, init.completion_handler);
-
-    return init.result.get();
-#endif // defined(NET_TS_ENABLE_OLD_SERVICES)
-  }
-#endif // !defined(NET_TS_NO_DEPRECATED)
-
   /// Asynchronously perform forward resolution of a query to a list of entries.
   /**
    * This function is used to resolve host and service names into a list of
@@ -755,10 +619,6 @@ public:
 
     basic_resolver_query<protocol_type> q(host, service, resolve_flags);
 
-#if defined(NET_TS_ENABLE_OLD_SERVICES)
-    return this->get_service().async_resolve(this->get_implementation(), q,
-        NET_TS_MOVE_CAST(ResolveHandler)(handler));
-#else // defined(NET_TS_ENABLE_OLD_SERVICES)
     std::experimental::net::async_completion<ResolveHandler,
       void (std::error_code, results_type)> init(handler);
 
@@ -766,7 +626,6 @@ public:
         this->get_implementation(), q, init.completion_handler);
 
     return init.result.get();
-#endif // defined(NET_TS_ENABLE_OLD_SERVICES)
   }
 
   /// Asynchronously perform forward resolution of a query to a list of entries.
@@ -888,10 +747,6 @@ public:
     basic_resolver_query<protocol_type> q(
         protocol, host, service, resolve_flags);
 
-#if defined(NET_TS_ENABLE_OLD_SERVICES)
-    return this->get_service().async_resolve(this->get_implementation(), q,
-        NET_TS_MOVE_CAST(ResolveHandler)(handler));
-#else // defined(NET_TS_ENABLE_OLD_SERVICES)
     std::experimental::net::async_completion<ResolveHandler,
       void (std::error_code, results_type)> init(handler);
 
@@ -899,7 +754,6 @@ public:
         this->get_implementation(), q, init.completion_handler);
 
     return init.result.get();
-#endif // defined(NET_TS_ENABLE_OLD_SERVICES)
   }
 
   /// Perform reverse resolution of an endpoint to a list of entries.
@@ -979,10 +833,6 @@ public:
     NET_TS_RESOLVE_HANDLER_CHECK(
         ResolveHandler, handler, results_type) type_check;
 
-#if defined(NET_TS_ENABLE_OLD_SERVICES)
-    return this->get_service().async_resolve(this->get_implementation(), e,
-        NET_TS_MOVE_CAST(ResolveHandler)(handler));
-#else // defined(NET_TS_ENABLE_OLD_SERVICES)
     std::experimental::net::async_completion<ResolveHandler,
       void (std::error_code, results_type)> init(handler);
 
@@ -990,7 +840,6 @@ public:
         this->get_implementation(), e, init.completion_handler);
 
     return init.result.get();
-#endif // defined(NET_TS_ENABLE_OLD_SERVICES)
   }
 };
 
@@ -1002,8 +851,6 @@ public:
 
 #include <experimental/__net_ts/detail/pop_options.hpp>
 
-#if !defined(NET_TS_ENABLE_OLD_SERVICES)
-# undef NET_TS_SVC_T
-#endif // !defined(NET_TS_ENABLE_OLD_SERVICES)
+#undef NET_TS_SVC_T
 
 #endif // NET_TS_IP_BASIC_RESOLVER_HPP

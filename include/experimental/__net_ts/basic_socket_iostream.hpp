@@ -22,7 +22,6 @@
 #include <istream>
 #include <ostream>
 #include <experimental/__net_ts/basic_socket_streambuf.hpp>
-#include <experimental/__net_ts/stream_socket_service.hpp>
 
 #if !defined(NET_TS_HAS_VARIADIC_TEMPLATES)
 
@@ -155,10 +154,6 @@ public:
   /// The duration type.
   typedef typename TimeTraits::duration duration;
 #else
-# if !defined(NET_TS_NO_DEPRECATED)
-  typedef typename traits_helper::time_type time_type;
-  typedef typename traits_helper::duration_type duration_type;
-# endif // !defined(NET_TS_NO_DEPRECATED)
   typedef typename traits_helper::time_type time_point;
   typedef typename traits_helper::duration_type duration;
 #endif
@@ -259,18 +254,6 @@ public:
     return rdbuf()->error();
   }
 
-#if !defined(NET_TS_NO_DEPRECATED)
-  /// (Deprecated: Use expiry().) Get the stream's expiry time as an absolute
-  /// time.
-  /**
-   * @return An absolute time value representing the stream's expiry time.
-   */
-  time_point expires_at() const
-  {
-    return rdbuf()->expires_at();
-  }
-#endif // !defined(NET_TS_NO_DEPRECATED)
-
   /// Get the stream's expiry time as an absolute time.
   /**
    * @return An absolute time value representing the stream's expiry time.
@@ -308,31 +291,6 @@ public:
     rdbuf()->expires_after(expiry_time);
   }
 
-#if !defined(NET_TS_NO_DEPRECATED)
-  /// (Deprecated: Use expiry().) Get the stream's expiry time relative to now.
-  /**
-   * @return A relative time value representing the stream's expiry time.
-   */
-  duration expires_from_now() const
-  {
-    return rdbuf()->expires_from_now();
-  }
-
-  /// (Deprecated: Use expires_after().) Set the stream's expiry time relative
-  /// to now.
-  /**
-   * This function sets the expiry time associated with the stream. Stream
-   * operations performed after this time (where the operations cannot be
-   * completed using the internal buffers) will fail with the error
-   * std::experimental::net::error::operation_aborted.
-   *
-   * @param expiry_time The expiry time to be used for the timer.
-   */
-  void expires_from_now(const duration& expiry_time)
-  {
-    rdbuf()->expires_from_now(expiry_time);
-  }
-#endif // !defined(NET_TS_NO_DEPRECATED)
 };
 
 } // inline namespace v1

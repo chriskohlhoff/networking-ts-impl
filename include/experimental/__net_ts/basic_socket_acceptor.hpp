@@ -22,25 +22,22 @@
 #include <experimental/__net_ts/detail/throw_error.hpp>
 #include <experimental/__net_ts/detail/type_traits.hpp>
 #include <experimental/__net_ts/error.hpp>
-#include <experimental/__net_ts/socket_acceptor_service.hpp>
 #include <experimental/__net_ts/socket_base.hpp>
 
 #if defined(NET_TS_HAS_MOVE)
 # include <utility>
 #endif // defined(NET_TS_HAS_MOVE)
 
-#if !defined(NET_TS_ENABLE_OLD_SERVICES)
-# if defined(NET_TS_WINDOWS_RUNTIME)
-#  include <experimental/__net_ts/detail/null_socket_service.hpp>
-#  define NET_TS_SVC_T detail::null_socket_service<Protocol>
-# elif defined(NET_TS_HAS_IOCP)
-#  include <experimental/__net_ts/detail/win_iocp_socket_service.hpp>
-#  define NET_TS_SVC_T detail::win_iocp_socket_service<Protocol>
-# else
-#  include <experimental/__net_ts/detail/reactive_socket_service.hpp>
-#  define NET_TS_SVC_T detail::reactive_socket_service<Protocol>
-# endif
-#endif // !defined(NET_TS_ENABLE_OLD_SERVICES)
+#if defined(NET_TS_WINDOWS_RUNTIME)
+# include <experimental/__net_ts/detail/null_socket_service.hpp>
+# define NET_TS_SVC_T detail::null_socket_service<Protocol>
+#elif defined(NET_TS_HAS_IOCP)
+# include <experimental/__net_ts/detail/win_iocp_socket_service.hpp>
+# define NET_TS_SVC_T detail::win_iocp_socket_service<Protocol>
+#else
+# include <experimental/__net_ts/detail/reactive_socket_service.hpp>
+# define NET_TS_SVC_T detail::reactive_socket_service<Protocol>
+#endif
 
 #include <experimental/__net_ts/detail/push_options.hpp>
 
@@ -291,45 +288,11 @@ public:
   {
   }
 
-#if defined(NET_TS_ENABLE_OLD_SERVICES)
-  // These functions are provided by basic_io_object<>.
-#else // defined(NET_TS_ENABLE_OLD_SERVICES)
-#if !defined(NET_TS_NO_DEPRECATED)
-  /// (Deprecated: Use get_executor().) Get the io_context associated with the
-  /// object.
-  /**
-   * This function may be used to obtain the io_context object that the I/O
-   * object uses to dispatch handlers for asynchronous operations.
-   *
-   * @return A reference to the io_context object that the I/O object will use
-   * to dispatch handlers. Ownership is not transferred to the caller.
-   */
-  std::experimental::net::io_context& get_io_context()
-  {
-    return basic_io_object<NET_TS_SVC_T>::get_io_context();
-  }
-
-  /// (Deprecated: Use get_executor().) Get the io_context associated with the
-  /// object.
-  /**
-   * This function may be used to obtain the io_context object that the I/O
-   * object uses to dispatch handlers for asynchronous operations.
-   *
-   * @return A reference to the io_context object that the I/O object will use
-   * to dispatch handlers. Ownership is not transferred to the caller.
-   */
-  std::experimental::net::io_context& get_io_service()
-  {
-    return basic_io_object<NET_TS_SVC_T>::get_io_service();
-  }
-#endif // !defined(NET_TS_NO_DEPRECATED)
-
   /// Get the executor associated with the object.
   executor_type get_executor() NET_TS_NOEXCEPT
   {
     return basic_io_object<NET_TS_SVC_T>::get_executor();
   }
-#endif // defined(NET_TS_ENABLE_OLD_SERVICES)
 
   /// Open the acceptor using the specified protocol.
   /**
@@ -1064,10 +1027,6 @@ public:
     // not meet the documented type requirements for a WaitHandler.
     NET_TS_WAIT_HANDLER_CHECK(WaitHandler, handler) type_check;
 
-#if defined(NET_TS_ENABLE_OLD_SERVICES)
-    return this->get_service().async_wait(this->get_implementation(),
-        w, NET_TS_MOVE_CAST(WaitHandler)(handler));
-#else // defined(NET_TS_ENABLE_OLD_SERVICES)
     async_completion<WaitHandler,
       void (std::error_code)> init(handler);
 
@@ -1075,296 +1034,7 @@ public:
         w, init.completion_handler);
 
     return init.result.get();
-#endif // defined(NET_TS_ENABLE_OLD_SERVICES)
   }
-
-#if !defined(NET_TS_NO_EXTENSIONS)
-  /// Accept a new connection.
-  /**
-   * This function is used to accept a new connection from a peer into the
-   * given socket. The function call will block until a new connection has been
-   * accepted successfully or an error occurs.
-   *
-   * @param peer The socket into which the new connection will be accepted.
-   *
-   * @throws std::system_error Thrown on failure.
-   *
-   * @par Example
-   * @code
-   * std::experimental::net::ip::tcp::acceptor acceptor(io_context);
-   * ...
-   * std::experimental::net::ip::tcp::socket socket(io_context);
-   * acceptor.accept(socket);
-   * @endcode
-   */
-#if defined(NET_TS_ENABLE_OLD_SERVICES)
-  template <typename Protocol1, typename SocketService>
-  void accept(basic_socket<Protocol1, SocketService>& peer,
-      typename enable_if<is_convertible<Protocol, Protocol1>::value>::type* = 0)
-#else // defined(NET_TS_ENABLE_OLD_SERVICES)
-  template <typename Protocol1>
-  void accept(basic_socket<Protocol1>& peer,
-      typename enable_if<is_convertible<Protocol, Protocol1>::value>::type* = 0)
-#endif // defined(NET_TS_ENABLE_OLD_SERVICES)
-  {
-    std::error_code ec;
-    this->get_service().accept(this->get_implementation(),
-        peer, static_cast<endpoint_type*>(0), ec);
-    std::experimental::net::detail::throw_error(ec, "accept");
-  }
-
-  /// Accept a new connection.
-  /**
-   * This function is used to accept a new connection from a peer into the
-   * given socket. The function call will block until a new connection has been
-   * accepted successfully or an error occurs.
-   *
-   * @param peer The socket into which the new connection will be accepted.
-   *
-   * @param ec Set to indicate what error occurred, if any.
-   *
-   * @par Example
-   * @code
-   * std::experimental::net::ip::tcp::acceptor acceptor(io_context);
-   * ...
-   * std::experimental::net::ip::tcp::socket socket(io_context);
-   * std::error_code ec;
-   * acceptor.accept(socket, ec);
-   * if (ec)
-   * {
-   *   // An error occurred.
-   * }
-   * @endcode
-   */
-#if defined(NET_TS_ENABLE_OLD_SERVICES)
-  template <typename Protocol1, typename SocketService>
-  NET_TS_SYNC_OP_VOID accept(
-      basic_socket<Protocol1, SocketService>& peer,
-      std::error_code& ec,
-      typename enable_if<is_convertible<Protocol, Protocol1>::value>::type* = 0)
-#else // defined(NET_TS_ENABLE_OLD_SERVICES)
-  template <typename Protocol1>
-  NET_TS_SYNC_OP_VOID accept(
-      basic_socket<Protocol1>& peer, std::error_code& ec,
-      typename enable_if<is_convertible<Protocol, Protocol1>::value>::type* = 0)
-#endif // defined(NET_TS_ENABLE_OLD_SERVICES)
-  {
-    this->get_service().accept(this->get_implementation(),
-        peer, static_cast<endpoint_type*>(0), ec);
-    NET_TS_SYNC_OP_VOID_RETURN(ec);
-  }
-
-  /// Start an asynchronous accept.
-  /**
-   * This function is used to asynchronously accept a new connection into a
-   * socket. The function call always returns immediately.
-   *
-   * @param peer The socket into which the new connection will be accepted.
-   * Ownership of the peer object is retained by the caller, which must
-   * guarantee that it is valid until the handler is called.
-   *
-   * @param handler The handler to be called when the accept operation
-   * completes. Copies will be made of the handler as required. The function
-   * signature of the handler must be:
-   * @code void handler(
-   *   const std::error_code& error // Result of operation.
-   * ); @endcode
-   * Regardless of whether the asynchronous operation completes immediately or
-   * not, the handler will not be invoked from within this function. Invocation
-   * of the handler will be performed in a manner equivalent to using
-   * std::experimental::net::io_context::post().
-   *
-   * @par Example
-   * @code
-   * void accept_handler(const std::error_code& error)
-   * {
-   *   if (!error)
-   *   {
-   *     // Accept succeeded.
-   *   }
-   * }
-   *
-   * ...
-   *
-   * std::experimental::net::ip::tcp::acceptor acceptor(io_context);
-   * ...
-   * std::experimental::net::ip::tcp::socket socket(io_context);
-   * acceptor.async_accept(socket, accept_handler);
-   * @endcode
-   */
-#if defined(NET_TS_ENABLE_OLD_SERVICES)
-  template <typename Protocol1, typename SocketService, typename AcceptHandler>
-  NET_TS_INITFN_RESULT_TYPE(AcceptHandler,
-      void (std::error_code))
-  async_accept(basic_socket<Protocol1, SocketService>& peer,
-      NET_TS_MOVE_ARG(AcceptHandler) handler,
-      typename enable_if<is_convertible<Protocol, Protocol1>::value>::type* = 0)
-#else // defined(NET_TS_ENABLE_OLD_SERVICES)
-  template <typename Protocol1, typename AcceptHandler>
-  NET_TS_INITFN_RESULT_TYPE(AcceptHandler,
-      void (std::error_code))
-  async_accept(basic_socket<Protocol1>& peer,
-      NET_TS_MOVE_ARG(AcceptHandler) handler,
-      typename enable_if<is_convertible<Protocol, Protocol1>::value>::type* = 0)
-#endif // defined(NET_TS_ENABLE_OLD_SERVICES)
-  {
-    // If you get an error on the following line it means that your handler does
-    // not meet the documented type requirements for a AcceptHandler.
-    NET_TS_ACCEPT_HANDLER_CHECK(AcceptHandler, handler) type_check;
-
-#if defined(NET_TS_ENABLE_OLD_SERVICES)
-    return this->get_service().async_accept(this->get_implementation(),
-        peer, static_cast<endpoint_type*>(0),
-        NET_TS_MOVE_CAST(AcceptHandler)(handler));
-#else // defined(NET_TS_ENABLE_OLD_SERVICES)
-    async_completion<AcceptHandler,
-      void (std::error_code)> init(handler);
-
-    this->get_service().async_accept(this->get_implementation(),
-        peer, static_cast<endpoint_type*>(0), init.completion_handler);
-
-    return init.result.get();
-#endif // defined(NET_TS_ENABLE_OLD_SERVICES)
-  }
-
-  /// Accept a new connection and obtain the endpoint of the peer
-  /**
-   * This function is used to accept a new connection from a peer into the
-   * given socket, and additionally provide the endpoint of the remote peer.
-   * The function call will block until a new connection has been accepted
-   * successfully or an error occurs.
-   *
-   * @param peer The socket into which the new connection will be accepted.
-   *
-   * @param peer_endpoint An endpoint object which will receive the endpoint of
-   * the remote peer.
-   *
-   * @throws std::system_error Thrown on failure.
-   *
-   * @par Example
-   * @code
-   * std::experimental::net::ip::tcp::acceptor acceptor(io_context);
-   * ...
-   * std::experimental::net::ip::tcp::socket socket(io_context);
-   * std::experimental::net::ip::tcp::endpoint endpoint;
-   * acceptor.accept(socket, endpoint);
-   * @endcode
-   */
-#if defined(NET_TS_ENABLE_OLD_SERVICES)
-  template <typename SocketService>
-  void accept(basic_socket<protocol_type, SocketService>& peer,
-      endpoint_type& peer_endpoint)
-#else // defined(NET_TS_ENABLE_OLD_SERVICES)
-  void accept(basic_socket<protocol_type>& peer, endpoint_type& peer_endpoint)
-#endif // defined(NET_TS_ENABLE_OLD_SERVICES)
-  {
-    std::error_code ec;
-    this->get_service().accept(this->get_implementation(),
-        peer, &peer_endpoint, ec);
-    std::experimental::net::detail::throw_error(ec, "accept");
-  }
-
-  /// Accept a new connection and obtain the endpoint of the peer
-  /**
-   * This function is used to accept a new connection from a peer into the
-   * given socket, and additionally provide the endpoint of the remote peer.
-   * The function call will block until a new connection has been accepted
-   * successfully or an error occurs.
-   *
-   * @param peer The socket into which the new connection will be accepted.
-   *
-   * @param peer_endpoint An endpoint object which will receive the endpoint of
-   * the remote peer.
-   *
-   * @param ec Set to indicate what error occurred, if any.
-   *
-   * @par Example
-   * @code
-   * std::experimental::net::ip::tcp::acceptor acceptor(io_context);
-   * ...
-   * std::experimental::net::ip::tcp::socket socket(io_context);
-   * std::experimental::net::ip::tcp::endpoint endpoint;
-   * std::error_code ec;
-   * acceptor.accept(socket, endpoint, ec);
-   * if (ec)
-   * {
-   *   // An error occurred.
-   * }
-   * @endcode
-   */
-#if defined(NET_TS_ENABLE_OLD_SERVICES)
-  template <typename SocketService>
-  NET_TS_SYNC_OP_VOID accept(
-      basic_socket<protocol_type, SocketService>& peer,
-      endpoint_type& peer_endpoint, std::error_code& ec)
-#else // defined(NET_TS_ENABLE_OLD_SERVICES)
-  NET_TS_SYNC_OP_VOID accept(basic_socket<protocol_type>& peer,
-      endpoint_type& peer_endpoint, std::error_code& ec)
-#endif // defined(NET_TS_ENABLE_OLD_SERVICES)
-  {
-    this->get_service().accept(
-        this->get_implementation(), peer, &peer_endpoint, ec);
-    NET_TS_SYNC_OP_VOID_RETURN(ec);
-  }
-
-  /// Start an asynchronous accept.
-  /**
-   * This function is used to asynchronously accept a new connection into a
-   * socket, and additionally obtain the endpoint of the remote peer. The
-   * function call always returns immediately.
-   *
-   * @param peer The socket into which the new connection will be accepted.
-   * Ownership of the peer object is retained by the caller, which must
-   * guarantee that it is valid until the handler is called.
-   *
-   * @param peer_endpoint An endpoint object into which the endpoint of the
-   * remote peer will be written. Ownership of the peer_endpoint object is
-   * retained by the caller, which must guarantee that it is valid until the
-   * handler is called.
-   *
-   * @param handler The handler to be called when the accept operation
-   * completes. Copies will be made of the handler as required. The function
-   * signature of the handler must be:
-   * @code void handler(
-   *   const std::error_code& error // Result of operation.
-   * ); @endcode
-   * Regardless of whether the asynchronous operation completes immediately or
-   * not, the handler will not be invoked from within this function. Invocation
-   * of the handler will be performed in a manner equivalent to using
-   * std::experimental::net::io_context::post().
-   */
-#if defined(NET_TS_ENABLE_OLD_SERVICES)
-  template <typename SocketService, typename AcceptHandler>
-  NET_TS_INITFN_RESULT_TYPE(AcceptHandler,
-      void (std::error_code))
-  async_accept(basic_socket<protocol_type, SocketService>& peer,
-      endpoint_type& peer_endpoint, NET_TS_MOVE_ARG(AcceptHandler) handler)
-#else // defined(NET_TS_ENABLE_OLD_SERVICES)
-  template <typename AcceptHandler>
-  NET_TS_INITFN_RESULT_TYPE(AcceptHandler,
-      void (std::error_code))
-  async_accept(basic_socket<protocol_type>& peer,
-      endpoint_type& peer_endpoint, NET_TS_MOVE_ARG(AcceptHandler) handler)
-#endif // defined(NET_TS_ENABLE_OLD_SERVICES)
-  {
-    // If you get an error on the following line it means that your handler does
-    // not meet the documented type requirements for a AcceptHandler.
-    NET_TS_ACCEPT_HANDLER_CHECK(AcceptHandler, handler) type_check;
-
-#if defined(NET_TS_ENABLE_OLD_SERVICES)
-    return this->get_service().async_accept(this->get_implementation(), peer,
-        &peer_endpoint, NET_TS_MOVE_CAST(AcceptHandler)(handler));
-#else // defined(NET_TS_ENABLE_OLD_SERVICES)
-    async_completion<AcceptHandler,
-      void (std::error_code)> init(handler);
-
-    this->get_service().async_accept(this->get_implementation(),
-        peer, &peer_endpoint, init.completion_handler);
-
-    return init.result.get();
-#endif // defined(NET_TS_ENABLE_OLD_SERVICES)
-  }
-#endif // !defined(NET_TS_NO_EXTENSIONS)
 
 #if defined(NET_TS_HAS_MOVE) || defined(GENERATING_DOCUMENTATION)
   /// Accept a new connection.
@@ -1475,12 +1145,6 @@ public:
     NET_TS_MOVE_ACCEPT_HANDLER_CHECK(MoveAcceptHandler,
         handler, typename Protocol::socket) type_check;
 
-#if defined(NET_TS_ENABLE_OLD_SERVICES)
-    return this->get_service().async_accept(
-        this->get_implementation(), static_cast<std::experimental::net::io_context*>(0),
-        static_cast<endpoint_type*>(0),
-        NET_TS_MOVE_CAST(MoveAcceptHandler)(handler));
-#else // defined(NET_TS_ENABLE_OLD_SERVICES)
     async_completion<MoveAcceptHandler,
       void (std::error_code,
         typename Protocol::socket)> init(handler);
@@ -1490,7 +1154,6 @@ public:
         static_cast<endpoint_type*>(0), init.completion_handler);
 
     return init.result.get();
-#endif // defined(NET_TS_ENABLE_OLD_SERVICES)
   }
 
   /// Accept a new connection.
@@ -1613,11 +1276,6 @@ public:
     NET_TS_MOVE_ACCEPT_HANDLER_CHECK(MoveAcceptHandler,
         handler, typename Protocol::socket) type_check;
 
-#if defined(NET_TS_ENABLE_OLD_SERVICES)
-    return this->get_service().async_accept(this->get_implementation(),
-        &io_context, static_cast<endpoint_type*>(0),
-        NET_TS_MOVE_CAST(MoveAcceptHandler)(handler));
-#else // defined(NET_TS_ENABLE_OLD_SERVICES)
     async_completion<MoveAcceptHandler,
       void (std::error_code,
         typename Protocol::socket)> init(handler);
@@ -1626,7 +1284,6 @@ public:
         &io_context, static_cast<endpoint_type*>(0), init.completion_handler);
 
     return init.result.get();
-#endif // defined(NET_TS_ENABLE_OLD_SERVICES)
   }
 
   /// Accept a new connection.
@@ -1754,11 +1411,6 @@ public:
     NET_TS_MOVE_ACCEPT_HANDLER_CHECK(MoveAcceptHandler,
         handler, typename Protocol::socket) type_check;
 
-#if defined(NET_TS_ENABLE_OLD_SERVICES)
-    return this->get_service().async_accept(this->get_implementation(),
-        static_cast<std::experimental::net::io_context*>(0), &peer_endpoint,
-        NET_TS_MOVE_CAST(MoveAcceptHandler)(handler));
-#else // defined(NET_TS_ENABLE_OLD_SERVICES)
     async_completion<MoveAcceptHandler,
       void (std::error_code,
         typename Protocol::socket)> init(handler);
@@ -1768,7 +1420,6 @@ public:
         init.completion_handler);
 
     return init.result.get();
-#endif // defined(NET_TS_ENABLE_OLD_SERVICES)
   }
 
   /// Accept a new connection.
@@ -1909,11 +1560,6 @@ public:
     NET_TS_MOVE_ACCEPT_HANDLER_CHECK(MoveAcceptHandler,
         handler, typename Protocol::socket) type_check;
 
-#if defined(NET_TS_ENABLE_OLD_SERVICES)
-    return this->get_service().async_accept(
-        this->get_implementation(), &io_context, &peer_endpoint,
-        NET_TS_MOVE_CAST(MoveAcceptHandler)(handler));
-#else // defined(NET_TS_ENABLE_OLD_SERVICES)
     async_completion<MoveAcceptHandler,
       void (std::error_code,
         typename Protocol::socket)> init(handler);
@@ -1922,7 +1568,6 @@ public:
         &io_context, &peer_endpoint, init.completion_handler);
 
     return init.result.get();
-#endif // defined(NET_TS_ENABLE_OLD_SERVICES)
   }
 #endif // defined(NET_TS_HAS_MOVE) || defined(GENERATING_DOCUMENTATION)
 };
@@ -1934,8 +1579,6 @@ public:
 
 #include <experimental/__net_ts/detail/pop_options.hpp>
 
-#if !defined(NET_TS_ENABLE_OLD_SERVICES)
-# undef NET_TS_SVC_T
-#endif // !defined(NET_TS_ENABLE_OLD_SERVICES)
+#undef NET_TS_SVC_T
 
 #endif // NET_TS_BASIC_SOCKET_ACCEPTOR_HPP

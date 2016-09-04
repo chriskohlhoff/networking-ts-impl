@@ -64,13 +64,6 @@ io_context::count_type io_context::run()
   return s;
 }
 
-#if !defined(NET_TS_NO_DEPRECATED)
-io_context::count_type io_context::run(std::error_code& ec)
-{
-  return impl_.run(ec);
-}
-#endif // !defined(NET_TS_NO_DEPRECATED)
-
 io_context::count_type io_context::run_one()
 {
   std::error_code ec;
@@ -78,13 +71,6 @@ io_context::count_type io_context::run_one()
   std::experimental::net::detail::throw_error(ec);
   return s;
 }
-
-#if !defined(NET_TS_NO_DEPRECATED)
-io_context::count_type io_context::run_one(std::error_code& ec)
-{
-  return impl_.run_one(ec);
-}
-#endif // !defined(NET_TS_NO_DEPRECATED)
 
 io_context::count_type io_context::poll()
 {
@@ -94,13 +80,6 @@ io_context::count_type io_context::poll()
   return s;
 }
 
-#if !defined(NET_TS_NO_DEPRECATED)
-io_context::count_type io_context::poll(std::error_code& ec)
-{
-  return impl_.poll(ec);
-}
-#endif // !defined(NET_TS_NO_DEPRECATED)
-
 io_context::count_type io_context::poll_one()
 {
   std::error_code ec;
@@ -108,13 +87,6 @@ io_context::count_type io_context::poll_one()
   std::experimental::net::detail::throw_error(ec);
   return s;
 }
-
-#if !defined(NET_TS_NO_DEPRECATED)
-io_context::count_type io_context::poll_one(std::error_code& ec)
-{
-  return impl_.poll_one(ec);
-}
-#endif // !defined(NET_TS_NO_DEPRECATED)
 
 void io_context::stop()
 {
@@ -142,31 +114,12 @@ io_context::service::~service()
 
 void io_context::service::shutdown()
 {
-#if !defined(NET_TS_NO_DEPRECATED)
-  shutdown_service();
-#endif // !defined(NET_TS_NO_DEPRECATED)
 }
-
-#if !defined(NET_TS_NO_DEPRECATED)
-void io_context::service::shutdown_service()
-{
-}
-#endif // !defined(NET_TS_NO_DEPRECATED)
 
 void io_context::service::notify_fork(io_context::fork_event ev)
 {
-#if !defined(NET_TS_NO_DEPRECATED)
-  fork_service(ev);
-#else // !defined(NET_TS_NO_DEPRECATED)
   (void)ev;
-#endif // !defined(NET_TS_NO_DEPRECATED)
 }
-
-#if !defined(NET_TS_NO_DEPRECATED)
-void io_context::service::fork_service(io_context::fork_event)
-{
-}
-#endif // !defined(NET_TS_NO_DEPRECATED)
 
 } // inline namespace v1
 } // namespace net

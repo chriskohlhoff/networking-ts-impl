@@ -164,15 +164,6 @@ std::string address::to_string() const
   return ipv4_address_.to_string();
 }
 
-#if !defined(NET_TS_NO_DEPRECATED)
-std::string address::to_string(std::error_code& ec) const
-{
-  if (type_ == ipv6)
-    return ipv6_address_.to_string(ec);
-  return ipv4_address_.to_string(ec);
-}
-#endif // !defined(NET_TS_NO_DEPRECATED)
-
 bool address::is_loopback() const
 {
   return (type_ == ipv4)

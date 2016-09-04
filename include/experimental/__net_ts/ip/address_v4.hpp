@@ -109,57 +109,14 @@ public:
   /// Get the address as an unsigned integer in host byte order
   NET_TS_DECL uint_type to_uint() const;
 
-#if !defined(NET_TS_NO_DEPRECATED)
-  /// Get the address as an unsigned long in host byte order
-  NET_TS_DECL unsigned long to_ulong() const;
-#endif // !defined(NET_TS_NO_DEPRECATED)
-
   /// Get the address as a string in dotted decimal format.
   NET_TS_DECL std::string to_string() const;
-
-#if !defined(NET_TS_NO_DEPRECATED)
-  /// (Deprecated: Use other overload.) Get the address as a string in dotted
-  /// decimal format.
-  NET_TS_DECL std::string to_string(std::error_code& ec) const;
-
-  /// (Deprecated: Use make_address_v4().) Create an address from an IP address
-  /// string in dotted decimal form.
-  static address_v4 from_string(const char* str);
-
-  /// (Deprecated: Use make_address_v4().) Create an address from an IP address
-  /// string in dotted decimal form.
-  static address_v4 from_string(
-      const char* str, std::error_code& ec);
-
-  /// (Deprecated: Use make_address_v4().) Create an address from an IP address
-  /// string in dotted decimal form.
-  static address_v4 from_string(const std::string& str);
-
-  /// (Deprecated: Use make_address_v4().) Create an address from an IP address
-  /// string in dotted decimal form.
-  static address_v4 from_string(
-      const std::string& str, std::error_code& ec);
-#endif // !defined(NET_TS_NO_DEPRECATED)
 
   /// Determine whether the address is a loopback address.
   NET_TS_DECL bool is_loopback() const;
 
   /// Determine whether the address is unspecified.
   NET_TS_DECL bool is_unspecified() const;
-
-#if !defined(NET_TS_NO_DEPRECATED)
-  /// (Deprecated: Use network_v4 class.) Determine whether the address is a
-  /// class A address.
-  NET_TS_DECL bool is_class_a() const;
-
-  /// (Deprecated: Use network_v4 class.) Determine whether the address is a
-  /// class B address.
-  NET_TS_DECL bool is_class_b() const;
-
-  /// (Deprecated: Use network_v4 class.) Determine whether the address is a
-  /// class C address.
-  NET_TS_DECL bool is_class_c() const;
-#endif // !defined(NET_TS_NO_DEPRECATED)
 
   /// Determine whether the address is a multicast address.
   NET_TS_DECL bool is_multicast() const;
@@ -217,18 +174,6 @@ public:
   {
     return address_v4(0xFFFFFFFF);
   }
-
-#if !defined(NET_TS_NO_DEPRECATED)
-  /// (Deprecated: Use network_v4 class.) Obtain an address object that
-  /// represents the broadcast address that corresponds to the specified
-  /// address and netmask.
-  NET_TS_DECL static address_v4 broadcast(
-      const address_v4& addr, const address_v4& mask);
-
-  /// (Deprecated: Use network_v4 class.) Obtain the netmask that corresponds
-  /// to the address, based on its address class.
-  NET_TS_DECL static address_v4 netmask(const address_v4& addr);
-#endif // !defined(NET_TS_NO_DEPRECATED)
 
 private:
   // The underlying IPv4 address.

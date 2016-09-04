@@ -22,7 +22,6 @@
 #include <experimental/__net_ts/detail/handler_type_requirements.hpp>
 #include <experimental/__net_ts/detail/throw_error.hpp>
 #include <experimental/__net_ts/error.hpp>
-#include <experimental/__net_ts/stream_socket_service.hpp>
 
 #include <experimental/__net_ts/detail/push_options.hpp>
 
@@ -361,11 +360,6 @@ public:
     // not meet the documented type requirements for a WriteHandler.
     NET_TS_WRITE_HANDLER_CHECK(WriteHandler, handler) type_check;
 
-#if defined(NET_TS_ENABLE_OLD_SERVICES)
-    return this->get_service().async_send(
-        this->get_implementation(), buffers, 0,
-        NET_TS_MOVE_CAST(WriteHandler)(handler));
-#else // defined(NET_TS_ENABLE_OLD_SERVICES)
     async_completion<WriteHandler,
       void (std::error_code, std::size_t)> init(handler);
 
@@ -374,7 +368,6 @@ public:
         init.completion_handler);
 
     return init.result.get();
-#endif // defined(NET_TS_ENABLE_OLD_SERVICES)
   }
 
   /// Start an asynchronous send.
@@ -425,11 +418,6 @@ public:
     // not meet the documented type requirements for a WriteHandler.
     NET_TS_WRITE_HANDLER_CHECK(WriteHandler, handler) type_check;
 
-#if defined(NET_TS_ENABLE_OLD_SERVICES)
-    return this->get_service().async_send(
-        this->get_implementation(), buffers, flags,
-        NET_TS_MOVE_CAST(WriteHandler)(handler));
-#else // defined(NET_TS_ENABLE_OLD_SERVICES)
     async_completion<WriteHandler,
       void (std::error_code, std::size_t)> init(handler);
 
@@ -438,7 +426,6 @@ public:
         init.completion_handler);
 
     return init.result.get();
-#endif // defined(NET_TS_ENABLE_OLD_SERVICES)
   }
 
   /// Receive some data on the socket.
@@ -593,10 +580,6 @@ public:
     // not meet the documented type requirements for a ReadHandler.
     NET_TS_READ_HANDLER_CHECK(ReadHandler, handler) type_check;
 
-#if defined(NET_TS_ENABLE_OLD_SERVICES)
-    return this->get_service().async_receive(this->get_implementation(),
-        buffers, 0, NET_TS_MOVE_CAST(ReadHandler)(handler));
-#else // defined(NET_TS_ENABLE_OLD_SERVICES)
     async_completion<ReadHandler,
       void (std::error_code, std::size_t)> init(handler);
 
@@ -604,7 +587,6 @@ public:
         buffers, 0, init.completion_handler);
 
     return init.result.get();
-#endif // defined(NET_TS_ENABLE_OLD_SERVICES)
   }
 
   /// Start an asynchronous receive.
@@ -657,10 +639,6 @@ public:
     // not meet the documented type requirements for a ReadHandler.
     NET_TS_READ_HANDLER_CHECK(ReadHandler, handler) type_check;
 
-#if defined(NET_TS_ENABLE_OLD_SERVICES)
-    return this->get_service().async_receive(this->get_implementation(),
-        buffers, flags, NET_TS_MOVE_CAST(ReadHandler)(handler));
-#else // defined(NET_TS_ENABLE_OLD_SERVICES)
     async_completion<ReadHandler,
       void (std::error_code, std::size_t)> init(handler);
 
@@ -668,7 +646,6 @@ public:
         buffers, flags, init.completion_handler);
 
     return init.result.get();
-#endif // defined(NET_TS_ENABLE_OLD_SERVICES)
   }
 
   /// Write some data to the socket.
@@ -776,10 +753,6 @@ public:
     // not meet the documented type requirements for a WriteHandler.
     NET_TS_WRITE_HANDLER_CHECK(WriteHandler, handler) type_check;
 
-#if defined(NET_TS_ENABLE_OLD_SERVICES)
-    return this->get_service().async_send(this->get_implementation(),
-        buffers, 0, NET_TS_MOVE_CAST(WriteHandler)(handler));
-#else // defined(NET_TS_ENABLE_OLD_SERVICES)
     async_completion<WriteHandler,
       void (std::error_code, std::size_t)> init(handler);
 
@@ -787,7 +760,6 @@ public:
         buffers, 0, init.completion_handler);
 
     return init.result.get();
-#endif // defined(NET_TS_ENABLE_OLD_SERVICES)
   }
 
   /// Read some data from the socket.
@@ -899,10 +871,6 @@ public:
     // not meet the documented type requirements for a ReadHandler.
     NET_TS_READ_HANDLER_CHECK(ReadHandler, handler) type_check;
 
-#if defined(NET_TS_ENABLE_OLD_SERVICES)
-    return this->get_service().async_receive(this->get_implementation(),
-        buffers, 0, NET_TS_MOVE_CAST(ReadHandler)(handler));
-#else // defined(NET_TS_ENABLE_OLD_SERVICES)
     async_completion<ReadHandler,
       void (std::error_code, std::size_t)> init(handler);
 
@@ -910,7 +878,6 @@ public:
         buffers, 0, init.completion_handler);
 
     return init.result.get();
-#endif // defined(NET_TS_ENABLE_OLD_SERVICES)
   }
 };
 

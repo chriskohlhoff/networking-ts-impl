@@ -212,44 +212,6 @@ public:
   }
 };
 
-#if !defined(NET_TS_NO_DEPRECATED)
-
-template <>
-class consuming_buffers<mutable_buffer,
-    mutable_buffers_1, const mutable_buffer*>
-  : public consuming_single_buffer<NET_TS_MUTABLE_BUFFER>
-{
-public:
-  explicit consuming_buffers(const mutable_buffers_1& buffer)
-    : consuming_single_buffer<NET_TS_MUTABLE_BUFFER>(buffer)
-  {
-  }
-};
-
-template <>
-class consuming_buffers<const_buffer, mutable_buffers_1, const mutable_buffer*>
-  : public consuming_single_buffer<NET_TS_CONST_BUFFER>
-{
-public:
-  explicit consuming_buffers(const mutable_buffers_1& buffer)
-    : consuming_single_buffer<NET_TS_CONST_BUFFER>(buffer)
-  {
-  }
-};
-
-template <>
-class consuming_buffers<const_buffer, const_buffers_1, const const_buffer*>
-  : public consuming_single_buffer<NET_TS_CONST_BUFFER>
-{
-public:
-  explicit consuming_buffers(const const_buffers_1& buffer)
-    : consuming_single_buffer<NET_TS_CONST_BUFFER>(buffer)
-  {
-  }
-};
-
-#endif // !defined(NET_TS_NO_DEPRECATED)
-
 template <typename Buffer, typename Elem>
 class consuming_buffers<Buffer, boost::array<Elem, 2>,
     typename boost::array<Elem, 2>::const_iterator>

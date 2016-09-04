@@ -51,11 +51,7 @@ namespace ip {
  */
 template <typename InternetProtocol>
 class basic_resolver_results
-#if !defined(NET_TS_NO_DEPRECATED)
-  : public basic_resolver_iterator<InternetProtocol>
-#else // !defined(NET_TS_NO_DEPRECATED)
   : private basic_resolver_iterator<InternetProtocol>
-#endif // !defined(NET_TS_NO_DEPRECATED)
 {
 public:
   /// The protocol type associated with the results.

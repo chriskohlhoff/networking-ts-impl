@@ -133,65 +133,6 @@ typename Protocol::endpoint connect(
     typename enable_if<is_endpoint_sequence<
         EndpointSequence>::value>::type* = 0);
 
-#if !defined(NET_TS_NO_DEPRECATED)
-/// (Deprecated.) Establishes a socket connection by trying each endpoint in a
-/// sequence.
-/**
- * This function attempts to connect a socket to one of a sequence of
- * endpoints. It does this by repeated calls to the socket's @c connect member
- * function, once for each endpoint in the sequence, until a connection is
- * successfully established.
- *
- * @param s The socket to be connected. If the socket is already open, it will
- * be closed.
- *
- * @param begin An iterator pointing to the start of a sequence of endpoints.
- *
- * @returns On success, an iterator denoting the successfully connected
- * endpoint. Otherwise, the end iterator.
- *
- * @throws std::system_error Thrown on failure. If the sequence is
- * empty, the associated @c error_code is std::experimental::net::error::not_found.
- * Otherwise, contains the error from the last connection attempt.
- *
- * @note This overload assumes that a default constructed object of type @c
- * Iterator represents the end of the sequence. This is a valid assumption for
- * iterator types such as @c std::experimental::net::ip::tcp::resolver::iterator.
- */
-template <typename Protocol NET_TS_SVC_TPARAM, typename Iterator>
-Iterator connect(basic_socket<Protocol NET_TS_SVC_TARG>& s, Iterator begin,
-    typename enable_if<!is_endpoint_sequence<Iterator>::value>::type* = 0);
-
-/// (Deprecated.) Establishes a socket connection by trying each endpoint in a
-/// sequence.
-/**
- * This function attempts to connect a socket to one of a sequence of
- * endpoints. It does this by repeated calls to the socket's @c connect member
- * function, once for each endpoint in the sequence, until a connection is
- * successfully established.
- *
- * @param s The socket to be connected. If the socket is already open, it will
- * be closed.
- *
- * @param begin An iterator pointing to the start of a sequence of endpoints.
- *
- * @param ec Set to indicate what error occurred, if any. If the sequence is
- * empty, set to std::experimental::net::error::not_found. Otherwise, contains the error
- * from the last connection attempt.
- *
- * @returns On success, an iterator denoting the successfully connected
- * endpoint. Otherwise, the end iterator.
- *
- * @note This overload assumes that a default constructed object of type @c
- * Iterator represents the end of the sequence. This is a valid assumption for
- * iterator types such as @c std::experimental::net::ip::tcp::resolver::iterator.
- */
-template <typename Protocol NET_TS_SVC_TPARAM, typename Iterator>
-Iterator connect(basic_socket<Protocol NET_TS_SVC_TARG>& s,
-    Iterator begin, std::error_code& ec,
-    typename enable_if<!is_endpoint_sequence<Iterator>::value>::type* = 0);
-#endif // !defined(NET_TS_NO_DEPRECATED)
-
 /// Establishes a socket connection by trying each endpoint in a sequence.
 /**
  * This function attempts to connect a socket to one of a sequence of
@@ -387,90 +328,6 @@ typename Protocol::endpoint connect(
     std::error_code& ec,
     typename enable_if<is_endpoint_sequence<
         EndpointSequence>::value>::type* = 0);
-
-#if !defined(NET_TS_NO_DEPRECATED)
-/// (Deprecated.) Establishes a socket connection by trying each endpoint in a
-/// sequence.
-/**
- * This function attempts to connect a socket to one of a sequence of
- * endpoints. It does this by repeated calls to the socket's @c connect member
- * function, once for each endpoint in the sequence, until a connection is
- * successfully established.
- *
- * @param s The socket to be connected. If the socket is already open, it will
- * be closed.
- *
- * @param begin An iterator pointing to the start of a sequence of endpoints.
- *
- * @param connect_condition A function object that is called prior to each
- * connection attempt. The signature of the function object must be:
- * @code bool connect_condition(
- *     const std::error_code& ec,
- *     const typename Protocol::endpoint& next); @endcode
- * The @c ec parameter contains the result from the most recent connect
- * operation. Before the first connection attempt, @c ec is always set to
- * indicate success. The @c next parameter is the next endpoint to be tried.
- * The function object should return true if the next endpoint should be tried,
- * and false if it should be skipped.
- *
- * @returns On success, an iterator denoting the successfully connected
- * endpoint. Otherwise, the end iterator.
- *
- * @throws std::system_error Thrown on failure. If the sequence is
- * empty, the associated @c error_code is std::experimental::net::error::not_found.
- * Otherwise, contains the error from the last connection attempt.
- *
- * @note This overload assumes that a default constructed object of type @c
- * Iterator represents the end of the sequence. This is a valid assumption for
- * iterator types such as @c std::experimental::net::ip::tcp::resolver::iterator.
- */
-template <typename Protocol NET_TS_SVC_TPARAM,
-    typename Iterator, typename ConnectCondition>
-Iterator connect(basic_socket<Protocol NET_TS_SVC_TARG>& s,
-    Iterator begin, ConnectCondition connect_condition,
-    typename enable_if<!is_endpoint_sequence<Iterator>::value>::type* = 0);
-
-/// (Deprecated.) Establishes a socket connection by trying each endpoint in a
-/// sequence.
-/**
- * This function attempts to connect a socket to one of a sequence of
- * endpoints. It does this by repeated calls to the socket's @c connect member
- * function, once for each endpoint in the sequence, until a connection is
- * successfully established.
- *
- * @param s The socket to be connected. If the socket is already open, it will
- * be closed.
- *
- * @param begin An iterator pointing to the start of a sequence of endpoints.
- *
- * @param connect_condition A function object that is called prior to each
- * connection attempt. The signature of the function object must be:
- * @code bool connect_condition(
- *     const std::error_code& ec,
- *     const typename Protocol::endpoint& next); @endcode
- * The @c ec parameter contains the result from the most recent connect
- * operation. Before the first connection attempt, @c ec is always set to
- * indicate success. The @c next parameter is the next endpoint to be tried.
- * The function object should return true if the next endpoint should be tried,
- * and false if it should be skipped.
- *
- * @param ec Set to indicate what error occurred, if any. If the sequence is
- * empty, set to std::experimental::net::error::not_found. Otherwise, contains the error
- * from the last connection attempt.
- *
- * @returns On success, an iterator denoting the successfully connected
- * endpoint. Otherwise, the end iterator.
- *
- * @note This overload assumes that a default constructed object of type @c
- * Iterator represents the end of the sequence. This is a valid assumption for
- * iterator types such as @c std::experimental::net::ip::tcp::resolver::iterator.
- */
-template <typename Protocol NET_TS_SVC_TPARAM,
-    typename Iterator, typename ConnectCondition>
-Iterator connect(basic_socket<Protocol NET_TS_SVC_TARG>& s, Iterator begin,
-    ConnectCondition connect_condition, std::error_code& ec,
-    typename enable_if<!is_endpoint_sequence<Iterator>::value>::type* = 0);
-#endif // !defined(NET_TS_NO_DEPRECATED)
 
 /// Establishes a socket connection by trying each endpoint in a sequence.
 /**
@@ -681,51 +538,6 @@ async_connect(basic_socket<Protocol NET_TS_SVC_TARG>& s,
     typename enable_if<is_endpoint_sequence<
         EndpointSequence>::value>::type* = 0);
 
-#if !defined(NET_TS_NO_DEPRECATED)
-/// (Deprecated.) Asynchronously establishes a socket connection by trying each
-/// endpoint in a sequence.
-/**
- * This function attempts to connect a socket to one of a sequence of
- * endpoints. It does this by repeated calls to the socket's @c async_connect
- * member function, once for each endpoint in the sequence, until a connection
- * is successfully established.
- *
- * @param s The socket to be connected. If the socket is already open, it will
- * be closed.
- *
- * @param begin An iterator pointing to the start of a sequence of endpoints.
- *
- * @param handler The handler to be called when the connect operation
- * completes. Copies will be made of the handler as required. The function
- * signature of the handler must be:
- * @code void handler(
- *   // Result of operation. if the sequence is empty, set to
- *   // std::experimental::net::error::not_found. Otherwise, contains the
- *   // error from the last connection attempt.
- *   const std::error_code& error,
- *
- *   // On success, an iterator denoting the successfully
- *   // connected endpoint. Otherwise, the end iterator.
- *   Iterator iterator
- * ); @endcode
- * Regardless of whether the asynchronous operation completes immediately or
- * not, the handler will not be invoked from within this function. Invocation
- * of the handler will be performed in a manner equivalent to using
- * std::experimental::net::io_context::post().
- *
- * @note This overload assumes that a default constructed object of type @c
- * Iterator represents the end of the sequence. This is a valid assumption for
- * iterator types such as @c std::experimental::net::ip::tcp::resolver::iterator.
- */
-template <typename Protocol NET_TS_SVC_TPARAM,
-    typename Iterator, typename IteratorConnectHandler>
-NET_TS_INITFN_RESULT_TYPE(IteratorConnectHandler,
-    void (std::error_code, Iterator))
-async_connect(basic_socket<Protocol NET_TS_SVC_TARG>& s,
-    Iterator begin, NET_TS_MOVE_ARG(IteratorConnectHandler) handler,
-    typename enable_if<!is_endpoint_sequence<Iterator>::value>::type* = 0);
-#endif // !defined(NET_TS_NO_DEPRECATED)
-
 /// Asynchronously establishes a socket connection by trying each endpoint in a
 /// sequence.
 /**
@@ -887,63 +699,6 @@ async_connect(basic_socket<Protocol NET_TS_SVC_TARG>& s,
     NET_TS_MOVE_ARG(RangeConnectHandler) handler,
     typename enable_if<is_endpoint_sequence<
         EndpointSequence>::value>::type* = 0);
-
-#if !defined(NET_TS_NO_DEPRECATED)
-/// (Deprecated.) Asynchronously establishes a socket connection by trying each
-/// endpoint in a sequence.
-/**
- * This function attempts to connect a socket to one of a sequence of
- * endpoints. It does this by repeated calls to the socket's @c async_connect
- * member function, once for each endpoint in the sequence, until a connection
- * is successfully established.
- *
- * @param s The socket to be connected. If the socket is already open, it will
- * be closed.
- *
- * @param begin An iterator pointing to the start of a sequence of endpoints.
- *
- * @param connect_condition A function object that is called prior to each
- * connection attempt. The signature of the function object must be:
- * @code bool connect_condition(
- *     const std::error_code& ec,
- *     const typename Protocol::endpoint& next); @endcode
- * The @c ec parameter contains the result from the most recent connect
- * operation. Before the first connection attempt, @c ec is always set to
- * indicate success. The @c next parameter is the next endpoint to be tried.
- * The function object should return true if the next endpoint should be tried,
- * and false if it should be skipped.
- *
- * @param handler The handler to be called when the connect operation
- * completes. Copies will be made of the handler as required. The function
- * signature of the handler must be:
- * @code void handler(
- *   // Result of operation. if the sequence is empty, set to
- *   // std::experimental::net::error::not_found. Otherwise, contains the
- *   // error from the last connection attempt.
- *   const std::error_code& error,
- *
- *   // On success, an iterator denoting the successfully
- *   // connected endpoint. Otherwise, the end iterator.
- *   Iterator iterator
- * ); @endcode
- * Regardless of whether the asynchronous operation completes immediately or
- * not, the handler will not be invoked from within this function. Invocation
- * of the handler will be performed in a manner equivalent to using
- * std::experimental::net::io_context::post().
- *
- * @note This overload assumes that a default constructed object of type @c
- * Iterator represents the end of the sequence. This is a valid assumption for
- * iterator types such as @c std::experimental::net::ip::tcp::resolver::iterator.
- */
-template <typename Protocol NET_TS_SVC_TPARAM, typename Iterator,
-    typename ConnectCondition, typename IteratorConnectHandler>
-NET_TS_INITFN_RESULT_TYPE(IteratorConnectHandler,
-    void (std::error_code, Iterator))
-async_connect(basic_socket<Protocol NET_TS_SVC_TARG>& s, Iterator begin,
-    ConnectCondition connect_condition,
-    NET_TS_MOVE_ARG(IteratorConnectHandler) handler,
-    typename enable_if<!is_endpoint_sequence<Iterator>::value>::type* = 0);
-#endif // !defined(NET_TS_NO_DEPRECATED)
 
 /// Asynchronously establishes a socket connection by trying each endpoint in a
 /// sequence.

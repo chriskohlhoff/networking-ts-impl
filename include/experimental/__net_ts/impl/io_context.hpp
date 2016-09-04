@@ -129,90 +129,6 @@ std::size_t io_context::run_one_until(
 
 #endif // defined(NET_TS_HAS_CHRONO)
 
-#if !defined(NET_TS_NO_DEPRECATED)
-
-inline void io_context::reset()
-{
-  restart();
-}
-
-template <typename CompletionHandler>
-NET_TS_INITFN_RESULT_TYPE(CompletionHandler, void ())
-io_context::dispatch(NET_TS_MOVE_ARG(CompletionHandler) handler)
-{
-  // If you get an error on the following line it means that your handler does
-  // not meet the documented type requirements for a CompletionHandler.
-  NET_TS_COMPLETION_HANDLER_CHECK(CompletionHandler, handler) type_check;
-
-  async_completion<CompletionHandler, void ()> init(handler);
-
-  if (impl_.can_dispatch())
-  {
-    detail::fenced_block b(detail::fenced_block::full);
-    networking_ts_handler_invoke_helpers::invoke(
-        init.completion_handler, init.completion_handler);
-  }
-  else
-  {
-    // Allocate and construct an operation to wrap the handler.
-    typedef detail::completion_handler<
-      typename handler_type<CompletionHandler, void ()>::type> op;
-    typename op::ptr p = { detail::addressof(init.completion_handler),
-      op::ptr::allocate(init.completion_handler), 0 };
-    p.p = new (p.v) op(init.completion_handler);
-
-    NET_TS_HANDLER_CREATION((*this, *p.p,
-          "io_context", this, 0, "dispatch"));
-
-    impl_.do_dispatch(p.p);
-    p.v = p.p = 0;
-  }
-
-  return init.result.get();
-}
-
-template <typename CompletionHandler>
-NET_TS_INITFN_RESULT_TYPE(CompletionHandler, void ())
-io_context::post(NET_TS_MOVE_ARG(CompletionHandler) handler)
-{
-  // If you get an error on the following line it means that your handler does
-  // not meet the documented type requirements for a CompletionHandler.
-  NET_TS_COMPLETION_HANDLER_CHECK(CompletionHandler, handler) type_check;
-
-  async_completion<CompletionHandler, void ()> init(handler);
-
-  bool is_continuation =
-    networking_ts_handler_cont_helpers::is_continuation(init.completion_handler);
-
-  // Allocate and construct an operation to wrap the handler.
-  typedef detail::completion_handler<
-    typename handler_type<CompletionHandler, void ()>::type> op;
-  typename op::ptr p = { detail::addressof(init.completion_handler),
-      op::ptr::allocate(init.completion_handler), 0 };
-  p.p = new (p.v) op(init.completion_handler);
-
-  NET_TS_HANDLER_CREATION((*this, *p.p,
-        "io_context", this, 0, "post"));
-
-  impl_.post_immediate_completion(p.p, is_continuation);
-  p.v = p.p = 0;
-
-  return init.result.get();
-}
-
-template <typename Handler>
-#if defined(GENERATING_DOCUMENTATION)
-unspecified
-#else
-inline detail::wrapped_handler<io_context&, Handler>
-#endif
-io_context::wrap(Handler handler)
-{
-  return detail::wrapped_handler<io_context&, Handler>(*this, handler);
-}
-
-#endif // !defined(NET_TS_NO_DEPRECATED)
-
 inline io_context&
 io_context::executor_type::context() const NET_TS_NOEXCEPT
 {
@@ -320,46 +236,10 @@ io_context::executor_type::running_in_this_thread() const NET_TS_NOEXCEPT
   return io_context_.impl_.can_dispatch();
 }
 
-#if !defined(NET_TS_NO_DEPRECATED)
-inline io_context::work::work(std::experimental::net::io_context& io_context)
-  : io_context_impl_(io_context.impl_)
-{
-  io_context_impl_.work_started();
-}
-
-inline io_context::work::work(const work& other)
-  : io_context_impl_(other.io_context_impl_)
-{
-  io_context_impl_.work_started();
-}
-
-inline io_context::work::~work()
-{
-  io_context_impl_.work_finished();
-}
-
-inline std::experimental::net::io_context& io_context::work::get_io_context()
-{
-  return static_cast<std::experimental::net::io_context&>(io_context_impl_.context());
-}
-
-inline std::experimental::net::io_context& io_context::work::get_io_service()
-{
-  return static_cast<std::experimental::net::io_context&>(io_context_impl_.context());
-}
-#endif // !defined(NET_TS_NO_DEPRECATED)
-
 inline std::experimental::net::io_context& io_context::service::get_io_context()
 {
   return static_cast<std::experimental::net::io_context&>(context());
 }
-
-#if !defined(NET_TS_NO_DEPRECATED)
-inline std::experimental::net::io_context& io_context::service::get_io_service()
-{
-  return static_cast<std::experimental::net::io_context&>(context());
-}
-#endif // !defined(NET_TS_NO_DEPRECATED)
 
 } // inline namespace v1
 } // namespace net
