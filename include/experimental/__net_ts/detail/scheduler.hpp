@@ -20,8 +20,8 @@
 #include <system_error>
 #include <experimental/__net_ts/execution_context.hpp>
 #include <experimental/__net_ts/detail/atomic_count.hpp>
-#include <experimental/__net_ts/detail/event.hpp>
-#include <experimental/__net_ts/detail/mutex.hpp>
+#include <experimental/__net_ts/detail/conditionally_enabled_event.hpp>
+#include <experimental/__net_ts/detail/conditionally_enabled_mutex.hpp>
 #include <experimental/__net_ts/detail/op_queue.hpp>
 #include <experimental/__net_ts/detail/reactor_fwd.hpp>
 #include <experimental/__net_ts/detail/scheduler_operation.hpp>
@@ -124,7 +124,19 @@ public:
   // work_started() was previously called for the operations.
   NET_TS_DECL void abandon_operations(op_queue<operation>& ops);
 
+  // Get the concurrency hint that was used to initialise the scheduler.
+  int concurrency_hint() const
+  {
+    return concurrency_hint_;
+  }
+
 private:
+  // The mutex type used by this scheduler.
+  typedef conditionally_enabled_mutex mutex;
+
+  // The event type used by this scheduler.
+  typedef conditionally_enabled_event event;
+
   // Structure containing thread-specific data.
   typedef scheduler_thread_info thread_info;
 
@@ -187,6 +199,9 @@ private:
 
   // Flag to indicate that the dispatcher has been shut down.
   bool shutdown_;
+
+  // The concurrency hint used to initialise the scheduler.
+  const int concurrency_hint_;
 };
 
 } // namespace detail

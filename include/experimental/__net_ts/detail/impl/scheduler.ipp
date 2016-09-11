@@ -17,6 +17,7 @@
 
 #include <experimental/__net_ts/detail/config.hpp>
 
+#include <experimental/__net_ts/detail/concurrency_hint.hpp>
 #include <experimental/__net_ts/detail/event.hpp>
 #include <experimental/__net_ts/detail/limits.hpp>
 #include <experimental/__net_ts/detail/reactor.hpp>
@@ -89,13 +90,17 @@ struct scheduler::work_cleanup
 scheduler::scheduler(
     std::experimental::net::execution_context& ctx, int concurrency_hint)
   : std::experimental::net::detail::execution_context_service_base<scheduler>(ctx),
-    one_thread_(concurrency_hint == 1),
-    mutex_(),
+    one_thread_(concurrency_hint == 1
+        || !NET_TS_CONCURRENCY_HINT_IS_LOCKING(
+          SCHEDULER, concurrency_hint)),
+    mutex_(NET_TS_CONCURRENCY_HINT_IS_LOCKING(
+          SCHEDULER, concurrency_hint)),
     task_(0),
     task_interrupted_(true),
     outstanding_work_(0),
     stopped_(false),
-    shutdown_(false)
+    shutdown_(false),
+    concurrency_hint_(concurrency_hint)
 {
   NET_TS_HANDLER_TRACKING_INIT;
 }

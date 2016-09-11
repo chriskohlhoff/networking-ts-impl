@@ -16,9 +16,6 @@
 #endif // defined(_MSC_VER) && (_MSC_VER >= 1200)
 
 #include <experimental/__net_ts/detail/config.hpp>
-
-#if !defined(NET_TS_HAS_THREADS)
-
 #include <experimental/__net_ts/detail/noncopyable.hpp>
 
 #include <experimental/__net_ts/detail/push_options.hpp>
@@ -78,14 +75,20 @@ public:
   template <typename Lock>
   void wait(Lock&)
   {
+    do_wait();
   }
 
   // Timed wait for the event to become signalled.
   template <typename Lock>
-  bool wait_for_usec(Lock& lock, long usec)
+  bool wait_for_usec(Lock&, long usec)
   {
+    do_wait_for_usec(usec);
     return true;
   }
+
+private:
+  NET_TS_DECL static void do_wait();
+  NET_TS_DECL static void do_wait_for_usec(long usec);
 };
 
 } // namespace detail
@@ -96,6 +99,8 @@ public:
 
 #include <experimental/__net_ts/detail/pop_options.hpp>
 
-#endif // !defined(NET_TS_HAS_THREADS)
+#if defined(NET_TS_HEADER_ONLY)
+# include <experimental/__net_ts/detail/impl/null_event.ipp>
+#endif // defined(NET_TS_HEADER_ONLY)
 
 #endif // NET_TS_DETAIL_NULL_EVENT_HPP

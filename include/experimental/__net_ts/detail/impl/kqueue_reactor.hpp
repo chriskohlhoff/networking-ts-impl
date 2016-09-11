@@ -46,7 +46,7 @@ void kqueue_reactor::schedule_timer(timer_queue<Time_Traits>& queue,
     const typename Time_Traits::time_type& time,
     typename timer_queue<Time_Traits>::per_timer_data& timer, wait_op* op)
 {
-  std::experimental::net::detail::mutex::scoped_lock lock(mutex_);
+  mutex::scoped_lock lock(mutex_);
 
   if (shutdown_)
   {
@@ -65,7 +65,7 @@ std::size_t kqueue_reactor::cancel_timer(timer_queue<Time_Traits>& queue,
     typename timer_queue<Time_Traits>::per_timer_data& timer,
     std::size_t max_cancelled)
 {
-  std::experimental::net::detail::mutex::scoped_lock lock(mutex_);
+  mutex::scoped_lock lock(mutex_);
   op_queue<operation> ops;
   std::size_t n = queue.cancel_timer(timer, ops, max_cancelled);
   lock.unlock();
@@ -78,7 +78,7 @@ void kqueue_reactor::move_timer(timer_queue<Time_Traits>& queue,
     typename timer_queue<Time_Traits>::per_timer_data& target,
     typename timer_queue<Time_Traits>::per_timer_data& source)
 {
-  std::experimental::net::detail::mutex::scoped_lock lock(mutex_);
+  mutex::scoped_lock lock(mutex_);
   op_queue<operation> ops;
   queue.cancel_timer(target, ops);
   queue.move_timer(target, source);

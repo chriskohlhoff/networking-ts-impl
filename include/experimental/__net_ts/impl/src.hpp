@@ -33,6 +33,7 @@
 #include <experimental/__net_ts/detail/impl/eventfd_select_interrupter.ipp>
 #include <experimental/__net_ts/detail/impl/handler_tracking.ipp>
 #include <experimental/__net_ts/detail/impl/kqueue_reactor.ipp>
+#include <experimental/__net_ts/detail/impl/null_event.ipp>
 #include <experimental/__net_ts/detail/impl/pipe_select_interrupter.ipp>
 #include <experimental/__net_ts/detail/impl/posix_event.ipp>
 #include <experimental/__net_ts/detail/impl/posix_mutex.ipp>

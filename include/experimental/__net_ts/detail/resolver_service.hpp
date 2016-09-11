@@ -21,9 +21,10 @@
 
 #include <experimental/__net_ts/ip/basic_resolver_query.hpp>
 #include <experimental/__net_ts/ip/basic_resolver_results.hpp>
+#include <experimental/__net_ts/detail/concurrency_hint.hpp>
 #include <experimental/__net_ts/detail/memory.hpp>
 #include <experimental/__net_ts/detail/resolve_endpoint_op.hpp>
-#include <experimental/__net_ts/detail/resolve_op.hpp>
+#include <experimental/__net_ts/detail/resolve_query_op.hpp>
 #include <experimental/__net_ts/detail/resolver_service_base.hpp>
 
 #include <experimental/__net_ts/detail/push_options.hpp>
@@ -92,7 +93,7 @@ public:
       const query_type& query, Handler& handler)
   {
     // Allocate and construct an operation to wrap the handler.
-    typedef resolve_op<Protocol, Handler> op;
+    typedef resolve_query_op<Protocol, Handler> op;
     typename op::ptr p = { std::experimental::net::detail::addressof(handler),
       op::ptr::allocate(handler), 0 };
     p.p = new (p.v) op(impl, query, io_context_impl_, handler);

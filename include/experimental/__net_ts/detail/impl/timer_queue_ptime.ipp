@@ -78,6 +78,12 @@ std::size_t timer_queue<time_traits<boost::posix_time::ptime> >::cancel_timer(
   return impl_.cancel_timer(timer, ops, max_cancelled);
 }
 
+void timer_queue<time_traits<boost::posix_time::ptime> >::move_timer(
+    per_timer_data& target, per_timer_data& source)
+{
+  impl_.move_timer(target, source);
+}
+
 } // namespace detail
 } // inline namespace v1
 } // namespace net

@@ -266,15 +266,16 @@ NET_TS_DECL int select(int nfds, fd_set* readfds, fd_set* writefds,
     fd_set* exceptfds, timeval* timeout, std::error_code& ec);
 
 NET_TS_DECL int poll_read(socket_type s,
-    state_type state, std::error_code& ec);
+    state_type state, int msec, std::error_code& ec);
 
 NET_TS_DECL int poll_write(socket_type s,
-    state_type state, std::error_code& ec);
+    state_type state, int msec, std::error_code& ec);
 
 NET_TS_DECL int poll_error(socket_type s,
-    state_type state, std::error_code& ec);
+    state_type state, int msec, std::error_code& ec);
 
-NET_TS_DECL int poll_connect(socket_type s, std::error_code& ec);
+NET_TS_DECL int poll_connect(socket_type s,
+    int msec, std::error_code& ec);
 
 #endif // !defined(NET_TS_WINDOWS_RUNTIME)
 

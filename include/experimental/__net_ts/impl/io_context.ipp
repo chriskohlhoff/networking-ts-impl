@@ -17,6 +17,7 @@
 
 #include <experimental/__net_ts/detail/config.hpp>
 #include <experimental/__net_ts/io_context.hpp>
+#include <experimental/__net_ts/detail/concurrency_hint.hpp>
 #include <experimental/__net_ts/detail/limits.hpp>
 #include <experimental/__net_ts/detail/scoped_ptr.hpp>
 #include <experimental/__net_ts/detail/service_registry.hpp>
@@ -36,12 +37,13 @@ namespace net {
 inline namespace v1 {
 
 io_context::io_context()
-  : impl_(add_impl(new impl_type(*this)))
+  : impl_(add_impl(new impl_type(*this, NET_TS_CONCURRENCY_HINT_DEFAULT)))
 {
 }
 
 io_context::io_context(int concurrency_hint)
-  : impl_(add_impl(new impl_type(*this, concurrency_hint)))
+  : impl_(add_impl(new impl_type(*this, concurrency_hint == 1
+          ? NET_TS_CONCURRENCY_HINT_1 : concurrency_hint)))
 {
 }
 

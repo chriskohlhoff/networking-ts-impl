@@ -20,8 +20,8 @@
 #if defined(NET_TS_HAS_EPOLL)
 
 #include <experimental/__net_ts/detail/atomic_count.hpp>
+#include <experimental/__net_ts/detail/conditionally_enabled_mutex.hpp>
 #include <experimental/__net_ts/detail/limits.hpp>
-#include <experimental/__net_ts/detail/mutex.hpp>
 #include <experimental/__net_ts/detail/object_pool.hpp>
 #include <experimental/__net_ts/detail/op_queue.hpp>
 #include <experimental/__net_ts/detail/reactor_op.hpp>
@@ -43,6 +43,10 @@ namespace detail {
 class epoll_reactor
   : public execution_context_service_base<epoll_reactor>
 {
+private:
+  // The mutex type used by this reactor.
+  typedef conditionally_enabled_mutex mutex;
+
 public:
   enum op_types { read_op = 0, write_op = 1,
     connect_op = 1, except_op = 2, max_ops = 3 };
@@ -61,9 +65,10 @@ public:
     int descriptor_;
     uint32_t registered_events_;
     op_queue<reactor_op> op_queue_[max_ops];
+    bool try_speculative_[max_ops];
     bool shutdown_;
 
-    NET_TS_DECL descriptor_state();
+    NET_TS_DECL descriptor_state(bool locking);
     void set_ready_events(uint32_t events) { task_result_ = events; }
     NET_TS_DECL operation* perform_io(uint32_t events);
     NET_TS_DECL static void do_complete(

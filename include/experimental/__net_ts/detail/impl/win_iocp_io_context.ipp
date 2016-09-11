@@ -73,7 +73,8 @@ win_iocp_io_context::win_iocp_io_context(
     stop_event_posted_(0),
     shutdown_(0),
     gqcs_timeout_(get_gqcs_timeout()),
-    dispatch_required_(0)
+    dispatch_required_(0),
+    concurrency_hint_(concurrency_hint)
 {
   NET_TS_HANDLER_TRACKING_INIT;
 

@@ -21,7 +21,7 @@
 #include <experimental/__net_ts/io_context.hpp>
 #include <experimental/__net_ts/detail/mutex.hpp>
 #include <experimental/__net_ts/detail/noncopyable.hpp>
-#include <experimental/__net_ts/detail/operation.hpp>
+#include <experimental/__net_ts/detail/resolve_op.hpp>
 #include <experimental/__net_ts/detail/socket_ops.hpp>
 #include <experimental/__net_ts/detail/socket_types.hpp>
 #include <experimental/__net_ts/detail/scoped_ptr.hpp>
@@ -75,7 +75,7 @@ public:
 
 protected:
   // Helper function to start an asynchronous resolve operation.
-  NET_TS_DECL void start_resolve_op(operation* op);
+  NET_TS_DECL void start_resolve_op(resolve_op* op);
 
 #if !defined(NET_TS_WINDOWS_RUNTIME)
   // Helper class to perform exception-safe cleanup of addrinfo objects.

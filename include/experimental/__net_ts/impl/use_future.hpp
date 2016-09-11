@@ -39,29 +39,37 @@ template <typename T, typename F, typename... Args>
 inline void promise_invoke_and_set(std::promise<T>& p,
     F& f, NET_TS_MOVE_ARG(Args)... args)
 {
+#if !defined(NET_TS_NO_EXCEPTIONS)
   try
+#endif // !defined(NET_TS_NO_EXCEPTIONS)
   {
     p.set_value(f(NET_TS_MOVE_CAST(Args)(args)...));
   }
+#if !defined(NET_TS_NO_EXCEPTIONS)
   catch (...)
   {
     p.set_exception(std::current_exception());
   }
+#endif // !defined(NET_TS_NO_EXCEPTIONS)
 }
 
 template <typename F, typename... Args>
 inline void promise_invoke_and_set(std::promise<void>& p,
     F& f, NET_TS_MOVE_ARG(Args)... args)
 {
+#if !defined(NET_TS_NO_EXCEPTIONS)
   try
+#endif // !defined(NET_TS_NO_EXCEPTIONS)
   {
     f(NET_TS_MOVE_CAST(Args)(args)...);
     p.set_value();
   }
+#if !defined(NET_TS_NO_EXCEPTIONS)
   catch (...)
   {
     p.set_exception(std::current_exception());
   }
+#endif // !defined(NET_TS_NO_EXCEPTIONS)
 }
 
 #else // defined(NET_TS_HAS_VARIADIC_TEMPLATES)
@@ -69,29 +77,60 @@ inline void promise_invoke_and_set(std::promise<void>& p,
 template <typename T, typename F>
 inline void promise_invoke_and_set(std::promise<T>& p, F& f)
 {
+#if !defined(NET_TS_NO_EXCEPTIONS)
   try
+#endif // !defined(NET_TS_NO_EXCEPTIONS)
   {
     p.set_value(f());
   }
+#if !defined(NET_TS_NO_EXCEPTIONS)
   catch (...)
   {
     p.set_exception(std::current_exception());
   }
+#endif // !defined(NET_TS_NO_EXCEPTIONS)
 }
 
 template <typename F, typename Args>
 inline void promise_invoke_and_set(std::promise<void>& p, F& f)
 {
+#if !defined(NET_TS_NO_EXCEPTIONS)
   try
+#endif // !defined(NET_TS_NO_EXCEPTIONS)
   {
     f();
     p.set_value();
+#if !defined(NET_TS_NO_EXCEPTIONS)
   }
   catch (...)
   {
     p.set_exception(std::current_exception());
   }
+#endif // !defined(NET_TS_NO_EXCEPTIONS)
 }
+
+#if defined(NET_TS_NO_EXCEPTIONS)
+
+#define NET_TS_PRIVATE_PROMISE_INVOKE_DEF(n) \
+  template <typename T, typename F, NET_TS_VARIADIC_TPARAMS(n)> \
+  inline void promise_invoke_and_set(std::promise<T>& p, \
+      F& f, NET_TS_VARIADIC_MOVE_PARAMS(n)) \
+  { \
+    p.set_value(f(NET_TS_VARIADIC_MOVE_ARGS(n))); \
+  } \
+  \
+  template <typename F, NET_TS_VARIADIC_TPARAMS(n)> \
+  inline void promise_invoke_and_set(std::promise<void>& p, \
+      F& f, NET_TS_VARIADIC_MOVE_PARAMS(n)) \
+  { \
+    f(NET_TS_VARIADIC_MOVE_ARGS(n)); \
+    p.set_value(); \
+  } \
+  /**/
+  NET_TS_VARIADIC_GENERATE(NET_TS_PRIVATE_PROMISE_INVOKE_DEF)
+#undef NET_TS_PRIVATE_PROMISE_INVOKE_DEF
+
+#else // defined(NET_TS_NO_EXCEPTIONS)
 
 #define NET_TS_PRIVATE_PROMISE_INVOKE_DEF(n) \
   template <typename T, typename F, NET_TS_VARIADIC_TPARAMS(n)> \
@@ -126,6 +165,8 @@ inline void promise_invoke_and_set(std::promise<void>& p, F& f)
   NET_TS_VARIADIC_GENERATE(NET_TS_PRIVATE_PROMISE_INVOKE_DEF)
 #undef NET_TS_PRIVATE_PROMISE_INVOKE_DEF
 
+#endif // defined(NET_TS_NO_EXCEPTIONS)
+
 #endif // defined(NET_TS_HAS_VARIADIC_TEMPLATES)
 
 // A function object adapter to invoke a nullary function object and capture
@@ -142,14 +183,18 @@ public:
 
   void operator()()
   {
+#if !defined(NET_TS_NO_EXCEPTIONS)
     try
+#endif // !defined(NET_TS_NO_EXCEPTIONS)
     {
       f_();
     }
+#if !defined(NET_TS_NO_EXCEPTIONS)
     catch (...)
     {
       p_->set_exception(std::current_exception());
     }
+#endif // !defined(NET_TS_NO_EXCEPTIONS)
   }
 
 private:
