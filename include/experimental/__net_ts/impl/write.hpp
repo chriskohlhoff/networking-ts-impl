@@ -108,62 +108,62 @@ inline std::size_t write(SyncWriteStream& s, const ConstBufferSequence& buffers,
   return bytes_transferred;
 }
 
-template <typename SyncWriteStream, typename DynamicBufferSequence,
+template <typename SyncWriteStream, typename DynamicBuffer,
     typename CompletionCondition>
 std::size_t write(SyncWriteStream& s,
-    NET_TS_MOVE_ARG(DynamicBufferSequence) buffers,
+    NET_TS_MOVE_ARG(DynamicBuffer) buffers,
     CompletionCondition completion_condition, std::error_code& ec,
     typename enable_if<
-      is_dynamic_buffer_sequence<DynamicBufferSequence>::value
+      is_dynamic_buffer<DynamicBuffer>::value
     >::type*)
 {
-  typename decay<DynamicBufferSequence>::type b(
-      NET_TS_MOVE_CAST(DynamicBufferSequence)(buffers));
+  typename decay<DynamicBuffer>::type b(
+      NET_TS_MOVE_CAST(DynamicBuffer)(buffers));
 
   std::size_t bytes_transferred = write(s, b.data(), completion_condition, ec);
   b.consume(bytes_transferred);
   return bytes_transferred;
 }
 
-template <typename SyncWriteStream, typename DynamicBufferSequence>
+template <typename SyncWriteStream, typename DynamicBuffer>
 inline std::size_t write(SyncWriteStream& s,
-    NET_TS_MOVE_ARG(DynamicBufferSequence) buffers,
+    NET_TS_MOVE_ARG(DynamicBuffer) buffers,
     typename enable_if<
-      is_dynamic_buffer_sequence<DynamicBufferSequence>::value
+      is_dynamic_buffer<DynamicBuffer>::value
     >::type*)
 {
   std::error_code ec;
   std::size_t bytes_transferred = write(s,
-      NET_TS_MOVE_CAST(DynamicBufferSequence)(buffers),
+      NET_TS_MOVE_CAST(DynamicBuffer)(buffers),
       transfer_all(), ec);
   std::experimental::net::detail::throw_error(ec, "write");
   return bytes_transferred;
 }
 
-template <typename SyncWriteStream, typename DynamicBufferSequence>
+template <typename SyncWriteStream, typename DynamicBuffer>
 inline std::size_t write(SyncWriteStream& s,
-    NET_TS_MOVE_ARG(DynamicBufferSequence) buffers,
+    NET_TS_MOVE_ARG(DynamicBuffer) buffers,
     std::error_code& ec,
     typename enable_if<
-      is_dynamic_buffer_sequence<DynamicBufferSequence>::value
+      is_dynamic_buffer<DynamicBuffer>::value
     >::type*)
 {
-  return write(s, NET_TS_MOVE_CAST(DynamicBufferSequence)(buffers),
+  return write(s, NET_TS_MOVE_CAST(DynamicBuffer)(buffers),
       transfer_all(), ec);
 }
 
-template <typename SyncWriteStream, typename DynamicBufferSequence,
+template <typename SyncWriteStream, typename DynamicBuffer,
     typename CompletionCondition>
 inline std::size_t write(SyncWriteStream& s,
-    NET_TS_MOVE_ARG(DynamicBufferSequence) buffers,
+    NET_TS_MOVE_ARG(DynamicBuffer) buffers,
     CompletionCondition completion_condition,
     typename enable_if<
-      is_dynamic_buffer_sequence<DynamicBufferSequence>::value
+      is_dynamic_buffer<DynamicBuffer>::value
     >::type*)
 {
   std::error_code ec;
   std::size_t bytes_transferred = write(s,
-      NET_TS_MOVE_CAST(DynamicBufferSequence)(buffers),
+      NET_TS_MOVE_CAST(DynamicBuffer)(buffers),
       completion_condition, ec);
   std::experimental::net::detail::throw_error(ec, "write");
   return bytes_transferred;
@@ -404,7 +404,7 @@ async_write(AsyncWriteStream& s, const ConstBufferSequence& buffers,
 
 namespace detail
 {
-  template <typename AsyncWriteStream, typename DynamicBufferSequence,
+  template <typename AsyncWriteStream, typename DynamicBuffer,
       typename CompletionCondition, typename WriteHandler>
   class write_dynbuf_op
   {
@@ -432,7 +432,7 @@ namespace detail
 
     write_dynbuf_op(write_dynbuf_op&& other)
       : stream_(other.stream_),
-        buffers_(NET_TS_MOVE_CAST(DynamicBufferSequence)(other.buffers_)),
+        buffers_(NET_TS_MOVE_CAST(DynamicBuffer)(other.buffers_)),
         completion_condition_(
           NET_TS_MOVE_CAST(CompletionCondition)(
             other.completion_condition_)),
@@ -457,35 +457,35 @@ namespace detail
 
   //private:
     AsyncWriteStream& stream_;
-    DynamicBufferSequence buffers_;
+    DynamicBuffer buffers_;
     CompletionCondition completion_condition_;
     WriteHandler handler_;
   };
 
-  template <typename AsyncWriteStream, typename DynamicBufferSequence,
+  template <typename AsyncWriteStream, typename DynamicBuffer,
       typename CompletionCondition, typename WriteHandler>
   inline void* networking_ts_handler_allocate(std::size_t size,
-      write_dynbuf_op<AsyncWriteStream, DynamicBufferSequence,
+      write_dynbuf_op<AsyncWriteStream, DynamicBuffer,
         CompletionCondition, WriteHandler>* this_handler)
   {
     return networking_ts_handler_alloc_helpers::allocate(
         size, this_handler->handler_);
   }
 
-  template <typename AsyncWriteStream, typename DynamicBufferSequence,
+  template <typename AsyncWriteStream, typename DynamicBuffer,
       typename CompletionCondition, typename WriteHandler>
   inline void networking_ts_handler_deallocate(void* pointer, std::size_t size,
-      write_dynbuf_op<AsyncWriteStream, DynamicBufferSequence,
+      write_dynbuf_op<AsyncWriteStream, DynamicBuffer,
         CompletionCondition, WriteHandler>* this_handler)
   {
     networking_ts_handler_alloc_helpers::deallocate(
         pointer, size, this_handler->handler_);
   }
 
-  template <typename AsyncWriteStream, typename DynamicBufferSequence,
+  template <typename AsyncWriteStream, typename DynamicBuffer,
       typename CompletionCondition, typename WriteHandler>
   inline bool networking_ts_handler_is_continuation(
-      write_dynbuf_op<AsyncWriteStream, DynamicBufferSequence,
+      write_dynbuf_op<AsyncWriteStream, DynamicBuffer,
         CompletionCondition, WriteHandler>* this_handler)
   {
     return networking_ts_handler_cont_helpers::is_continuation(
@@ -493,10 +493,10 @@ namespace detail
   }
 
   template <typename Function, typename AsyncWriteStream,
-      typename DynamicBufferSequence, typename CompletionCondition,
+      typename DynamicBuffer, typename CompletionCondition,
       typename WriteHandler>
   inline void networking_ts_handler_invoke(Function& function,
-      write_dynbuf_op<AsyncWriteStream, DynamicBufferSequence,
+      write_dynbuf_op<AsyncWriteStream, DynamicBuffer,
         CompletionCondition, WriteHandler>* this_handler)
   {
     networking_ts_handler_invoke_helpers::invoke(
@@ -504,10 +504,10 @@ namespace detail
   }
 
   template <typename Function, typename AsyncWriteStream,
-      typename DynamicBufferSequence, typename CompletionCondition,
+      typename DynamicBuffer, typename CompletionCondition,
       typename WriteHandler>
   inline void networking_ts_handler_invoke(const Function& function,
-      write_dynbuf_op<AsyncWriteStream, DynamicBufferSequence,
+      write_dynbuf_op<AsyncWriteStream, DynamicBuffer,
         CompletionCondition, WriteHandler>* this_handler)
   {
     networking_ts_handler_invoke_helpers::invoke(
@@ -517,36 +517,36 @@ namespace detail
 
 #if !defined(GENERATING_DOCUMENTATION)
 
-template <typename AsyncWriteStream, typename DynamicBufferSequence,
+template <typename AsyncWriteStream, typename DynamicBuffer,
     typename CompletionCondition, typename WriteHandler, typename Allocator>
 struct associated_allocator<
     detail::write_dynbuf_op<AsyncWriteStream,
-      DynamicBufferSequence, CompletionCondition, WriteHandler>,
+      DynamicBuffer, CompletionCondition, WriteHandler>,
     Allocator>
 {
   typedef typename associated_allocator<WriteHandler, Allocator>::type type;
 
   static type get(
       const detail::write_dynbuf_op<AsyncWriteStream,
-        DynamicBufferSequence, CompletionCondition, WriteHandler>& h,
+        DynamicBuffer, CompletionCondition, WriteHandler>& h,
       const Allocator& a = Allocator()) NET_TS_NOEXCEPT
   {
     return associated_allocator<WriteHandler, Allocator>::get(h.handler_, a);
   }
 };
 
-template <typename AsyncWriteStream, typename DynamicBufferSequence,
+template <typename AsyncWriteStream, typename DynamicBuffer,
     typename CompletionCondition, typename WriteHandler, typename Executor>
 struct associated_executor<
     detail::write_dynbuf_op<AsyncWriteStream,
-      DynamicBufferSequence, CompletionCondition, WriteHandler>,
+      DynamicBuffer, CompletionCondition, WriteHandler>,
     Executor>
 {
   typedef typename associated_executor<WriteHandler, Executor>::type type;
 
   static type get(
       const detail::write_dynbuf_op<AsyncWriteStream,
-        DynamicBufferSequence, CompletionCondition, WriteHandler>& h,
+        DynamicBuffer, CompletionCondition, WriteHandler>& h,
       const Executor& ex = Executor()) NET_TS_NOEXCEPT
   {
     return associated_executor<WriteHandler, Executor>::get(h.handler_, ex);
@@ -556,31 +556,31 @@ struct associated_executor<
 #endif // !defined(GENERATING_DOCUMENTATION)
 
 template <typename AsyncWriteStream,
-    typename DynamicBufferSequence, typename WriteHandler>
+    typename DynamicBuffer, typename WriteHandler>
 inline NET_TS_INITFN_RESULT_TYPE(WriteHandler,
     void (std::error_code, std::size_t))
 async_write(AsyncWriteStream& s,
-    NET_TS_MOVE_ARG(DynamicBufferSequence) buffers,
+    NET_TS_MOVE_ARG(DynamicBuffer) buffers,
     NET_TS_MOVE_ARG(WriteHandler) handler,
     typename enable_if<
-      is_dynamic_buffer_sequence<DynamicBufferSequence>::value
+      is_dynamic_buffer<DynamicBuffer>::value
     >::type*)
 {
   return async_write(s,
-      NET_TS_MOVE_CAST(DynamicBufferSequence)(buffers),
+      NET_TS_MOVE_CAST(DynamicBuffer)(buffers),
       transfer_all(), NET_TS_MOVE_CAST(WriteHandler)(handler));
 }
 
-template <typename AsyncWriteStream, typename DynamicBufferSequence,
+template <typename AsyncWriteStream, typename DynamicBuffer,
     typename CompletionCondition, typename WriteHandler>
 inline NET_TS_INITFN_RESULT_TYPE(WriteHandler,
     void (std::error_code, std::size_t))
 async_write(AsyncWriteStream& s,
-    NET_TS_MOVE_ARG(DynamicBufferSequence) buffers,
+    NET_TS_MOVE_ARG(DynamicBuffer) buffers,
     CompletionCondition completion_condition,
     NET_TS_MOVE_ARG(WriteHandler) handler,
     typename enable_if<
-      is_dynamic_buffer_sequence<DynamicBufferSequence>::value
+      is_dynamic_buffer<DynamicBuffer>::value
     >::type*)
 {
   // If you get an error on the following line it means that your handler does
@@ -591,10 +591,10 @@ async_write(AsyncWriteStream& s,
     void (std::error_code, std::size_t)> init(handler);
 
   detail::write_dynbuf_op<AsyncWriteStream,
-    typename decay<DynamicBufferSequence>::type,
+    typename decay<DynamicBuffer>::type,
       CompletionCondition, NET_TS_HANDLER_TYPE(
         WriteHandler, void (std::error_code, std::size_t))>(
-          s, NET_TS_MOVE_CAST(DynamicBufferSequence)(buffers),
+          s, NET_TS_MOVE_CAST(DynamicBuffer)(buffers),
             completion_condition, init.completion_handler)(
               std::error_code(), 0, 1);
 

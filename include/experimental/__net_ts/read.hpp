@@ -249,11 +249,11 @@ std::size_t read(SyncReadStream& s, const MutableBufferSequence& buffers,
  *     s, buffers,
  *     std::experimental::net::transfer_all()); @endcode
  */
-template <typename SyncReadStream, typename DynamicBufferSequence>
+template <typename SyncReadStream, typename DynamicBuffer>
 std::size_t read(SyncReadStream& s,
-    NET_TS_MOVE_ARG(DynamicBufferSequence) buffers,
+    NET_TS_MOVE_ARG(DynamicBuffer) buffers,
     typename enable_if<
-      is_dynamic_buffer_sequence<DynamicBufferSequence>::value
+      is_dynamic_buffer<DynamicBuffer>::value
     >::type* = 0);
 
 /// Attempt to read a certain amount of data from a stream before returning.
@@ -282,12 +282,12 @@ std::size_t read(SyncReadStream& s,
  *     s, buffers,
  *     std::experimental::net::transfer_all(), ec); @endcode
  */
-template <typename SyncReadStream, typename DynamicBufferSequence>
+template <typename SyncReadStream, typename DynamicBuffer>
 std::size_t read(SyncReadStream& s,
-    NET_TS_MOVE_ARG(DynamicBufferSequence) buffers,
+    NET_TS_MOVE_ARG(DynamicBuffer) buffers,
     std::error_code& ec,
     typename enable_if<
-      is_dynamic_buffer_sequence<DynamicBufferSequence>::value
+      is_dynamic_buffer<DynamicBuffer>::value
     >::type* = 0);
 
 /// Attempt to read a certain amount of data from a stream before returning.
@@ -326,13 +326,13 @@ std::size_t read(SyncReadStream& s,
  *
  * @throws std::system_error Thrown on failure.
  */
-template <typename SyncReadStream, typename DynamicBufferSequence,
+template <typename SyncReadStream, typename DynamicBuffer,
     typename CompletionCondition>
 std::size_t read(SyncReadStream& s,
-    NET_TS_MOVE_ARG(DynamicBufferSequence) buffers,
+    NET_TS_MOVE_ARG(DynamicBuffer) buffers,
     CompletionCondition completion_condition,
     typename enable_if<
-      is_dynamic_buffer_sequence<DynamicBufferSequence>::value
+      is_dynamic_buffer<DynamicBuffer>::value
     >::type* = 0);
 
 /// Attempt to read a certain amount of data from a stream before returning.
@@ -372,13 +372,13 @@ std::size_t read(SyncReadStream& s,
  * @returns The number of bytes read. If an error occurs, returns the total
  * number of bytes successfully transferred prior to the error.
  */
-template <typename SyncReadStream, typename DynamicBufferSequence,
+template <typename SyncReadStream, typename DynamicBuffer,
     typename CompletionCondition>
 std::size_t read(SyncReadStream& s,
-    NET_TS_MOVE_ARG(DynamicBufferSequence) buffers,
+    NET_TS_MOVE_ARG(DynamicBuffer) buffers,
     CompletionCondition completion_condition, std::error_code& ec,
     typename enable_if<
-      is_dynamic_buffer_sequence<DynamicBufferSequence>::value
+      is_dynamic_buffer<DynamicBuffer>::value
     >::type* = 0);
 
 /*@}*/
@@ -585,14 +585,14 @@ async_read(AsyncReadStream& s, const MutableBufferSequence& buffers,
  *     handler); @endcode
  */
 template <typename AsyncReadStream,
-    typename DynamicBufferSequence, typename ReadHandler>
+    typename DynamicBuffer, typename ReadHandler>
 NET_TS_INITFN_RESULT_TYPE(ReadHandler,
     void (std::error_code, std::size_t))
 async_read(AsyncReadStream& s,
-    NET_TS_MOVE_ARG(DynamicBufferSequence) buffers,
+    NET_TS_MOVE_ARG(DynamicBuffer) buffers,
     NET_TS_MOVE_ARG(ReadHandler) handler,
     typename enable_if<
-      is_dynamic_buffer_sequence<DynamicBufferSequence>::value
+      is_dynamic_buffer<DynamicBuffer>::value
     >::type* = 0);
 
 /// Start an asynchronous operation to read a certain amount of data from a
@@ -653,16 +653,16 @@ async_read(AsyncReadStream& s,
  * the handler will be performed in a manner equivalent to using
  * std::experimental::net::io_context::post().
  */
-template <typename AsyncReadStream, typename DynamicBufferSequence,
+template <typename AsyncReadStream, typename DynamicBuffer,
     typename CompletionCondition, typename ReadHandler>
 NET_TS_INITFN_RESULT_TYPE(ReadHandler,
     void (std::error_code, std::size_t))
 async_read(AsyncReadStream& s,
-    NET_TS_MOVE_ARG(DynamicBufferSequence) buffers,
+    NET_TS_MOVE_ARG(DynamicBuffer) buffers,
     CompletionCondition completion_condition,
     NET_TS_MOVE_ARG(ReadHandler) handler,
     typename enable_if<
-      is_dynamic_buffer_sequence<DynamicBufferSequence>::value
+      is_dynamic_buffer<DynamicBuffer>::value
     >::type* = 0);
 
 /*@}*/

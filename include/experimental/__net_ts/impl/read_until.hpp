@@ -38,30 +38,30 @@ namespace experimental {
 namespace net {
 inline namespace v1 {
 
-template <typename SyncReadStream, typename DynamicBufferSequence>
+template <typename SyncReadStream, typename DynamicBuffer>
 inline std::size_t read_until(SyncReadStream& s,
-    NET_TS_MOVE_ARG(DynamicBufferSequence) buffers, char delim)
+    NET_TS_MOVE_ARG(DynamicBuffer) buffers, char delim)
 {
   std::error_code ec;
   std::size_t bytes_transferred = read_until(s,
-      NET_TS_MOVE_CAST(DynamicBufferSequence)(buffers), delim, ec);
+      NET_TS_MOVE_CAST(DynamicBuffer)(buffers), delim, ec);
   std::experimental::net::detail::throw_error(ec, "read_until");
   return bytes_transferred;
 }
 
-template <typename SyncReadStream, typename DynamicBufferSequence>
+template <typename SyncReadStream, typename DynamicBuffer>
 std::size_t read_until(SyncReadStream& s,
-    NET_TS_MOVE_ARG(DynamicBufferSequence) buffers,
+    NET_TS_MOVE_ARG(DynamicBuffer) buffers,
     char delim, std::error_code& ec)
 {
-  typename decay<DynamicBufferSequence>::type b(
-      NET_TS_MOVE_CAST(DynamicBufferSequence)(buffers));
+  typename decay<DynamicBuffer>::type b(
+      NET_TS_MOVE_CAST(DynamicBuffer)(buffers));
 
   std::size_t search_position = 0;
   for (;;)
   {
     // Determine the range of the data to be searched.
-    typedef typename DynamicBufferSequence::const_buffers_type buffers_type;
+    typedef typename DynamicBuffer::const_buffers_type buffers_type;
     typedef buffers_iterator<buffers_type> iterator;
     buffers_type data_buffers = b.data();
     iterator begin = iterator::begin(data_buffers);
@@ -99,14 +99,14 @@ std::size_t read_until(SyncReadStream& s,
   }
 }
 
-template <typename SyncReadStream, typename DynamicBufferSequence>
+template <typename SyncReadStream, typename DynamicBuffer>
 inline std::size_t read_until(SyncReadStream& s,
-    NET_TS_MOVE_ARG(DynamicBufferSequence) buffers,
-    const std::string& delim)
+    NET_TS_MOVE_ARG(DynamicBuffer) buffers,
+    NET_TS_STRING_VIEW_PARAM delim)
 {
   std::error_code ec;
   std::size_t bytes_transferred = read_until(s,
-      NET_TS_MOVE_CAST(DynamicBufferSequence)(buffers), delim, ec);
+      NET_TS_MOVE_CAST(DynamicBuffer)(buffers), delim, ec);
   std::experimental::net::detail::throw_error(ec, "read_until");
   return bytes_transferred;
 }
@@ -146,19 +146,19 @@ namespace detail
   }
 } // namespace detail
 
-template <typename SyncReadStream, typename DynamicBufferSequence>
+template <typename SyncReadStream, typename DynamicBuffer>
 std::size_t read_until(SyncReadStream& s,
-    NET_TS_MOVE_ARG(DynamicBufferSequence) buffers,
-    const std::string& delim, std::error_code& ec)
+    NET_TS_MOVE_ARG(DynamicBuffer) buffers,
+    NET_TS_STRING_VIEW_PARAM delim, std::error_code& ec)
 {
-  typename decay<DynamicBufferSequence>::type b(
-      NET_TS_MOVE_CAST(DynamicBufferSequence)(buffers));
+  typename decay<DynamicBuffer>::type b(
+      NET_TS_MOVE_CAST(DynamicBuffer)(buffers));
 
   std::size_t search_position = 0;
   for (;;)
   {
     // Determine the range of the data to be searched.
-    typedef typename DynamicBufferSequence::const_buffers_type buffers_type;
+    typedef typename DynamicBuffer::const_buffers_type buffers_type;
     typedef buffers_iterator<buffers_type> iterator;
     buffers_type data_buffers = b.data();
     iterator begin = iterator::begin(data_buffers);
@@ -208,7 +208,7 @@ std::size_t read_until(SyncReadStream& s,
 namespace detail
 {
   template <typename AsyncReadStream,
-      typename DynamicBufferSequence, typename ReadHandler>
+      typename DynamicBuffer, typename ReadHandler>
   class read_until_delim_op
   {
   public:
@@ -238,7 +238,7 @@ namespace detail
 
     read_until_delim_op(read_until_delim_op&& other)
       : stream_(other.stream_),
-        buffers_(NET_TS_MOVE_CAST(DynamicBufferSequence)(other.buffers_)),
+        buffers_(NET_TS_MOVE_CAST(DynamicBuffer)(other.buffers_)),
         delim_(other.delim_),
         start_(other.start_),
         search_position_(other.search_position_),
@@ -259,7 +259,7 @@ namespace detail
         {
           {
             // Determine the range of the data to be searched.
-            typedef typename DynamicBufferSequence::const_buffers_type
+            typedef typename DynamicBuffer::const_buffers_type
               buffers_type;
             typedef buffers_iterator<buffers_type> iterator;
             buffers_type data_buffers = buffers_.data();
@@ -323,7 +323,7 @@ namespace detail
 
   //private:
     AsyncReadStream& stream_;
-    DynamicBufferSequence buffers_;
+    DynamicBuffer buffers_;
     char delim_;
     int start_;
     std::size_t search_position_;
@@ -331,30 +331,30 @@ namespace detail
   };
 
   template <typename AsyncReadStream,
-      typename DynamicBufferSequence, typename ReadHandler>
+      typename DynamicBuffer, typename ReadHandler>
   inline void* networking_ts_handler_allocate(std::size_t size,
       read_until_delim_op<AsyncReadStream,
-        DynamicBufferSequence, ReadHandler>* this_handler)
+        DynamicBuffer, ReadHandler>* this_handler)
   {
     return networking_ts_handler_alloc_helpers::allocate(
         size, this_handler->handler_);
   }
 
   template <typename AsyncReadStream,
-      typename DynamicBufferSequence, typename ReadHandler>
+      typename DynamicBuffer, typename ReadHandler>
   inline void networking_ts_handler_deallocate(void* pointer, std::size_t size,
       read_until_delim_op<AsyncReadStream,
-        DynamicBufferSequence, ReadHandler>* this_handler)
+        DynamicBuffer, ReadHandler>* this_handler)
   {
     networking_ts_handler_alloc_helpers::deallocate(
         pointer, size, this_handler->handler_);
   }
 
   template <typename AsyncReadStream,
-      typename DynamicBufferSequence, typename ReadHandler>
+      typename DynamicBuffer, typename ReadHandler>
   inline bool networking_ts_handler_is_continuation(
       read_until_delim_op<AsyncReadStream,
-        DynamicBufferSequence, ReadHandler>* this_handler)
+        DynamicBuffer, ReadHandler>* this_handler)
   {
     return this_handler->start_ == 0 ? true
       : networking_ts_handler_cont_helpers::is_continuation(
@@ -362,20 +362,20 @@ namespace detail
   }
 
   template <typename Function, typename AsyncReadStream,
-      typename DynamicBufferSequence, typename ReadHandler>
+      typename DynamicBuffer, typename ReadHandler>
   inline void networking_ts_handler_invoke(Function& function,
       read_until_delim_op<AsyncReadStream,
-        DynamicBufferSequence, ReadHandler>* this_handler)
+        DynamicBuffer, ReadHandler>* this_handler)
   {
     networking_ts_handler_invoke_helpers::invoke(
         function, this_handler->handler_);
   }
 
   template <typename Function, typename AsyncReadStream,
-      typename DynamicBufferSequence, typename ReadHandler>
+      typename DynamicBuffer, typename ReadHandler>
   inline void networking_ts_handler_invoke(const Function& function,
       read_until_delim_op<AsyncReadStream,
-        DynamicBufferSequence, ReadHandler>* this_handler)
+        DynamicBuffer, ReadHandler>* this_handler)
   {
     networking_ts_handler_invoke_helpers::invoke(
         function, this_handler->handler_);
@@ -384,36 +384,36 @@ namespace detail
 
 #if !defined(GENERATING_DOCUMENTATION)
 
-template <typename AsyncReadStream, typename DynamicBufferSequence,
+template <typename AsyncReadStream, typename DynamicBuffer,
     typename ReadHandler, typename Allocator>
 struct associated_allocator<
     detail::read_until_delim_op<AsyncReadStream,
-      DynamicBufferSequence, ReadHandler>,
+      DynamicBuffer, ReadHandler>,
     Allocator>
 {
   typedef typename associated_allocator<ReadHandler, Allocator>::type type;
 
   static type get(
       const detail::read_until_delim_op<AsyncReadStream,
-        DynamicBufferSequence, ReadHandler>& h,
+        DynamicBuffer, ReadHandler>& h,
       const Allocator& a = Allocator()) NET_TS_NOEXCEPT
   {
     return associated_allocator<ReadHandler, Allocator>::get(h.handler_, a);
   }
 };
 
-template <typename AsyncReadStream, typename DynamicBufferSequence,
+template <typename AsyncReadStream, typename DynamicBuffer,
     typename ReadHandler, typename Executor>
 struct associated_executor<
     detail::read_until_delim_op<AsyncReadStream,
-      DynamicBufferSequence, ReadHandler>,
+      DynamicBuffer, ReadHandler>,
     Executor>
 {
   typedef typename associated_executor<ReadHandler, Executor>::type type;
 
   static type get(
       const detail::read_until_delim_op<AsyncReadStream,
-        DynamicBufferSequence, ReadHandler>& h,
+        DynamicBuffer, ReadHandler>& h,
       const Executor& ex = Executor()) NET_TS_NOEXCEPT
   {
     return associated_executor<ReadHandler, Executor>::get(h.handler_, ex);
@@ -423,11 +423,11 @@ struct associated_executor<
 #endif // !defined(GENERATING_DOCUMENTATION)
 
 template <typename AsyncReadStream,
-    typename DynamicBufferSequence, typename ReadHandler>
+    typename DynamicBuffer, typename ReadHandler>
 NET_TS_INITFN_RESULT_TYPE(ReadHandler,
     void (std::error_code, std::size_t))
 async_read_until(AsyncReadStream& s,
-    NET_TS_MOVE_ARG(DynamicBufferSequence) buffers,
+    NET_TS_MOVE_ARG(DynamicBuffer) buffers,
     char delim, NET_TS_MOVE_ARG(ReadHandler) handler)
 {
   // If you get an error on the following line it means that your handler does
@@ -438,10 +438,10 @@ async_read_until(AsyncReadStream& s,
     void (std::error_code, std::size_t)> init(handler);
 
   detail::read_until_delim_op<AsyncReadStream,
-    typename decay<DynamicBufferSequence>::type,
+    typename decay<DynamicBuffer>::type,
       NET_TS_HANDLER_TYPE(ReadHandler,
         void (std::error_code, std::size_t))>(
-          s, NET_TS_MOVE_CAST(DynamicBufferSequence)(buffers),
+          s, NET_TS_MOVE_CAST(DynamicBuffer)(buffers),
             delim, init.completion_handler)(std::error_code(), 0, 1);
 
   return init.result.get();
@@ -450,7 +450,7 @@ async_read_until(AsyncReadStream& s,
 namespace detail
 {
   template <typename AsyncReadStream,
-      typename DynamicBufferSequence, typename ReadHandler>
+      typename DynamicBuffer, typename ReadHandler>
   class read_until_delim_string_op
   {
   public:
@@ -480,7 +480,7 @@ namespace detail
 
     read_until_delim_string_op(read_until_delim_string_op&& other)
       : stream_(other.stream_),
-        buffers_(NET_TS_MOVE_CAST(DynamicBufferSequence)(other.buffers_)),
+        buffers_(NET_TS_MOVE_CAST(DynamicBuffer)(other.buffers_)),
         delim_(NET_TS_MOVE_CAST(std::string)(other.delim_)),
         start_(other.start_),
         search_position_(other.search_position_),
@@ -501,7 +501,7 @@ namespace detail
         {
           {
             // Determine the range of the data to be searched.
-            typedef typename DynamicBufferSequence::const_buffers_type
+            typedef typename DynamicBuffer::const_buffers_type
               buffers_type;
             typedef buffers_iterator<buffers_type> iterator;
             buffers_type data_buffers = buffers_.data();
@@ -576,7 +576,7 @@ namespace detail
 
   //private:
     AsyncReadStream& stream_;
-    DynamicBufferSequence buffers_;
+    DynamicBuffer buffers_;
     std::string delim_;
     int start_;
     std::size_t search_position_;
@@ -584,30 +584,30 @@ namespace detail
   };
 
   template <typename AsyncReadStream,
-      typename DynamicBufferSequence, typename ReadHandler>
+      typename DynamicBuffer, typename ReadHandler>
   inline void* networking_ts_handler_allocate(std::size_t size,
       read_until_delim_string_op<AsyncReadStream,
-        DynamicBufferSequence, ReadHandler>* this_handler)
+        DynamicBuffer, ReadHandler>* this_handler)
   {
     return networking_ts_handler_alloc_helpers::allocate(
         size, this_handler->handler_);
   }
 
   template <typename AsyncReadStream,
-      typename DynamicBufferSequence, typename ReadHandler>
+      typename DynamicBuffer, typename ReadHandler>
   inline void networking_ts_handler_deallocate(void* pointer, std::size_t size,
       read_until_delim_string_op<AsyncReadStream,
-        DynamicBufferSequence, ReadHandler>* this_handler)
+        DynamicBuffer, ReadHandler>* this_handler)
   {
     networking_ts_handler_alloc_helpers::deallocate(
         pointer, size, this_handler->handler_);
   }
 
   template <typename AsyncReadStream,
-      typename DynamicBufferSequence, typename ReadHandler>
+      typename DynamicBuffer, typename ReadHandler>
   inline bool networking_ts_handler_is_continuation(
       read_until_delim_string_op<AsyncReadStream,
-        DynamicBufferSequence, ReadHandler>* this_handler)
+        DynamicBuffer, ReadHandler>* this_handler)
   {
     return this_handler->start_ == 0 ? true
       : networking_ts_handler_cont_helpers::is_continuation(
@@ -615,20 +615,20 @@ namespace detail
   }
 
   template <typename Function, typename AsyncReadStream,
-      typename DynamicBufferSequence, typename ReadHandler>
+      typename DynamicBuffer, typename ReadHandler>
   inline void networking_ts_handler_invoke(Function& function,
       read_until_delim_string_op<AsyncReadStream,
-        DynamicBufferSequence, ReadHandler>* this_handler)
+        DynamicBuffer, ReadHandler>* this_handler)
   {
     networking_ts_handler_invoke_helpers::invoke(
         function, this_handler->handler_);
   }
 
   template <typename Function, typename AsyncReadStream,
-      typename DynamicBufferSequence, typename ReadHandler>
+      typename DynamicBuffer, typename ReadHandler>
   inline void networking_ts_handler_invoke(const Function& function,
       read_until_delim_string_op<AsyncReadStream,
-        DynamicBufferSequence, ReadHandler>* this_handler)
+        DynamicBuffer, ReadHandler>* this_handler)
   {
     networking_ts_handler_invoke_helpers::invoke(
         function, this_handler->handler_);
@@ -637,36 +637,36 @@ namespace detail
 
 #if !defined(GENERATING_DOCUMENTATION)
 
-template <typename AsyncReadStream, typename DynamicBufferSequence,
+template <typename AsyncReadStream, typename DynamicBuffer,
     typename ReadHandler, typename Allocator>
 struct associated_allocator<
     detail::read_until_delim_string_op<AsyncReadStream,
-      DynamicBufferSequence, ReadHandler>,
+      DynamicBuffer, ReadHandler>,
     Allocator>
 {
   typedef typename associated_allocator<ReadHandler, Allocator>::type type;
 
   static type get(
       const detail::read_until_delim_string_op<AsyncReadStream,
-        DynamicBufferSequence, ReadHandler>& h,
+        DynamicBuffer, ReadHandler>& h,
       const Allocator& a = Allocator()) NET_TS_NOEXCEPT
   {
     return associated_allocator<ReadHandler, Allocator>::get(h.handler_, a);
   }
 };
 
-template <typename AsyncReadStream, typename DynamicBufferSequence,
+template <typename AsyncReadStream, typename DynamicBuffer,
     typename ReadHandler, typename Executor>
 struct associated_executor<
     detail::read_until_delim_string_op<AsyncReadStream,
-      DynamicBufferSequence, ReadHandler>,
+      DynamicBuffer, ReadHandler>,
     Executor>
 {
   typedef typename associated_executor<ReadHandler, Executor>::type type;
 
   static type get(
       const detail::read_until_delim_string_op<AsyncReadStream,
-        DynamicBufferSequence, ReadHandler>& h,
+        DynamicBuffer, ReadHandler>& h,
       const Executor& ex = Executor()) NET_TS_NOEXCEPT
   {
     return associated_executor<ReadHandler, Executor>::get(h.handler_, ex);
@@ -676,12 +676,13 @@ struct associated_executor<
 #endif // !defined(GENERATING_DOCUMENTATION)
 
 template <typename AsyncReadStream,
-    typename DynamicBufferSequence, typename ReadHandler>
+    typename DynamicBuffer, typename ReadHandler>
 NET_TS_INITFN_RESULT_TYPE(ReadHandler,
     void (std::error_code, std::size_t))
 async_read_until(AsyncReadStream& s,
-    NET_TS_MOVE_ARG(DynamicBufferSequence) buffers,
-    const std::string& delim, NET_TS_MOVE_ARG(ReadHandler) handler)
+    NET_TS_MOVE_ARG(DynamicBuffer) buffers,
+    NET_TS_STRING_VIEW_PARAM delim,
+    NET_TS_MOVE_ARG(ReadHandler) handler)
 {
   // If you get an error on the following line it means that your handler does
   // not meet the documented type requirements for a ReadHandler.
@@ -691,11 +692,12 @@ async_read_until(AsyncReadStream& s,
     void (std::error_code, std::size_t)> init(handler);
 
   detail::read_until_delim_string_op<AsyncReadStream,
-    typename decay<DynamicBufferSequence>::type,
+    typename decay<DynamicBuffer>::type,
       NET_TS_HANDLER_TYPE(ReadHandler,
         void (std::error_code, std::size_t))>(
-          s, NET_TS_MOVE_CAST(DynamicBufferSequence)(buffers),
-            delim, init.completion_handler)(std::error_code(), 0, 1);
+          s, NET_TS_MOVE_CAST(DynamicBuffer)(buffers),
+            static_cast<std::string>(delim),
+              init.completion_handler)(std::error_code(), 0, 1);
 
   return init.result.get();
 }

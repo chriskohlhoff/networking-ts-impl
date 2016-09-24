@@ -20,6 +20,7 @@
 #include <experimental/__net_ts/detail/array.hpp>
 #include <experimental/__net_ts/detail/cstdint.hpp>
 #include <experimental/__net_ts/detail/socket_types.hpp>
+#include <experimental/__net_ts/detail/string_view.hpp>
 #include <experimental/__net_ts/detail/winsock_init.hpp>
 #include <system_error>
 
@@ -223,6 +224,25 @@ NET_TS_DECL address_v4 make_address_v4(const std::string& str);
  */
 NET_TS_DECL address_v4 make_address_v4(
     const std::string& str, std::error_code& ec);
+
+#if defined(NET_TS_HAS_STD_STRING_VIEW) \
+  || defined(GENERATING_DOCUMENTATION)
+
+/// Create an IPv4 address from an IP address string in dotted decimal form.
+/**
+ * @relates address_v4
+ */
+NET_TS_DECL address_v4 make_address_v4(string_view str);
+
+/// Create an IPv4 address from an IP address string in dotted decimal form.
+/**
+ * @relates address_v4
+ */
+NET_TS_DECL address_v4 make_address_v4(
+    string_view str, std::error_code& ec);
+
+#endif // defined(NET_TS_HAS_STD_STRING_VIEW)
+       //  || defined(GENERATING_DOCUMENTATION)
 
 #if !defined(NET_TS_NO_IOSTREAM)
 

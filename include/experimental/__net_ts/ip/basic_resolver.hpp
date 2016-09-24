@@ -20,6 +20,7 @@
 #include <experimental/__net_ts/async_result.hpp>
 #include <experimental/__net_ts/basic_io_object.hpp>
 #include <experimental/__net_ts/detail/handler_type_requirements.hpp>
+#include <experimental/__net_ts/detail/string_view.hpp>
 #include <experimental/__net_ts/detail/throw_error.hpp>
 #include <experimental/__net_ts/error.hpp>
 #include <experimental/__net_ts/io_context.hpp>
@@ -186,7 +187,8 @@ public:
    * <tt>c:\\windows\\system32\\drivers\\etc\\services</tt>. Operating systems
    * may use additional locations when resolving service names.
    */
-  results_type resolve(const std::string& host, const std::string& service)
+  results_type resolve(NET_TS_STRING_VIEW_PARAM host,
+      NET_TS_STRING_VIEW_PARAM service)
   {
     return resolve(host, service, resolver_base::flags());
   }
@@ -224,8 +226,8 @@ public:
    * <tt>c:\\windows\\system32\\drivers\\etc\\services</tt>. Operating systems
    * may use additional locations when resolving service names.
    */
-  results_type resolve(const std::string& host, const std::string& service,
-      std::error_code& ec)
+  results_type resolve(NET_TS_STRING_VIEW_PARAM host,
+      NET_TS_STRING_VIEW_PARAM service, std::error_code& ec)
   {
     return resolve(host, service, resolver_base::flags(), ec);
   }
@@ -267,11 +269,12 @@ public:
    * <tt>c:\\windows\\system32\\drivers\\etc\\services</tt>. Operating systems
    * may use additional locations when resolving service names.
    */
-  results_type resolve(const std::string& host, const std::string& service,
-      resolver_base::flags resolve_flags)
+  results_type resolve(NET_TS_STRING_VIEW_PARAM host,
+      NET_TS_STRING_VIEW_PARAM service, resolver_base::flags resolve_flags)
   {
     std::error_code ec;
-    basic_resolver_query<protocol_type> q(host, service, resolve_flags);
+    basic_resolver_query<protocol_type> q(static_cast<std::string>(host),
+        static_cast<std::string>(service), resolve_flags);
     results_type r = this->get_service().resolve(
         this->get_implementation(), q, ec);
     std::experimental::net::detail::throw_error(ec, "resolve");
@@ -315,10 +318,12 @@ public:
    * <tt>c:\\windows\\system32\\drivers\\etc\\services</tt>. Operating systems
    * may use additional locations when resolving service names.
    */
-  results_type resolve(const std::string& host, const std::string& service,
-      resolver_base::flags resolve_flags, std::error_code& ec)
+  results_type resolve(NET_TS_STRING_VIEW_PARAM host,
+      NET_TS_STRING_VIEW_PARAM service, resolver_base::flags resolve_flags,
+      std::error_code& ec)
   {
-    basic_resolver_query<protocol_type> q(host, service, resolve_flags);
+    basic_resolver_query<protocol_type> q(static_cast<std::string>(host),
+        static_cast<std::string>(service), resolve_flags);
     return this->get_service().resolve(this->get_implementation(), q, ec);
   }
 
@@ -358,8 +363,8 @@ public:
    * <tt>c:\\windows\\system32\\drivers\\etc\\services</tt>. Operating systems
    * may use additional locations when resolving service names.
    */
-  results_type resolve(const protocol_type& protocol, const std::string& host,
-      const std::string& service)
+  results_type resolve(const protocol_type& protocol,
+      NET_TS_STRING_VIEW_PARAM host, NET_TS_STRING_VIEW_PARAM service)
   {
     return resolve(protocol, host, service, resolver_base::flags());
   }
@@ -400,8 +405,9 @@ public:
    * <tt>c:\\windows\\system32\\drivers\\etc\\services</tt>. Operating systems
    * may use additional locations when resolving service names.
    */
-  results_type resolve(const protocol_type& protocol, const std::string& host,
-      const std::string& service, std::error_code& ec)
+  results_type resolve(const protocol_type& protocol,
+      NET_TS_STRING_VIEW_PARAM host, NET_TS_STRING_VIEW_PARAM service,
+      std::error_code& ec)
   {
     return resolve(protocol, host, service, resolver_base::flags(), ec);
   }
@@ -446,12 +452,14 @@ public:
    * <tt>c:\\windows\\system32\\drivers\\etc\\services</tt>. Operating systems
    * may use additional locations when resolving service names.
    */
-  results_type resolve(const protocol_type& protocol, const std::string& host,
-      const std::string& service, resolver_base::flags resolve_flags)
+  results_type resolve(const protocol_type& protocol,
+      NET_TS_STRING_VIEW_PARAM host, NET_TS_STRING_VIEW_PARAM service,
+      resolver_base::flags resolve_flags)
   {
     std::error_code ec;
     basic_resolver_query<protocol_type> q(
-        protocol, host, service, resolve_flags);
+        protocol, static_cast<std::string>(host),
+        static_cast<std::string>(service), resolve_flags);
     results_type r = this->get_service().resolve(
         this->get_implementation(), q, ec);
     std::experimental::net::detail::throw_error(ec, "resolve");
@@ -498,12 +506,13 @@ public:
    * <tt>c:\\windows\\system32\\drivers\\etc\\services</tt>. Operating systems
    * may use additional locations when resolving service names.
    */
-  results_type resolve(const protocol_type& protocol, const std::string& host,
-      const std::string& service, resolver_base::flags resolve_flags,
-      std::error_code& ec)
+  results_type resolve(const protocol_type& protocol,
+      NET_TS_STRING_VIEW_PARAM host, NET_TS_STRING_VIEW_PARAM service,
+      resolver_base::flags resolve_flags, std::error_code& ec)
   {
     basic_resolver_query<protocol_type> q(
-        protocol, host, service, resolve_flags);
+        protocol, static_cast<std::string>(host),
+        static_cast<std::string>(service), resolve_flags);
     return this->get_service().resolve(this->get_implementation(), q, ec);
   }
 
@@ -552,7 +561,8 @@ public:
   template <typename ResolveHandler>
   NET_TS_INITFN_RESULT_TYPE(ResolveHandler,
       void (std::error_code, results_type))
-  async_resolve(const std::string& host, const std::string& service,
+  async_resolve(NET_TS_STRING_VIEW_PARAM host,
+      NET_TS_STRING_VIEW_PARAM service,
       NET_TS_MOVE_ARG(ResolveHandler) handler)
   {
     return async_resolve(host, service, resolver_base::flags(),
@@ -608,7 +618,8 @@ public:
   template <typename ResolveHandler>
   NET_TS_INITFN_RESULT_TYPE(ResolveHandler,
       void (std::error_code, results_type))
-  async_resolve(const std::string& host, const std::string& service,
+  async_resolve(NET_TS_STRING_VIEW_PARAM host,
+      NET_TS_STRING_VIEW_PARAM service,
       resolver_base::flags resolve_flags,
       NET_TS_MOVE_ARG(ResolveHandler) handler)
   {
@@ -617,7 +628,8 @@ public:
     NET_TS_RESOLVE_HANDLER_CHECK(
         ResolveHandler, handler, results_type) type_check;
 
-    basic_resolver_query<protocol_type> q(host, service, resolve_flags);
+    basic_resolver_query<protocol_type> q(static_cast<std::string>(host),
+        static_cast<std::string>(service), resolve_flags);
 
     std::experimental::net::async_completion<ResolveHandler,
       void (std::error_code, results_type)> init(handler);
@@ -676,8 +688,9 @@ public:
   template <typename ResolveHandler>
   NET_TS_INITFN_RESULT_TYPE(ResolveHandler,
       void (std::error_code, results_type))
-  async_resolve(const protocol_type& protocol, const std::string& host,
-      const std::string& service, NET_TS_MOVE_ARG(ResolveHandler) handler)
+  async_resolve(const protocol_type& protocol,
+      NET_TS_STRING_VIEW_PARAM host, NET_TS_STRING_VIEW_PARAM service,
+      NET_TS_MOVE_ARG(ResolveHandler) handler)
   {
     return async_resolve(protocol, host, service, resolver_base::flags(),
         NET_TS_MOVE_CAST(ResolveHandler)(handler));
@@ -735,8 +748,9 @@ public:
   template <typename ResolveHandler>
   NET_TS_INITFN_RESULT_TYPE(ResolveHandler,
       void (std::error_code, results_type))
-  async_resolve(const protocol_type& protocol, const std::string& host,
-      const std::string& service, resolver_base::flags resolve_flags,
+  async_resolve(const protocol_type& protocol,
+      NET_TS_STRING_VIEW_PARAM host, NET_TS_STRING_VIEW_PARAM service,
+      resolver_base::flags resolve_flags,
       NET_TS_MOVE_ARG(ResolveHandler) handler)
   {
     // If you get an error on the following line it means that your handler does
@@ -745,7 +759,8 @@ public:
         ResolveHandler, handler, results_type) type_check;
 
     basic_resolver_query<protocol_type> q(
-        protocol, host, service, resolve_flags);
+        protocol, static_cast<std::string>(host),
+        static_cast<std::string>(service), resolve_flags);
 
     std::experimental::net::async_completion<ResolveHandler,
       void (std::error_code, results_type)> init(handler);

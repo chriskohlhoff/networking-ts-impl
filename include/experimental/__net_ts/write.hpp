@@ -248,11 +248,11 @@ std::size_t write(SyncWriteStream& s, const ConstBufferSequence& buffers,
  *     s, buffers,
  *     std::experimental::net::transfer_all()); @endcode
  */
-template <typename SyncWriteStream, typename DynamicBufferSequence>
+template <typename SyncWriteStream, typename DynamicBuffer>
 std::size_t write(SyncWriteStream& s,
-    NET_TS_MOVE_ARG(DynamicBufferSequence) buffers,
+    NET_TS_MOVE_ARG(DynamicBuffer) buffers,
     typename enable_if<
-      is_dynamic_buffer_sequence<DynamicBufferSequence>::value
+      is_dynamic_buffer<DynamicBuffer>::value
     >::type* = 0);
 
 /// Write all of the supplied data to a stream before returning.
@@ -282,12 +282,12 @@ std::size_t write(SyncWriteStream& s,
  *     s, buffers,
  *     std::experimental::net::transfer_all(), ec); @endcode
  */
-template <typename SyncWriteStream, typename DynamicBufferSequence>
+template <typename SyncWriteStream, typename DynamicBuffer>
 std::size_t write(SyncWriteStream& s,
-    NET_TS_MOVE_ARG(DynamicBufferSequence) buffers,
+    NET_TS_MOVE_ARG(DynamicBuffer) buffers,
     std::error_code& ec,
     typename enable_if<
-      is_dynamic_buffer_sequence<DynamicBufferSequence>::value
+      is_dynamic_buffer<DynamicBuffer>::value
     >::type* = 0);
 
 /// Write a certain amount of data to a stream before returning.
@@ -326,13 +326,13 @@ std::size_t write(SyncWriteStream& s,
  *
  * @throws std::system_error Thrown on failure.
  */
-template <typename SyncWriteStream, typename DynamicBufferSequence,
+template <typename SyncWriteStream, typename DynamicBuffer,
     typename CompletionCondition>
 std::size_t write(SyncWriteStream& s,
-    NET_TS_MOVE_ARG(DynamicBufferSequence) buffers,
+    NET_TS_MOVE_ARG(DynamicBuffer) buffers,
     CompletionCondition completion_condition,
     typename enable_if<
-      is_dynamic_buffer_sequence<DynamicBufferSequence>::value
+      is_dynamic_buffer<DynamicBuffer>::value
     >::type* = 0);
 
 /// Write a certain amount of data to a stream before returning.
@@ -372,13 +372,13 @@ std::size_t write(SyncWriteStream& s,
  * @returns The number of bytes written. If an error occurs, returns the total
  * number of bytes successfully transferred prior to the error.
  */
-template <typename SyncWriteStream, typename DynamicBufferSequence,
+template <typename SyncWriteStream, typename DynamicBuffer,
     typename CompletionCondition>
 std::size_t write(SyncWriteStream& s,
-    NET_TS_MOVE_ARG(DynamicBufferSequence) buffers,
+    NET_TS_MOVE_ARG(DynamicBuffer) buffers,
     CompletionCondition completion_condition, std::error_code& ec,
     typename enable_if<
-      is_dynamic_buffer_sequence<DynamicBufferSequence>::value
+      is_dynamic_buffer<DynamicBuffer>::value
     >::type* = 0);
 
 /*@}*/
@@ -574,14 +574,14 @@ async_write(AsyncWriteStream& s, const ConstBufferSequence& buffers,
  * std::experimental::net::io_context::post().
  */
 template <typename AsyncWriteStream,
-    typename DynamicBufferSequence, typename WriteHandler>
+    typename DynamicBuffer, typename WriteHandler>
 NET_TS_INITFN_RESULT_TYPE(WriteHandler,
     void (std::error_code, std::size_t))
 async_write(AsyncWriteStream& s,
-    NET_TS_MOVE_ARG(DynamicBufferSequence) buffers,
+    NET_TS_MOVE_ARG(DynamicBuffer) buffers,
     NET_TS_MOVE_ARG(WriteHandler) handler,
     typename enable_if<
-      is_dynamic_buffer_sequence<DynamicBufferSequence>::value
+      is_dynamic_buffer<DynamicBuffer>::value
     >::type* = 0);
 
 /// Start an asynchronous operation to write a certain amount of data to a
@@ -641,16 +641,16 @@ async_write(AsyncWriteStream& s,
  * the handler will be performed in a manner equivalent to using
  * std::experimental::net::io_context::post().
  */
-template <typename AsyncWriteStream, typename DynamicBufferSequence,
+template <typename AsyncWriteStream, typename DynamicBuffer,
     typename CompletionCondition, typename WriteHandler>
 NET_TS_INITFN_RESULT_TYPE(WriteHandler,
     void (std::error_code, std::size_t))
 async_write(AsyncWriteStream& s,
-    NET_TS_MOVE_ARG(DynamicBufferSequence) buffers,
+    NET_TS_MOVE_ARG(DynamicBuffer) buffers,
     CompletionCondition completion_condition,
     NET_TS_MOVE_ARG(WriteHandler) handler,
     typename enable_if<
-      is_dynamic_buffer_sequence<DynamicBufferSequence>::value
+      is_dynamic_buffer<DynamicBuffer>::value
     >::type* = 0);
 
 /*@}*/

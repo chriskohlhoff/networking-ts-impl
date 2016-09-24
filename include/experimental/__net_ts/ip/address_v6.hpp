@@ -19,6 +19,7 @@
 #include <string>
 #include <experimental/__net_ts/detail/array.hpp>
 #include <experimental/__net_ts/detail/socket_types.hpp>
+#include <experimental/__net_ts/detail/string_view.hpp>
 #include <experimental/__net_ts/detail/winsock_init.hpp>
 #include <system_error>
 #include <experimental/__net_ts/ip/address_v4.hpp>
@@ -226,6 +227,25 @@ NET_TS_DECL address_v6 make_address_v6(const std::string& str);
  */
 NET_TS_DECL address_v6 make_address_v6(
     const std::string& str, std::error_code& ec);
+
+#if defined(NET_TS_HAS_STD_STRING_VIEW) \
+  || defined(GENERATING_DOCUMENTATION)
+
+/// Create an IPv6 address from an IP address string.
+/**
+ * @relates address_v6
+ */
+NET_TS_DECL address_v6 make_address_v6(string_view str);
+
+/// Create an IPv6 address from an IP address string.
+/**
+ * @relates address_v6
+ */
+NET_TS_DECL address_v6 make_address_v6(
+    string_view str, std::error_code& ec);
+
+#endif // defined(NET_TS_HAS_STD_STRING_VIEW)
+       //  || defined(GENERATING_DOCUMENTATION)
 
 /// Tag type used for distinguishing overloads that deal in IPv4-mapped IPv6
 /// addresses.

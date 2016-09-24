@@ -20,6 +20,7 @@
 #include <string>
 #include <experimental/__net_ts/async_result.hpp>
 #include <experimental/__net_ts/detail/regex_fwd.hpp>
+#include <experimental/__net_ts/detail/string_view.hpp>
 #include <experimental/__net_ts/detail/type_traits.hpp>
 #include <experimental/__net_ts/error.hpp>
 
@@ -124,9 +125,9 @@ struct is_match_condition
  * This data may be the start of a new line, to be extracted by a subsequent
  * @c read_until operation.
  */
-template <typename SyncReadStream, typename DynamicBufferSequence>
+template <typename SyncReadStream, typename DynamicBuffer>
 std::size_t read_until(SyncReadStream& s,
-    NET_TS_MOVE_ARG(DynamicBufferSequence) buffers, char delim);
+    NET_TS_MOVE_ARG(DynamicBuffer) buffers, char delim);
 
 /// Read data into a dynamic buffer sequence until it contains a specified
 /// delimiter.
@@ -162,9 +163,9 @@ std::size_t read_until(SyncReadStream& s,
  * typically leave that data in the dynamic buffer sequence for a subsequent
  * read_until operation to examine.
  */
-template <typename SyncReadStream, typename DynamicBufferSequence>
+template <typename SyncReadStream, typename DynamicBuffer>
 std::size_t read_until(SyncReadStream& s,
-    NET_TS_MOVE_ARG(DynamicBufferSequence) buffers,
+    NET_TS_MOVE_ARG(DynamicBuffer) buffers,
     char delim, std::error_code& ec);
 
 /// Read data into a dynamic buffer sequence until it contains a specified
@@ -218,11 +219,10 @@ std::size_t read_until(SyncReadStream& s,
  * This data may be the start of a new line, to be extracted by a subsequent
  * @c read_until operation.
  */
-template <typename SyncReadStream,
-    typename DynamicBufferSequence, typename Allocator>
+template <typename SyncReadStream, typename DynamicBuffer>
 std::size_t read_until(SyncReadStream& s,
-    NET_TS_MOVE_ARG(DynamicBufferSequence) buffers,
-    const std::basic_string<char, std::char_traits<char>, Allocator>& delim);
+    NET_TS_MOVE_ARG(DynamicBuffer) buffers,
+    NET_TS_STRING_VIEW_PARAM delim);
 
 /// Read data into a dynamic buffer sequence until it contains a specified
 /// delimiter.
@@ -258,11 +258,10 @@ std::size_t read_until(SyncReadStream& s,
  * typically leave that data in the dynamic buffer sequence for a subsequent
  * read_until operation to examine.
  */
-template <typename SyncReadStream,
-    typename DynamicBufferSequence, typename Allocator>
+template <typename SyncReadStream, typename DynamicBuffer>
 std::size_t read_until(SyncReadStream& s,
-    NET_TS_MOVE_ARG(DynamicBufferSequence) buffers,
-    const std::basic_string<char, std::char_traits<char>, Allocator>& delim,
+    NET_TS_MOVE_ARG(DynamicBuffer) buffers,
+    NET_TS_STRING_VIEW_PARAM delim,
     std::error_code& ec);
 
 /*@}*/
@@ -358,11 +357,11 @@ std::size_t read_until(SyncReadStream& s,
  * @c async_read_until operation.
  */
 template <typename AsyncReadStream,
-    typename DynamicBufferSequence, typename ReadHandler>
+    typename DynamicBuffer, typename ReadHandler>
 NET_TS_INITFN_RESULT_TYPE(ReadHandler,
     void (std::error_code, std::size_t))
 async_read_until(AsyncReadStream& s,
-    NET_TS_MOVE_ARG(DynamicBufferSequence) buffers,
+    NET_TS_MOVE_ARG(DynamicBuffer) buffers,
     char delim, NET_TS_MOVE_ARG(ReadHandler) handler);
 
 /// Start an asynchronous operation to read data into a dynamic buffer sequence
@@ -448,12 +447,12 @@ async_read_until(AsyncReadStream& s,
  * @c async_read_until operation.
  */
 template <typename AsyncReadStream,
-    typename DynamicBufferSequence, typename ReadHandler>
+    typename DynamicBuffer, typename ReadHandler>
 NET_TS_INITFN_RESULT_TYPE(ReadHandler,
     void (std::error_code, std::size_t))
 async_read_until(AsyncReadStream& s,
-    NET_TS_MOVE_ARG(DynamicBufferSequence) buffers,
-    const std::string& delim,
+    NET_TS_MOVE_ARG(DynamicBuffer) buffers,
+    NET_TS_STRING_VIEW_PARAM delim,
     NET_TS_MOVE_ARG(ReadHandler) handler);
 
 /*@}*/

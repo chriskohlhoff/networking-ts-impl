@@ -24,6 +24,7 @@
 #include <vector>
 #include <experimental/__net_ts/detail/array_fwd.hpp>
 #include <experimental/__net_ts/detail/is_buffer_sequence.hpp>
+#include <experimental/__net_ts/detail/string_view.hpp>
 #include <experimental/__net_ts/detail/throw_exception.hpp>
 #include <experimental/__net_ts/detail/type_traits.hpp>
 
@@ -274,14 +275,13 @@ struct is_const_buffer_sequence
 {
 };
 
-/// Trait to determine whether a type satisfies the DynamicBufferSequence
-/// requirements.
+/// Trait to determine whether a type satisfies the DynamicBuffer requirements.
 template <typename T>
-struct is_dynamic_buffer_sequence
+struct is_dynamic_buffer
 #if defined(GENERATING_DOCUMENTATION)
   : integral_constant<bool, automatically_determined>
 #else // defined(GENERATING_DOCUMENTATION)
-  : std::experimental::net::detail::is_dynamic_buffer_sequence<T>
+  : std::experimental::net::detail::is_dynamic_buffer<T>
 #endif // defined(GENERATING_DOCUMENTATION)
 {
 };
@@ -1327,9 +1327,57 @@ inline NET_TS_CONST_BUFFER buffer(
       );
 }
 
+#if defined(NET_TS_HAS_STD_STRING_VIEW) \
+  || defined(GENERATING_DOCUMENTATION)
+
+/// Create a new modifiable buffer that represents the given string_view.
+/**
+ * @returns <tt>mutable_buffer(data.size() ? &data[0] : 0,
+ * data.size() * sizeof(Elem))</tt>.
+ */
+template <typename Elem, typename Traits>
+inline NET_TS_CONST_BUFFER buffer(
+    basic_string_view<Elem, Traits> data) NET_TS_NOEXCEPT
+{
+  return NET_TS_CONST_BUFFER(data.size() ? &data[0] : 0,
+      data.size() * sizeof(Elem)
+#if defined(NET_TS_ENABLE_BUFFER_DEBUGGING)
+      , detail::buffer_debug_check<
+          typename basic_string_view<Elem, Traits>::iterator
+        >(data.begin())
+#endif // NET_TS_ENABLE_BUFFER_DEBUGGING
+      );
+}
+
+/// Create a new non-modifiable buffer that represents the given string.
+/**
+ * @returns A mutable_buffer value equivalent to:
+ * @code mutable_buffer(
+ *     data.size() ? &data[0] : 0,
+ *     min(data.size() * sizeof(Elem), max_size_in_bytes)); @endcode
+ */
+template <typename Elem, typename Traits>
+inline NET_TS_CONST_BUFFER buffer(
+    basic_string_view<Elem, Traits> data,
+    std::size_t max_size_in_bytes) NET_TS_NOEXCEPT
+{
+  return NET_TS_CONST_BUFFER(data.size() ? &data[0] : 0,
+      data.size() * sizeof(Elem) < max_size_in_bytes
+      ? data.size() * sizeof(Elem) : max_size_in_bytes
+#if defined(NET_TS_ENABLE_BUFFER_DEBUGGING)
+      , detail::buffer_debug_check<
+          typename basic_string_view<Elem, Traits>::iterator
+        >(data.begin())
+#endif // NET_TS_ENABLE_BUFFER_DEBUGGING
+      );
+}
+
+#endif // defined(NET_TS_HAS_STD_STRING_VIEW)
+       //  || defined(GENERATING_DOCUMENTATION)
+
 /*@}*/
 
-/// Adapt a basic_string to the DynamicBufferSequence requirements.
+/// Adapt a basic_string to the DynamicBuffer requirements.
 /**
  * Requires that <tt>sizeof(Elem) == 1</tt>.
  */
@@ -1480,7 +1528,7 @@ private:
   const std::size_t max_size_;
 };
 
-/// Adapt a vector to the DynamicBufferSequence requirements.
+/// Adapt a vector to the DynamicBuffer requirements.
 /**
  * Requires that <tt>sizeof(Elem) == 1</tt>.
  */

@@ -102,12 +102,12 @@ template <typename Protocol
     NET_TS_SVC_TPARAM_DEF1(= stream_socket_service<Protocol>),
 #if defined(NET_TS_HAS_BOOST_DATE_TIME) \
   || defined(GENERATING_DOCUMENTATION)
-    typename Time = boost::posix_time::ptime,
-    typename TimeTraits = time_traits<Time>
-    NET_TS_SVC_TPARAM1_DEF2(= deadline_timer_service<Time, TimeTraits>)>
+    typename Clock = boost::posix_time::ptime,
+    typename WaitTraits = time_traits<Clock>
+    NET_TS_SVC_TPARAM1_DEF2(= deadline_timer_service<Clock, WaitTraits>)>
 #else
-    typename Time = chrono::steady_clock,
-    typename TimeTraits = wait_traits<Time>
+    typename Clock = chrono::steady_clock,
+    typename WaitTraits = wait_traits<Clock>
     NET_TS_SVC_TPARAM1_DEF1(= steady_timer::service_type)>
 #endif
 class basic_socket_streambuf;
@@ -122,12 +122,12 @@ template <typename Protocol
     NET_TS_SVC_TPARAM_DEF1(= stream_socket_service<Protocol>),
 #if defined(NET_TS_HAS_BOOST_DATE_TIME) \
   || defined(GENERATING_DOCUMENTATION)
-    typename Time = boost::posix_time::ptime,
-    typename TimeTraits = time_traits<Time>
-    NET_TS_SVC_TPARAM1_DEF2(= deadline_timer_service<Time, TimeTraits>)>
+    typename Clock = boost::posix_time::ptime,
+    typename WaitTraits = time_traits<Clock>
+    NET_TS_SVC_TPARAM1_DEF2(= deadline_timer_service<Clock, WaitTraits>)>
 #else
-    typename Time = chrono::steady_clock,
-    typename TimeTraits = wait_traits<Time>
+    typename Clock = chrono::steady_clock,
+    typename WaitTraits = wait_traits<Clock>
     NET_TS_SVC_TPARAM1_DEF1(= steady_timer::service_type)>
 #endif
 class basic_socket_iostream;

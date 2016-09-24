@@ -18,6 +18,7 @@
 #include <experimental/__net_ts/detail/config.hpp>
 #include <string>
 #include <experimental/__net_ts/detail/throw_exception.hpp>
+#include <experimental/__net_ts/detail/string_view.hpp>
 #include <experimental/__net_ts/detail/type_traits.hpp>
 #include <system_error>
 #include <experimental/__net_ts/ip/address_v4.hpp>
@@ -181,6 +182,27 @@ NET_TS_DECL address make_address(const std::string& str);
  */
 NET_TS_DECL address make_address(
     const std::string& str, std::error_code& ec);
+
+#if defined(NET_TS_HAS_STD_STRING_VIEW) \
+  || defined(GENERATING_DOCUMENTATION)
+
+/// Create an address from an IPv4 address string in dotted decimal form,
+/// or from an IPv6 address in hexadecimal notation.
+/**
+ * @relates address
+ */
+NET_TS_DECL address make_address(string_view str);
+
+/// Create an address from an IPv4 address string in dotted decimal form,
+/// or from an IPv6 address in hexadecimal notation.
+/**
+ * @relates address
+ */
+NET_TS_DECL address make_address(
+    string_view str, std::error_code& ec);
+
+#endif // defined(NET_TS_HAS_STD_STRING_VIEW)
+       //  || defined(GENERATING_DOCUMENTATION)
 
 #if !defined(NET_TS_NO_IOSTREAM)
 

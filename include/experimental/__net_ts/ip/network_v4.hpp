@@ -18,6 +18,7 @@
 
 #include <experimental/__net_ts/detail/config.hpp>
 #include <string>
+#include <experimental/__net_ts/detail/string_view.hpp>
 #include <system_error>
 #include <experimental/__net_ts/ip/address_v4_range.hpp>
 
@@ -186,25 +187,49 @@ inline network_v4 make_network_v4(
  */
 NET_TS_DECL network_v4 make_network_v4(const char* str);
 
-/// Create an IPv4 address from an IP address string in dotted decimal form.
+/// Create an IPv4 network from a string containing IP address and prefix
+/// length.
 /**
  * @relates network_v4
  */
 NET_TS_DECL network_v4 make_network_v4(
     const char* str, std::error_code& ec);
 
-/// Create an IPv4 address from an IP address string in dotted decimal form.
+/// Create an IPv4 network from a string containing IP address and prefix
+/// length.
 /**
  * @relates network_v4
  */
 NET_TS_DECL network_v4 make_network_v4(const std::string& str);
 
-/// Create an IPv4 address from an IP address string in dotted decimal form.
+/// Create an IPv4 network from a string containing IP address and prefix
+/// length.
 /**
  * @relates network_v4
  */
 NET_TS_DECL network_v4 make_network_v4(
     const std::string& str, std::error_code& ec);
+
+#if defined(NET_TS_HAS_STD_STRING_VIEW) \
+  || defined(GENERATING_DOCUMENTATION)
+
+/// Create an IPv4 network from a string containing IP address and prefix
+/// length.
+/**
+ * @relates network_v4
+ */
+NET_TS_DECL network_v4 make_network_v4(string_view str);
+
+/// Create an IPv4 network from a string containing IP address and prefix
+/// length.
+/**
+ * @relates network_v4
+ */
+NET_TS_DECL network_v4 make_network_v4(
+    string_view str, std::error_code& ec);
+
+#endif // defined(NET_TS_HAS_STD_STRING_VIEW)
+       //  || defined(GENERATING_DOCUMENTATION)
 
 #if !defined(NET_TS_NO_IOSTREAM)
 
