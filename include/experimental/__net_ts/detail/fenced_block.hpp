@@ -20,6 +20,8 @@
 #if !defined(NET_TS_HAS_THREADS) \
   || defined(NET_TS_DISABLE_FENCED_BLOCK)
 # include <experimental/__net_ts/detail/null_fenced_block.hpp>
+#elif defined(NET_TS_HAS_STD_ATOMIC)
+# include <experimental/__net_ts/detail/std_fenced_block.hpp>
 #elif defined(__MACH__) && defined(__APPLE__)
 # include <experimental/__net_ts/detail/macos_fenced_block.hpp>
 #elif defined(__sun)
@@ -51,6 +53,8 @@ namespace detail {
 #if !defined(NET_TS_HAS_THREADS) \
   || defined(NET_TS_DISABLE_FENCED_BLOCK)
 typedef null_fenced_block fenced_block;
+#elif defined(NET_TS_HAS_STD_ATOMIC)
+typedef std_fenced_block fenced_block;
 #elif defined(__MACH__) && defined(__APPLE__)
 typedef macos_fenced_block fenced_block;
 #elif defined(__sun)

@@ -53,18 +53,6 @@
 # include <experimental/__net_ts/async_result.hpp>
 #endif // defined(NET_TS_ENABLE_HANDLER_TYPE_REQUIREMENTS)
 
-// Newer gcc, clang need special treatment to suppress unused typedef warnings.
-#if defined(__clang__) && (__clang_major__ >= 7)
-# define NET_TS_UNUSED_TYPEDEF __attribute__((__unused__))
-#elif defined(__GNUC__)
-# if ((__GNUC__ == 4) && (__GNUC_MINOR__ >= 8)) || (__GNUC__ > 4)
-#  define NET_TS_UNUSED_TYPEDEF __attribute__((__unused__))
-# endif // ((__GNUC__ == 4) && (__GNUC_MINOR__ >= 8)) || (__GNUC__ > 4)
-#endif // defined(__GNUC__)
-#if !defined(NET_TS_UNUSED_TYPEDEF)
-# define NET_TS_UNUSED_TYPEDEF
-#endif // !defined(NET_TS_UNUSED_TYPEDEF)
-
 namespace std {
 namespace experimental {
 namespace net {

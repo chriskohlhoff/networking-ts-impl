@@ -62,6 +62,8 @@ template <typename Handler, typename T>
 class hook_allocator
 {
 public:
+  typedef T value_type;
+
   template <typename U>
   struct rebind
   {
@@ -98,6 +100,8 @@ template <typename Handler>
 class hook_allocator<Handler, void>
 {
 public:
+  typedef void value_type;
+
   template <typename U>
   struct rebind
   {
@@ -130,7 +134,9 @@ public:
   { \
     typedef typename ::std::experimental::net::associated_allocator<Handler, \
       ::std::experimental::net::detail::hook_allocator<Handler, \
-        void> >::type::template rebind<op>::other allocator_type; \
+        void> >::type associated_allocator_type; \
+    typedef NET_TS_REBIND_ALLOC( \
+      associated_allocator_type, op) allocator_type; \
     Handler* h; \
     op* v; \
     op* p; \
@@ -167,7 +173,7 @@ public:
 #define NET_TS_DEFINE_HANDLER_ALLOCATOR_PTR(op, alloc) \
   struct ptr \
   { \
-    typename alloc::template rebind<op>::other a; \
+    NET_TS_REBIND_ALLOC(alloc, op) a; \
     void* v; \
     op* p; \
     ~ptr() \

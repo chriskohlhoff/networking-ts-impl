@@ -572,6 +572,30 @@
 # endif // !defined(NET_TS_DISABLE_NULLPTR)
 #endif // !defined(NET_TS_HAS_NULLPTR)
 
+// Standard library support for the C++11 allocator additions.
+#if !defined(NET_TS_HAS_CXX11_ALLOCATORS)
+# if !defined(NET_TS_DISABLE_CXX11_ALLOCATORS)
+#  if defined(__clang__)
+#   if defined(NET_TS_HAS_CLANG_LIBCXX)
+#    define NET_TS_HAS_CXX11_ALLOCATORS 1
+#   elif (__cplusplus >= 201103)
+#    define NET_TS_HAS_CXX11_ALLOCATORS 1
+#   endif // (__cplusplus >= 201103)
+#  elif defined(__GNUC__)
+#   if ((__GNUC__ == 4) && (__GNUC_MINOR__ >= 6)) || (__GNUC__ > 4)
+#    if defined(__GXX_EXPERIMENTAL_CXX0X__)
+#     define NET_TS_HAS_CXX11_ALLOCATORS 1
+#    endif // defined(__GXX_EXPERIMENTAL_CXX0X__)
+#   endif // ((__GNUC__ == 4) && (__GNUC_MINOR__ >= 6)) || (__GNUC__ > 4)
+#  endif // defined(__GNUC__)
+#  if defined(NET_TS_MSVC)
+#   if (_MSC_VER >= 1700)
+#    define NET_TS_HAS_CXX11_ALLOCATORS 1
+#   endif // (_MSC_VER >= 1700)
+#  endif // defined(NET_TS_MSVC)
+# endif // !defined(NET_TS_DISABLE_CXX11_ALLOCATORS)
+#endif // !defined(NET_TS_HAS_CXX11_ALLOCATORS)
+
 // Standard library support for the cstdint header.
 #if !defined(NET_TS_HAS_CSTDINT)
 # if !defined(NET_TS_DISABLE_CSTDINT)
@@ -1231,4 +1255,26 @@
 // Helper macros to manage transition away from error_code return values.
 #define NET_TS_SYNC_OP_VOID void
 #define NET_TS_SYNC_OP_VOID_RETURN(e) return
+// Newer gcc, clang need special treatment to suppress unused typedef warnings.
+#if defined(__clang__) && (__clang_major__ >= 7)
+# define NET_TS_UNUSED_TYPEDEF __attribute__((__unused__))
+#elif defined(__GNUC__)
+# if ((__GNUC__ == 4) && (__GNUC_MINOR__ >= 8)) || (__GNUC__ > 4)
+#  define NET_TS_UNUSED_TYPEDEF __attribute__((__unused__))
+# endif // ((__GNUC__ == 4) && (__GNUC_MINOR__ >= 8)) || (__GNUC__ > 4)
+#endif // defined(__GNUC__)
+#if !defined(NET_TS_UNUSED_TYPEDEF)
+# define NET_TS_UNUSED_TYPEDEF
+#endif // !defined(NET_TS_UNUSED_TYPEDEF)
+
+// Some versions of gcc generate spurious warnings about unused variables.
+#if defined(__GNUC__)
+# if (__GNUC__ >= 4)
+#  define NET_TS_UNUSED_VARIABLE __attribute__((__unused__))
+# endif // (__GNUC__ >= 4)
+#endif // defined(__GNUC__)
+#if !defined(NET_TS_UNUSED_VARIABLE)
+# define NET_TS_UNUSED_VARIABLE
+#endif // !defined(NET_TS_UNUSED_VARIABLE)
+
 #endif // NET_TS_DETAIL_CONFIG_HPP

@@ -257,13 +257,17 @@ inline const std::error_category& get_addrinfo_category()
 extern NET_TS_DECL
 const std::error_category& get_misc_category();
 
-static const std::error_category& system_category
+static const std::error_category&
+  system_category NET_TS_UNUSED_VARIABLE
   = std::experimental::net::error::get_system_category();
-static const std::error_category& netdb_category
+static const std::error_category&
+  netdb_category NET_TS_UNUSED_VARIABLE
   = std::experimental::net::error::get_netdb_category();
-static const std::error_category& addrinfo_category
+static const std::error_category&
+  addrinfo_category NET_TS_UNUSED_VARIABLE
   = std::experimental::net::error::get_addrinfo_category();
-static const std::error_category& misc_category
+static const std::error_category&
+  misc_category NET_TS_UNUSED_VARIABLE
   = std::experimental::net::error::get_misc_category();
 
 } // namespace error

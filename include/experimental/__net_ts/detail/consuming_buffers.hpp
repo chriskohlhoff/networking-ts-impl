@@ -104,7 +104,7 @@ public:
     Buffer_Iterator next = std::experimental::net::buffer_sequence_begin(buffers_);
     Buffer_Iterator end = std::experimental::net::buffer_sequence_end(buffers_);
 
-    std::advance(end, next_elem_);
+    std::advance(next, next_elem_);
     while (next != end && size > 0)
     {
       Buffer next_buf = Buffer(*next) + next_elem_offset_;

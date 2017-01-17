@@ -49,7 +49,7 @@ using boost::addressof;
 
 } // namespace detail
 
-#if defined(NET_TS_HAS_NULLPTR)
+#if defined(NET_TS_HAS_CXX11_ALLOCATORS)
 using std::allocator_arg_t;
 # define NET_TS_USES_ALLOCATOR(t) \
   namespace std { \
@@ -57,10 +57,16 @@ using std::allocator_arg_t;
     struct uses_allocator<t, Allocator> : true_type {}; \
   } \
   /**/
-#else // defined(NET_TS_HAS_NULLPTR)
+# define NET_TS_REBIND_ALLOC(alloc, t) \
+  typename std::allocator_traits<alloc>::template rebind_alloc<t>
+  /**/
+#else // defined(NET_TS_HAS_CXX11_ALLOCATORS)
 struct allocator_arg_t {};
 # define NET_TS_USES_ALLOCATOR(t)
-#endif // defined(NET_TS_HAS_NULLPTR)
+# define NET_TS_REBIND_ALLOC(alloc, t) \
+  typename alloc::template rebind<t>::other
+  /**/
+#endif // defined(NET_TS_HAS_CXX11_ALLOCATORS)
 
 } // inline namespace v1
 } // namespace net
