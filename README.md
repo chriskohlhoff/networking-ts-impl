@@ -7,6 +7,12 @@ Warning: This implementation is automatically generated from the
 still be missing small pieces of functionality, or contain artifacts from Asio
 that are not part of the TS.
 
+## Supported platforms and compilers
+
+Requires C++11 or later. Should work with:
+* Recent gcc or clang on Linux, macOS and other similar POSIX platforms.
+* Recent versions of Microsoft Visual Studio on Windows.
+
 ## Scope
 
 A testsuite, examples and documentation are considered out-of-scope for this
