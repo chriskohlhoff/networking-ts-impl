@@ -2,7 +2,7 @@
 // detail/concurrency_hint.hpp
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //
-// Copyright (c) 2003-2016 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2003-2017 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -26,8 +26,12 @@
 // If set, this bit indicates that the scheduler should perform locking.
 #define NET_TS_CONCURRENCY_HINT_LOCKING_SCHEDULER 0x1u
 
-// If set, this bit indicates that the reactor should perform locking.
-#define NET_TS_CONCURRENCY_HINT_LOCKING_REACTOR 0x2u
+// If set, this bit indicates that the reactor should perform locking when
+// managing descriptor registrations.
+#define NET_TS_CONCURRENCY_HINT_LOCKING_REACTOR_REGISTRATION 0x2u
+
+// If set, this bit indicates that the reactor should perform locking for I/O.
+#define NET_TS_CONCURRENCY_HINT_LOCKING_REACTOR_IO 0x4u
 
 // Helper macro to determine if we have a special concurrency hint.
 #define NET_TS_CONCURRENCY_HINT_IS_SPECIAL(hint) \
@@ -64,13 +68,15 @@
 //   timers), occur in only one thread at a time.
 #define NET_TS_CONCURRENCY_HINT_UNSAFE_IO \
   static_cast<int>(NET_TS_CONCURRENCY_HINT_ID \
-      | NET_TS_CONCURRENCY_HINT_LOCKING_SCHEDULER)
+      | NET_TS_CONCURRENCY_HINT_LOCKING_SCHEDULER \
+      | NET_TS_CONCURRENCY_HINT_LOCKING_REACTOR_REGISTRATION)
 
 // The special concurrency hint provides full thread safety.
 #define NET_TS_CONCURRENCY_HINT_SAFE \
   static_cast<int>(NET_TS_CONCURRENCY_HINT_ID \
       | NET_TS_CONCURRENCY_HINT_LOCKING_SCHEDULER \
-      | NET_TS_CONCURRENCY_HINT_LOCKING_REACTOR)
+      | NET_TS_CONCURRENCY_HINT_LOCKING_REACTOR_REGISTRATION \
+      | NET_TS_CONCURRENCY_HINT_LOCKING_REACTOR_IO)
 
 // This #define may be overridden at compile time to specify a program-wide
 // default concurrency hint, used by the zero-argument io_context constructor.

@@ -2,7 +2,7 @@
 // detail/impl/epoll_reactor.ipp
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //
-// Copyright (c) 2003-2016 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2003-2017 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -41,7 +41,7 @@ epoll_reactor::epoll_reactor(std::experimental::net::execution_context& ctx)
   : execution_context_service_base<epoll_reactor>(ctx),
     scheduler_(use_service<scheduler>(ctx)),
     mutex_(NET_TS_CONCURRENCY_HINT_IS_LOCKING(
-          SCHEDULER, scheduler_.concurrency_hint())),
+          REACTOR_REGISTRATION, scheduler_.concurrency_hint())),
     interrupter_(),
     epoll_fd_(do_epoll_create()),
     timer_fd_(do_timerfd_create()),
@@ -597,7 +597,8 @@ int epoll_reactor::do_timerfd_create()
 epoll_reactor::descriptor_state* epoll_reactor::allocate_descriptor_state()
 {
   mutex::scoped_lock descriptors_lock(registered_descriptors_mutex_);
-  return registered_descriptors_.alloc(registered_descriptors_mutex_.enabled());
+  return registered_descriptors_.alloc(NET_TS_CONCURRENCY_HINT_IS_LOCKING(
+        REACTOR_IO, scheduler_.concurrency_hint()));
 }
 
 void epoll_reactor::free_descriptor_state(epoll_reactor::descriptor_state* s)

@@ -2,7 +2,7 @@
 // ip/impl/network_v6.ipp
 // ~~~~~~~~~~~~~~~~~~~~~~
 //
-// Copyright (c) 2003-2016 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2003-2017 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 // Copyright (c) 2014 Oliver Kowalke (oliver dot kowalke at gmail dot com)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -150,8 +150,11 @@ network_v6 make_network_v6(const std::string& str,
     return network_v6();
   }
 
-  return network_v6(make_address_v6(str.substr(0, pos)),
-      std::atoi(str.substr(pos + 1).c_str()));
+  const address_v6 addr = make_address_v6(str.substr(0, pos), ec);
+  if (ec)
+    return network_v6();
+
+  return network_v6(addr, std::atoi(str.substr(pos + 1).c_str()));
 }
 
 #if defined(NET_TS_HAS_STD_STRING_VIEW)

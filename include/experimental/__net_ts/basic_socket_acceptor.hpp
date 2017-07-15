@@ -2,7 +2,7 @@
 // basic_socket_acceptor.hpp
 // ~~~~~~~~~~~~~~~~~~~~~~~~~
 //
-// Copyright (c) 2003-2016 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2003-2017 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -250,10 +250,8 @@ public:
       basic_socket_acceptor<Protocol1 NET_TS_SVC_TARG1>&& other,
       typename enable_if<is_convertible<Protocol1, Protocol>::value>::type* = 0)
     : basic_io_object<NET_TS_SVC_T>(
-        other.get_service().get_io_context())
+        other.get_service(), other.get_implementation())
   {
-    this->get_service().template converting_move_construct<Protocol1>(
-        this->get_implementation(), other.get_implementation());
   }
 
   /// Move-assign a basic_socket_acceptor from an acceptor of another protocol
@@ -529,6 +527,58 @@ public:
   {
     this->get_service().close(this->get_implementation(), ec);
     NET_TS_SYNC_OP_VOID_RETURN(ec);
+  }
+
+  /// Release ownership of the underlying native acceptor.
+  /**
+   * This function causes all outstanding asynchronous accept operations to
+   * finish immediately, and the handlers for cancelled operations will be
+   * passed the std::experimental::net::error::operation_aborted error. Ownership of the
+   * native acceptor is then transferred to the caller.
+   *
+   * @throws std::system_error Thrown on failure.
+   *
+   * @note This function is unsupported on Windows versions prior to Windows
+   * 8.1, and will fail with std::experimental::net::error::operation_not_supported on
+   * these platforms.
+   */
+#if defined(NET_TS_MSVC) && (NET_TS_MSVC >= 1400) \
+  && (!defined(_WIN32_WINNT) || _WIN32_WINNT < 0x0603)
+  __declspec(deprecated("This function always fails with "
+        "operation_not_supported when used on Windows versions "
+        "prior to Windows 8.1."))
+#endif
+  native_handle_type release()
+  {
+    std::error_code ec;
+    native_handle_type s = this->get_service().release(
+        this->get_implementation(), ec);
+    std::experimental::net::detail::throw_error(ec, "release");
+    return s;
+  }
+
+  /// Release ownership of the underlying native acceptor.
+  /**
+   * This function causes all outstanding asynchronous accept operations to
+   * finish immediately, and the handlers for cancelled operations will be
+   * passed the std::experimental::net::error::operation_aborted error. Ownership of the
+   * native acceptor is then transferred to the caller.
+   *
+   * @param ec Set to indicate what error occurred, if any.
+   *
+   * @note This function is unsupported on Windows versions prior to Windows
+   * 8.1, and will fail with std::experimental::net::error::operation_not_supported on
+   * these platforms.
+   */
+#if defined(NET_TS_MSVC) && (NET_TS_MSVC >= 1400) \
+  && (!defined(_WIN32_WINNT) || _WIN32_WINNT < 0x0603)
+  __declspec(deprecated("This function always fails with "
+        "operation_not_supported when used on Windows versions "
+        "prior to Windows 8.1."))
+#endif
+  native_handle_type release(std::error_code& ec)
+  {
+    return this->get_service().release(this->get_implementation(), ec);
   }
 
   /// Get the native acceptor representation.

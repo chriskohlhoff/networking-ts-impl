@@ -2,7 +2,7 @@
 // strand.hpp
 // ~~~~~~~~~~
 //
-// Copyright (c) 2003-2016 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2003-2017 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -151,7 +151,7 @@ public:
   }
 
   /// Obtain the underlying execution context.
-  execution_context& context() NET_TS_NOEXCEPT
+  execution_context& context() const NET_TS_NOEXCEPT
   {
     return executor_.context();
   }
@@ -160,7 +160,7 @@ public:
   /**
    * The strand delegates this call to its underlying executor.
    */
-  void on_work_started() NET_TS_NOEXCEPT
+  void on_work_started() const NET_TS_NOEXCEPT
   {
     executor_.on_work_started();
   }
@@ -169,7 +169,7 @@ public:
   /**
    * The strand delegates this call to its underlying executor.
    */
-  void on_work_finished() NET_TS_NOEXCEPT
+  void on_work_finished() const NET_TS_NOEXCEPT
   {
     executor_.on_work_finished();
   }
@@ -190,7 +190,7 @@ public:
    * internal storage needed for function invocation.
    */
   template <typename Function, typename Allocator>
-  void dispatch(NET_TS_MOVE_ARG(Function) f, const Allocator& a)
+  void dispatch(NET_TS_MOVE_ARG(Function) f, const Allocator& a) const
   {
     detail::strand_executor_service::dispatch(impl_,
         executor_, NET_TS_MOVE_CAST(Function)(f), a);
@@ -210,7 +210,7 @@ public:
    * internal storage needed for function invocation.
    */
   template <typename Function, typename Allocator>
-  void post(NET_TS_MOVE_ARG(Function) f, const Allocator& a)
+  void post(NET_TS_MOVE_ARG(Function) f, const Allocator& a) const
   {
     detail::strand_executor_service::post(impl_,
         executor_, NET_TS_MOVE_CAST(Function)(f), a);
@@ -230,7 +230,7 @@ public:
    * internal storage needed for function invocation.
    */
   template <typename Function, typename Allocator>
-  void defer(NET_TS_MOVE_ARG(Function) f, const Allocator& a)
+  void defer(NET_TS_MOVE_ARG(Function) f, const Allocator& a) const
   {
     detail::strand_executor_service::defer(impl_,
         executor_, NET_TS_MOVE_CAST(Function)(f), a);

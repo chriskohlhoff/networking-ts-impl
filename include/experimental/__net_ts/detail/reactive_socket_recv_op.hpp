@@ -2,7 +2,7 @@
 // detail/reactive_socket_recv_op.hpp
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //
-// Copyright (c) 2003-2016 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2003-2017 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -61,7 +61,7 @@ public:
 
     if (result == done)
       if ((o->state_ & socket_ops::stream_oriented) != 0)
-        if (o->bytes_transferred_ < bufs.total_size())
+        if (o->bytes_transferred_ == 0)
           result = done_and_exhausted;
 
     NET_TS_HANDLER_REACTOR_OPERATION((*o, "non_blocking_recv",

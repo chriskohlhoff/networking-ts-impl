@@ -2,7 +2,7 @@
 // detail/config.hpp
 // ~~~~~~~~~~~~~~~~~
 //
-// Copyright (c) 2003-2016 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2003-2017 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -85,6 +85,11 @@
 # endif // (__cplusplus >= 201103)
 #endif // defined(__clang__)
 
+// Android platform detection.
+#if defined(__ANDROID__)
+# include <android/api-level.h>
+#endif // defined(__ANDROID__)
+
 // Support move construction and assignment on compilers known to allow it.
 #if !defined(NET_TS_HAS_MOVE)
 # if !defined(NET_TS_DISABLE_MOVE)
@@ -158,6 +163,11 @@
 #    endif // defined(__GXX_EXPERIMENTAL_CXX0X__)
 #   endif // ((__GNUC__ == 4) && (__GNUC_MINOR__ >= 3)) || (__GNUC__ > 4)
 #  endif // defined(__GNUC__)
+#  if defined(NET_TS_MSVC)
+#   if (_MSC_VER >= 1900)
+#    define NET_TS_HAS_VARIADIC_TEMPLATES 1
+#   endif // (_MSC_VER >= 1900)
+#  endif // defined(NET_TS_MSVC)
 # endif // !defined(NET_TS_DISABLE_VARIADIC_TEMPLATES)
 #endif // !defined(NET_TS_HAS_VARIADIC_TEMPLATES)
 
@@ -175,6 +185,11 @@
 #   define NET_TS_DELETED = delete
 #  endif // __has_feature(__cxx_deleted_functions__)
 # endif // defined(__clang__)
+# if defined(NET_TS_MSVC)
+#  if (_MSC_VER >= 1900)
+#   define NET_TS_DELETED = delete
+#  endif // (_MSC_VER >= 1900)
+# endif // defined(NET_TS_MSVC)
 # if !defined(NET_TS_DELETED)
 #  define NET_TS_DELETED
 # endif // !defined(NET_TS_DELETED)
@@ -195,6 +210,11 @@
 #    endif // defined(__GXX_EXPERIMENTAL_CXX0X__)
 #   endif // ((__GNUC__ == 4) && (__GNUC_MINOR__ >= 6)) || (__GNUC__ > 4)
 #  endif // defined(__GNUC__)
+#  if defined(NET_TS_MSVC)
+#   if (_MSC_VER >= 1900)
+#    define NET_TS_HAS_CONSTEXPR 1
+#   endif // (_MSC_VER >= 1900)
+#  endif // defined(NET_TS_MSVC)
 # endif // !defined(NET_TS_DISABLE_CONSTEXPR)
 #endif // !defined(NET_TS_HAS_CONSTEXPR)
 #if !defined(NET_TS_CONSTEXPR)
@@ -260,6 +280,29 @@
 #  endif // defined(NET_TS_MSVC)
 # endif // !defined(NET_TS_DISABLE_DECLTYPE)
 #endif // !defined(NET_TS_HAS_DECLTYPE)
+
+// Support alias templates on compilers known to allow it.
+#if !defined(NET_TS_HAS_ALIAS_TEMPLATES)
+# if !defined(NET_TS_DISABLE_ALIAS_TEMPLATES)
+#  if defined(__clang__)
+#   if __has_feature(__cxx_alias_templates__)
+#    define NET_TS_HAS_ALIAS_TEMPLATES 1
+#   endif // __has_feature(__cxx_alias_templates__)
+#  endif // defined(__clang__)
+#  if defined(__GNUC__)
+#   if ((__GNUC__ == 4) && (__GNUC_MINOR__ >= 7)) || (__GNUC__ > 4)
+#    if defined(__GXX_EXPERIMENTAL_CXX0X__)
+#     define NET_TS_HAS_ALIAS_TEMPLATES 1
+#    endif // defined(__GXX_EXPERIMENTAL_CXX0X__)
+#   endif // ((__GNUC__ == 4) && (__GNUC_MINOR__ >= 7)) || (__GNUC__ > 4)
+#  endif // defined(__GNUC__)
+#  if defined(NET_TS_MSVC)
+#   if (_MSC_VER >= 1900)
+#    define NET_TS_HAS_ALIAS_TEMPLATES 1
+#   endif // (_MSC_VER >= 1900)
+#  endif // defined(NET_TS_MSVC)
+# endif // !defined(NET_TS_DISABLE_ALIAS_TEMPLATES)
+#endif // !defined(NET_TS_HAS_ALIAS_TEMPLATES)
 
 // Standard library support for system errors.
 #if !defined(NET_TS_HAS_STD_SYSTEM_ERROR)
@@ -733,23 +776,46 @@
 #if !defined(NET_TS_HAS_STD_STRING_VIEW)
 # if !defined(NET_TS_DISABLE_STD_STRING_VIEW)
 #  if defined(__clang__)
-#   if (__cplusplus >= 201103)
+#   if (__cplusplus >= 201402)
 #    if __has_include(<experimental/string_view>)
 #     define NET_TS_HAS_STD_STRING_VIEW 1
 #     define NET_TS_HAS_STD_EXPERIMENTAL_STRING_VIEW 1
 #    endif // __has_include(<experimental/string_view>)
-#   endif // (__cplusplus >= 201103)
+#   endif // (__cplusplus >= 201402)
 #  endif // defined(__clang__)
 #  if defined(__GNUC__)
 #   if ((__GNUC__ == 4) && (__GNUC_MINOR__ >= 9)) || (__GNUC__ > 4)
-#    if (__cplusplus >= 201300)
+#    if (__cplusplus >= 201402)
 #     define NET_TS_HAS_STD_STRING_VIEW 1
 #     define NET_TS_HAS_STD_EXPERIMENTAL_STRING_VIEW 1
-#    endif // (__cplusplus >= 201300)
+#    endif // (__cplusplus >= 201402)
 #   endif // ((__GNUC__ == 4) && (__GNUC_MINOR__ >= 7)) || (__GNUC__ > 4)
 #  endif // defined(__GNUC__)
+#  if defined(NET_TS_MSVC)
+#   if (_MSC_VER >= 1910)
+#    define NET_TS_HAS_STD_STRING_VIEW
+#   endif // (_MSC_VER >= 1910)
+#  endif // defined(NET_TS_MSVC)
 # endif // !defined(NET_TS_DISABLE_STD_STRING_VIEW)
 #endif // !defined(NET_TS_HAS_STD_STRING_VIEW)
+
+// Standard library support for iostream move construction and assignment.
+#if !defined(NET_TS_HAS_STD_IOSTREAM_MOVE)
+# if !defined(NET_TS_DISABLE_STD_IOSTREAM_MOVE)
+#  if defined(__GNUC__)
+#   if (__GNUC__ > 4)
+#    if defined(__GXX_EXPERIMENTAL_CXX0X__)
+#     define NET_TS_HAS_STD_IOSTREAM_MOVE 1
+#    endif // defined(__GXX_EXPERIMENTAL_CXX0X__)
+#   endif // (__GNUC__ > 4)
+#  endif // defined(__GNUC__)
+#  if defined(NET_TS_MSVC)
+#   if (_MSC_VER >= 1700)
+#    define NET_TS_HAS_STD_IOSTREAM_MOVE 1
+#   endif // (_MSC_VER >= 1700)
+#  endif // defined(NET_TS_MSVC)
+# endif // !defined(NET_TS_DISABLE_STD_IOSTREAM_MOVE)
+#endif // !defined(NET_TS_HAS_STD_IOSTREAM_MOVE)
 
 // Windows App target. Windows but with a limited API.
 #if !defined(NET_TS_WINDOWS_APP)

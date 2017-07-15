@@ -2,7 +2,7 @@
 // detail/impl/winrt_ssocket_service_base.ipp
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //
-// Copyright (c) 2003-2016 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2003-2017 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -149,6 +149,23 @@ std::error_code winrt_ssocket_service_base::close(
 
   ec = std::error_code();
   return ec;
+}
+
+winrt_ssocket_service_base::native_handle_type
+winrt_ssocket_service_base::release(
+    winrt_ssocket_service_base::base_implementation_type& impl,
+    std::error_code& ec)
+{
+  if (!is_open(impl))
+    return nullptr;
+
+  cancel(impl, ec);
+  if (ec)
+    return nullptr;
+
+  native_handle_type tmp = impl.socket_;
+  impl.socket_ = nullptr;
+  return tmp;
 }
 
 std::size_t winrt_ssocket_service_base::do_get_endpoint(

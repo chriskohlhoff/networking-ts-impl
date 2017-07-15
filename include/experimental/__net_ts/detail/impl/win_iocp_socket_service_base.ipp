@@ -2,7 +2,7 @@
 // detail/impl/win_iocp_socket_service_base.ipp
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //
-// Copyright (c) 2003-2016 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2003-2017 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -35,6 +35,7 @@ win_iocp_socket_service_base::win_iocp_socket_service_base(
     iocp_service_(use_service<win_iocp_io_context>(io_context)),
     reactor_(0),
     connect_ex_(0),
+    nt_set_info_(0),
     mutex_(),
     impl_list_(0)
 {
@@ -47,7 +48,6 @@ void win_iocp_socket_service_base::base_shutdown()
   base_implementation_type* impl = impl_list_;
   while (impl)
   {
-    std::error_code ignored_ec;
     close_for_destruction(*impl);
     impl = impl->next_;
   }
@@ -192,6 +192,39 @@ std::error_code win_iocp_socket_service_base::close(
 #endif // defined(NET_TS_ENABLE_CANCELIO)
 
   return ec;
+}
+
+socket_type win_iocp_socket_service_base::release(
+    win_iocp_socket_service_base::base_implementation_type& impl,
+    std::error_code& ec)
+{
+  if (!is_open(impl))
+    return invalid_socket;
+
+  cancel(impl, ec);
+  if (ec)
+    return invalid_socket;
+
+  nt_set_info_fn fn = get_nt_set_info();
+  if (fn == 0)
+  {
+    ec = std::experimental::net::error::operation_not_supported;
+    return invalid_socket;
+  }
+
+  HANDLE sock_as_handle = reinterpret_cast<HANDLE>(impl.socket_);
+  ULONG_PTR iosb[2] = { 0, 0 };
+  void* info[2] = { 0, 0 };
+  if (fn(sock_as_handle, iosb, &info, sizeof(info),
+        61 /* FileReplaceCompletionInformation */))
+  {
+    ec = std::experimental::net::error::operation_not_supported;
+    return invalid_socket;
+  }
+
+  socket_type tmp = impl.socket_;
+  impl.socket_ = invalid_socket;
+  return tmp;
 }
 
 std::error_code win_iocp_socket_service_base::cancel(
@@ -705,6 +738,24 @@ win_iocp_socket_service_base::get_connect_ex(
 
   return reinterpret_cast<connect_ex_fn>(ptr == this ? 0 : ptr);
 #endif // defined(NET_TS_DISABLE_CONNECTEX)
+}
+
+win_iocp_socket_service_base::nt_set_info_fn
+win_iocp_socket_service_base::get_nt_set_info()
+{
+  void* ptr = interlocked_compare_exchange_pointer(&nt_set_info_, 0, 0);
+  if (!ptr)
+  {
+    if (HMODULE h = ::GetModuleHandleA("NTDLL.DLL"))
+      ptr = reinterpret_cast<void*>(GetProcAddress(h, "NtSetInformationFile"));
+
+    // On failure, set nt_set_info_ to a special value to indicate that the
+    // NtSetInformationFile function is unavailable. That way we won't bother
+    // trying to look it up again.
+    interlocked_exchange_pointer(&nt_set_info_, ptr ? ptr : this);
+  }
+
+  return reinterpret_cast<nt_set_info_fn>(ptr == this ? 0 : ptr);
 }
 
 void* win_iocp_socket_service_base::interlocked_compare_exchange_pointer(

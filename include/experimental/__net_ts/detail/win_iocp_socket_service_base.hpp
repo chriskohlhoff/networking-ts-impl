@@ -2,7 +2,7 @@
 // detail/win_iocp_socket_service_base.hpp
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //
-// Copyright (c) 2003-2016 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2003-2017 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -117,6 +117,10 @@ public:
 
   // Destroy a socket implementation.
   NET_TS_DECL std::error_code close(
+      base_implementation_type& impl, std::error_code& ec);
+
+  // Release ownership of the socket.
+  NET_TS_DECL socket_type release(
       base_implementation_type& impl, std::error_code& ec);
 
   // Cancel all operations associated with the socket.
@@ -531,6 +535,15 @@ protected:
   NET_TS_DECL connect_ex_fn get_connect_ex(
       base_implementation_type& impl, int type);
 
+  // The type of a NtSetInformationFile function pointer.
+  typedef LONG (NTAPI *nt_set_info_fn)(HANDLE, ULONG_PTR*, void*, ULONG, ULONG);
+
+  // Helper function to get the NtSetInformationFile function pointer. If no
+  // NtSetInformationFile pointer has been obtained yet, one is obtained using
+  // GetProcAddress and the pointer is cached. Returns a null pointer if
+  // NtSetInformationFile is not available.
+  NET_TS_DECL nt_set_info_fn get_nt_set_info();
+
   // Helper function to emulate InterlockedCompareExchangePointer functionality
   // for:
   // - very old Platform SDKs; and
@@ -556,6 +569,9 @@ protected:
 
   // Pointer to ConnectEx implementation.
   void* connect_ex_;
+
+  // Pointer to NtSetInformationFile implementation.
+  void* nt_set_info_;
 
   // Mutex to protect access to the linked list of implementations. 
   std::experimental::net::detail::mutex mutex_;

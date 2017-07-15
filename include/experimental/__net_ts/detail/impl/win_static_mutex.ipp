@@ -2,7 +2,7 @@
 // detail/impl/win_static_mutex.ipp
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //
-// Copyright (c) 2003-2016 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2003-2017 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -97,7 +97,13 @@ int win_static_mutex::do_init()
 # if defined(UNDER_CE)
     ::InitializeCriticalSection(&crit_section_);
 # elif defined(NET_TS_WINDOWS_APP)
-    ::InitializeCriticalSectionEx(&crit_section_, 0x80000000, 0);
+    if (!::InitializeCriticalSectionEx(&crit_section_, 0, 0))
+    {
+      last_error = ::GetLastError();
+      ::ReleaseMutex(mutex);
+      ::CloseHandle(mutex);
+      return last_error;
+    }
 # else
     if (!::InitializeCriticalSectionAndSpinCount(&crit_section_, 0x80000000))
     {

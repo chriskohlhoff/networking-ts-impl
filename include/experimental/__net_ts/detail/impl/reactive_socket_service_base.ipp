@@ -2,7 +2,7 @@
 // detail/reactive_socket_service_base.ipp
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //
-// Copyright (c) 2003-2016 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2003-2017 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -124,6 +124,25 @@ std::error_code reactive_socket_service_base::close(
   return ec;
 }
 
+socket_type reactive_socket_service_base::release(
+    reactive_socket_service_base::base_implementation_type& impl,
+    std::error_code& ec)
+{
+  if (!is_open(impl))
+    return invalid_socket;
+
+  cancel(impl, ec);
+  if (ec)
+    return invalid_socket;
+
+  reactor_.deregister_descriptor(impl.socket_, impl.reactor_data_,
+      (impl.state_ & socket_ops::possible_dup) == 0);
+
+  socket_type tmp = impl.socket_;
+  impl.socket_ = invalid_socket;
+  return tmp;
+}
+
 std::error_code reactive_socket_service_base::cancel(
     reactive_socket_service_base::base_implementation_type& impl,
     std::error_code& ec)
@@ -230,7 +249,7 @@ void reactive_socket_service_base::start_accept_op(
     reactor_op* op, bool is_continuation, bool peer_is_open)
 {
   if (!peer_is_open)
-    start_op(impl, reactor::read_op, op, true, is_continuation, false);
+    start_op(impl, reactor::read_op, op, is_continuation, true, false);
   else
   {
     op->ec_ = std::experimental::net::error::already_open;
