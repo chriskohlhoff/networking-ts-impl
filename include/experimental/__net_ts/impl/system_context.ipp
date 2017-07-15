@@ -1,6 +1,6 @@
 //
-// impl/system_executor.ipp
-// ~~~~~~~~~~~~~~~~~~~~
+// impl/system_context.ipp
+// ~~~~~~~~~~~~~~~~~~~~~~~
 //
 // Copyright (c) 2003-2017 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 //
@@ -8,15 +8,15 @@
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-#ifndef NET_TS_IMPL_SYSTEM_EXECUTOR_IPP
-#define NET_TS_IMPL_SYSTEM_EXECUTOR_IPP
+#ifndef NET_TS_IMPL_SYSTEM_CONTEXT_IPP
+#define NET_TS_IMPL_SYSTEM_CONTEXT_IPP
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1200)
 # pragma once
 #endif // defined(_MSC_VER) && (_MSC_VER >= 1200)
 
 #include <experimental/__net_ts/detail/config.hpp>
-#include <experimental/__net_ts/system_executor.hpp>
+#include <experimental/__net_ts/system_context.hpp>
 
 #include <experimental/__net_ts/detail/push_options.hpp>
 
@@ -25,7 +25,7 @@ namespace experimental {
 namespace net {
 inline namespace v1 {
 
-struct system_executor::thread_function
+struct system_context::thread_function
 {
   detail::scheduler* scheduler_;
 
@@ -36,7 +36,7 @@ struct system_executor::thread_function
   }
 };
 
-system_executor::context_impl::context_impl()
+system_context::system_context()
   : scheduler_(use_service<detail::scheduler>(*this))
 {
   scheduler_.work_started();
@@ -46,10 +46,26 @@ system_executor::context_impl::context_impl()
   threads_.create_threads(f, num_threads ? num_threads : 2);
 }
 
-system_executor::context_impl::~context_impl()
+system_context::~system_context()
 {
   scheduler_.work_finished();
   scheduler_.stop();
+  threads_.join();
+}
+
+void system_context::stop()
+{
+  scheduler_.stop();
+}
+
+bool system_context::stopped() const NET_TS_NOEXCEPT
+{
+  return scheduler_.stopped();
+}
+
+void system_context::join()
+{
+  scheduler_.work_finished();
   threads_.join();
 }
 
@@ -60,4 +76,4 @@ system_executor::context_impl::~context_impl()
 
 #include <experimental/__net_ts/detail/pop_options.hpp>
 
-#endif // NET_TS_IMPL_SYSTEM_EXECUTOR_IPP
+#endif // NET_TS_IMPL_SYSTEM_CONTEXT_IPP
