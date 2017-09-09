@@ -154,9 +154,6 @@ public:
     } \
     void reset() \
     { \
-      allocator_type a(::std::experimental::net::associated_allocator<Handler, \
-        ::std::experimental::net::detail::hook_allocator<Handler, void> >::get(*h, \
-          ::std::experimental::net::detail::hook_allocator<Handler, void>(*h))); \
       if (p) \
       { \
         p->~op(); \
@@ -164,6 +161,9 @@ public:
       } \
       if (v) \
       { \
+        allocator_type a(::std::experimental::net::associated_allocator<Handler, \
+          ::std::experimental::net::detail::hook_allocator<Handler, void> >::get(*h, \
+            ::std::experimental::net::detail::hook_allocator<Handler, void>(*h))); \
         a.deallocate(static_cast<op*>(v), 1); \
         v = 0; \
       } \
@@ -191,10 +191,6 @@ public:
     } \
     void reset() \
     { \
-      typedef typename ::std::experimental::net::detail::get_recycling_allocator< \
-        Alloc>::type recycling_allocator_type; \
-      NET_TS_REBIND_ALLOC(recycling_allocator_type, op) a1( \
-            ::std::experimental::net::detail::get_recycling_allocator<Alloc>::get(*a)); \
       if (p) \
       { \
         p->~op(); \
@@ -202,6 +198,10 @@ public:
       } \
       if (v) \
       { \
+        typedef typename ::std::experimental::net::detail::get_recycling_allocator< \
+          Alloc>::type recycling_allocator_type; \
+        NET_TS_REBIND_ALLOC(recycling_allocator_type, op) a1( \
+              ::std::experimental::net::detail::get_recycling_allocator<Alloc>::get(*a)); \
         a1.deallocate(static_cast<op*>(v), 1); \
         v = 0; \
       } \
