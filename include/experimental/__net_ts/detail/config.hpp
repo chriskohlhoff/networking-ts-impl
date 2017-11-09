@@ -445,11 +445,11 @@
 #   endif // (__cplusplus >= 201103)
 #  endif // defined(__clang__)
 #  if defined(__GNUC__)
-#   if ((__GNUC__ == 4) && (__GNUC_MINOR__ >= 5)) || (__GNUC__ > 4)
+#   if ((__GNUC__ == 4) && (__GNUC_MINOR__ >= 7)) || (__GNUC__ > 4)
 #    if defined(__GXX_EXPERIMENTAL_CXX0X__)
 #     define NET_TS_HAS_STD_ATOMIC 1
 #    endif // defined(__GXX_EXPERIMENTAL_CXX0X__)
-#   endif // ((__GNUC__ == 4) && (__GNUC_MINOR__ >= 5)) || (__GNUC__ > 4)
+#   endif // ((__GNUC__ == 4) && (__GNUC_MINOR__ >= 7)) || (__GNUC__ > 4)
 #  endif // defined(__GNUC__)
 #  if defined(NET_TS_MSVC)
 #   if (_MSC_VER >= 1700)
@@ -632,9 +632,9 @@
 #   endif // ((__GNUC__ == 4) && (__GNUC_MINOR__ >= 6)) || (__GNUC__ > 4)
 #  endif // defined(__GNUC__)
 #  if defined(NET_TS_MSVC)
-#   if (_MSC_VER >= 1700)
+#   if (_MSC_VER >= 1800)
 #    define NET_TS_HAS_CXX11_ALLOCATORS 1
-#   endif // (_MSC_VER >= 1700)
+#   endif // (_MSC_VER >= 1800)
 #  endif // defined(NET_TS_MSVC)
 # endif // !defined(NET_TS_DISABLE_CXX11_ALLOCATORS)
 #endif // !defined(NET_TS_HAS_CXX11_ALLOCATORS)
@@ -792,7 +792,7 @@
 #   endif // ((__GNUC__ == 4) && (__GNUC_MINOR__ >= 7)) || (__GNUC__ > 4)
 #  endif // defined(__GNUC__)
 #  if defined(NET_TS_MSVC)
-#   if (_MSC_VER >= 1910)
+#   if (_MSC_VER >= 1910 && _HAS_CXX17)
 #    define NET_TS_HAS_STD_STRING_VIEW
 #   endif // (_MSC_VER >= 1910)
 #  endif // defined(NET_TS_MSVC)
@@ -1322,8 +1322,16 @@
 #define NET_TS_SYNC_OP_VOID void
 #define NET_TS_SYNC_OP_VOID_RETURN(e) return
 // Newer gcc, clang need special treatment to suppress unused typedef warnings.
-#if defined(__clang__) && (__clang_major__ >= 7)
-# define NET_TS_UNUSED_TYPEDEF __attribute__((__unused__))
+#if defined(__clang__)
+# if defined(__apple_build_version__)
+#  if (__clang_major__ >= 7)
+#   define NET_TS_UNUSED_TYPEDEF __attribute__((__unused__))
+#  endif // (__clang_major__ >= 7)
+# elif ((__clang_major__ == 3) && (__clang_minor__ >= 6)) \
+    || (__clang_major__ > 3)
+#  define NET_TS_UNUSED_TYPEDEF __attribute__((__unused__))
+# endif // ((__clang_major__ == 3) && (__clang_minor__ >= 6))
+        //   || (__clang_major__ > 3)
 #elif defined(__GNUC__)
 # if ((__GNUC__ == 4) && (__GNUC_MINOR__ >= 8)) || (__GNUC__ > 4)
 #  define NET_TS_UNUSED_TYPEDEF __attribute__((__unused__))

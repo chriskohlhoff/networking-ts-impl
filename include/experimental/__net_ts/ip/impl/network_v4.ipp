@@ -185,7 +185,14 @@ network_v4 make_network_v4(const std::string& str,
   if (ec)
     return network_v4();
 
-  return network_v4(addr, std::atoi(str.substr(pos + 1).c_str()));
+  const int prefix_len = std::atoi(str.substr(pos + 1).c_str());
+  if (prefix_len < 0 || prefix_len > 32)
+  {
+    ec = std::experimental::net::error::invalid_argument;
+    return network_v4();
+  }
+
+  return network_v4(addr, static_cast<unsigned short>(prefix_len));
 }
 
 #if defined(NET_TS_HAS_STD_STRING_VIEW)

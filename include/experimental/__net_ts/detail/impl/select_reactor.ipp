@@ -183,6 +183,11 @@ void select_reactor::deregister_internal_descriptor(
     op_queue_[i].cancel_operations(descriptor, ops);
 }
 
+void select_reactor::cleanup_descriptor_data(
+    select_reactor::per_descriptor_data&)
+{
+}
+
 void select_reactor::run(long usec, op_queue<operation>& ops)
 {
   std::experimental::net::detail::mutex::scoped_lock lock(mutex_);

@@ -244,8 +244,6 @@ bool non_blocking_accept(socket_type s,
     if (ec == std::experimental::net::error::would_block
         || ec == std::experimental::net::error::try_again)
     {
-      if (state & user_set_non_blocking)
-        return true;
       // Fall through to retry operation.
     }
     else if (ec == std::experimental::net::error::connection_aborted)

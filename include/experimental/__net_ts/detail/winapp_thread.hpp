@@ -19,8 +19,8 @@
 
 #if defined(NET_TS_WINDOWS) && defined(NET_TS_WINDOWS_APP)
 
-#include <experimental/__net_ts/detail/memory.hpp>
 #include <experimental/__net_ts/detail/noncopyable.hpp>
+#include <experimental/__net_ts/detail/scoped_ptr.hpp>
 #include <experimental/__net_ts/detail/socket_types.hpp>
 #include <experimental/__net_ts/detail/throw_error.hpp>
 #include <experimental/__net_ts/error.hpp>
@@ -43,7 +43,7 @@ public:
   template <typename Function>
   winapp_thread(Function f, unsigned int = 0)
   {
-    std::auto_ptr<func_base> arg(new func<Function>(f));
+    scoped_ptr<func_base> arg(new func<Function>(f));
     DWORD thread_id = 0;
     thread_ = ::CreateThread(0, 0, winapp_thread_function,
         arg.get(), 0, &thread_id);
@@ -111,7 +111,7 @@ private:
 
 inline DWORD WINAPI winapp_thread_function(LPVOID arg)
 {
-  std::auto_ptr<winapp_thread::func_base> func(
+  scoped_ptr<winapp_thread::func_base> func(
       static_cast<winapp_thread::func_base*>(arg));
   func->run();
   return 0;
