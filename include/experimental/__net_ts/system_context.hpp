@@ -19,7 +19,6 @@
 #include <experimental/__net_ts/detail/scheduler.hpp>
 #include <experimental/__net_ts/detail/thread_group.hpp>
 #include <experimental/__net_ts/execution_context.hpp>
-#include <experimental/__net_ts/system_executor.hpp>
 
 #include <experimental/__net_ts/detail/push_options.hpp>
 
@@ -27,6 +26,8 @@ namespace std {
 namespace experimental {
 namespace net {
 inline namespace v1 {
+
+class system_executor;
 
 /// The executor context for the system executor.
 class system_context : public execution_context
@@ -39,10 +40,7 @@ public:
   NET_TS_DECL ~system_context();
 
   /// Obtain an executor for the context.
-  executor_type get_executor() NET_TS_NOEXCEPT
-  {
-    return system_executor();
-  }
+  executor_type get_executor() NET_TS_NOEXCEPT;
 
   /// Signal all threads in the system thread pool to stop.
   NET_TS_DECL void stop();
@@ -78,6 +76,7 @@ private:
 
 #include <experimental/__net_ts/detail/pop_options.hpp>
 
+#include <experimental/__net_ts/impl/system_context.hpp>
 #if defined(NET_TS_HEADER_ONLY)
 # include <experimental/__net_ts/impl/system_context.ipp>
 #endif // defined(NET_TS_HEADER_ONLY)

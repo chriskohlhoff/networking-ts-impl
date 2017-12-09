@@ -121,6 +121,35 @@ namespace detail {
  * }
  * @endcode
  *
+ * @par Submitting arbitrary tasks to the io_context
+ *
+ * To submit functions to the io_context, use the @ref std::experimental::net::dispatch,
+ * @ref std::experimental::net::post or @ref std::experimental::net::defer free functions.
+ *
+ * For example:
+ *
+ * @code void my_task()
+ * {
+ *   ...
+ * }
+ *
+ * ...
+ *
+ * std::experimental::net::io_context io_context;
+ *
+ * // Submit a function to the io_context.
+ * std::experimental::net::post(io_context, my_task);
+ *
+ * // Submit a lambda object to the io_context.
+ * std::experimental::net::post(io_context,
+ *     []()
+ *     {
+ *       ...
+ *     });
+ *
+ * // Run the io_context until it runs out of work.
+ * io_context.run(); @endcode
+ *
  * @par Stopping the io_context from running out of work
  *
  * Some applications may need to prevent an io_context object's run() call from

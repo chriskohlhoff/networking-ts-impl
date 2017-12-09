@@ -546,6 +546,8 @@ template <typename Arg>
 class promise_handler_selector<void(std::exception_ptr, Arg)>
   : public promise_handler_ex_1<Arg> {};
 
+#if defined(NET_TS_HAS_VARIADIC_TEMPLATES)
+
 template <typename... Arg>
 class promise_handler_selector<void(Arg...)>
   : public promise_handler_n<std::tuple<Arg...> > {};
@@ -557,6 +559,32 @@ class promise_handler_selector<void(std::error_code, Arg...)>
 template <typename... Arg>
 class promise_handler_selector<void(std::exception_ptr, Arg...)>
   : public promise_handler_ex_n<std::tuple<Arg...> > {};
+
+#else // defined(NET_TS_HAS_VARIADIC_TEMPLATES)
+
+#define NET_TS_PRIVATE_PROMISE_SELECTOR_DEF(n) \
+  template <typename Arg, NET_TS_VARIADIC_TPARAMS(n)> \
+  class promise_handler_selector< \
+    void(Arg, NET_TS_VARIADIC_TARGS(n))> \
+      : public promise_handler_n< \
+        std::tuple<Arg, NET_TS_VARIADIC_TARGS(n)> > {}; \
+  \
+  template <typename Arg, NET_TS_VARIADIC_TPARAMS(n)> \
+  class promise_handler_selector< \
+    void(std::error_code, Arg, NET_TS_VARIADIC_TARGS(n))> \
+      : public promise_handler_ec_n< \
+        std::tuple<Arg, NET_TS_VARIADIC_TARGS(n)> > {}; \
+  \
+  template <typename Arg, NET_TS_VARIADIC_TPARAMS(n)> \
+  class promise_handler_selector< \
+    void(std::exception_ptr, Arg, NET_TS_VARIADIC_TARGS(n))> \
+      : public promise_handler_ex_n< \
+        std::tuple<Arg, NET_TS_VARIADIC_TARGS(n)> > {}; \
+  /**/
+  NET_TS_VARIADIC_GENERATE(NET_TS_PRIVATE_PROMISE_SELECTOR_DEF)
+#undef NET_TS_PRIVATE_PROMISE_SELECTOR_DEF
+
+#endif // defined(NET_TS_HAS_VARIADIC_TEMPLATES)
 
 // Completion handlers produced from the use_future completion token, when not
 // using use_future::operator().

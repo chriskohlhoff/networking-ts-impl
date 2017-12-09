@@ -29,19 +29,37 @@ namespace net {
 inline namespace v1 {
 namespace detail {
 
+// Helper template to determine the maximum number of prepared buffers.
+template <typename Buffers>
+struct prepared_buffers_max
+{
+  enum { value = buffer_sequence_adapter_base::max_buffers };
+};
+
+template <typename Elem, std::size_t N>
+struct prepared_buffers_max<boost::array<Elem, N> >
+{
+  enum { value = N };
+};
+
+#if defined(NET_TS_HAS_STD_ARRAY)
+
+template <typename Elem, std::size_t N>
+struct prepared_buffers_max<std::array<Elem, N> >
+{
+  enum { value = N };
+};
+
+#endif // defined(NET_TS_HAS_STD_ARRAY)
 
 // A buffer sequence used to represent a subsequence of the buffers.
-template <typename Buffer>
+template <typename Buffer, std::size_t MaxBuffers>
 struct prepared_buffers
 {
   typedef Buffer value_type;
   typedef const Buffer* const_iterator;
 
-  enum
-  {
-    max_buffers = buffer_sequence_adapter_base::max_buffers < 8
-      ? buffer_sequence_adapter_base::max_buffers : 8
-  };
+  enum { max_buffers = MaxBuffers < 16 ? MaxBuffers : 16 };
 
   prepared_buffers() : count(0) {}
   const_iterator begin() const { return elems; }
@@ -56,6 +74,9 @@ template <typename Buffer, typename Buffers, typename Buffer_Iterator>
 class consuming_buffers
 {
 public:
+  typedef prepared_buffers<Buffer, prepared_buffers_max<Buffers>::value>
+    prepared_buffers_type;
+
   // Construct to represent the entire list of buffers.
   explicit consuming_buffers(const Buffers& buffers)
     : buffers_(buffers),
@@ -74,9 +95,9 @@ public:
   }
 
   // Get the buffer for a single transfer, with a size.
-  prepared_buffers<Buffer> prepare(std::size_t max_size)
+  prepared_buffers_type prepare(std::size_t max_size)
   {
-    prepared_buffers<Buffer> result;
+    prepared_buffers_type result;
 
     Buffer_Iterator next = std::experimental::net::buffer_sequence_begin(buffers_);
     Buffer_Iterator end = std::experimental::net::buffer_sequence_end(buffers_);

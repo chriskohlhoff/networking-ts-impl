@@ -15,7 +15,7 @@
 # pragma once
 #endif // defined(_MSC_VER) && (_MSC_VER >= 1200)
 
-#include <chrono>
+#include <experimental/__net_ts/detail/chrono.hpp>
 
 #include <experimental/__net_ts/wait_traits.hpp>
 #include <experimental/__net_ts/basic_waitable_timer.hpp>

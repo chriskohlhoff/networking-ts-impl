@@ -28,13 +28,13 @@
 #include <experimental/__net_ts/detail/throw_exception.hpp>
 #include <experimental/__net_ts/detail/type_traits.hpp>
 
-#if defined(NET_TS_MSVC)
+#if defined(NET_TS_MSVC) && (NET_TS_MSVC >= 1700)
 # if defined(_HAS_ITERATOR_DEBUGGING) && (_HAS_ITERATOR_DEBUGGING != 0)
 #  if !defined(NET_TS_DISABLE_BUFFER_DEBUGGING)
 #   define NET_TS_ENABLE_BUFFER_DEBUGGING
 #  endif // !defined(NET_TS_DISABLE_BUFFER_DEBUGGING)
 # endif // defined(_HAS_ITERATOR_DEBUGGING)
-#endif // defined(NET_TS_MSVC)
+#endif // defined(NET_TS_MSVC) && (NET_TS_MSVC >= 1700)
 
 #if defined(__GNUC__)
 # if defined(_GLIBCXX_DEBUG)
@@ -1772,7 +1772,8 @@ inline std::size_t buffer_copy_1(const mutable_buffer& target,
   std::size_t target_size = target.size();
   std::size_t source_size = source.size();
   std::size_t n = target_size < source_size ? target_size : source_size;
-  memcpy(target.data(), source.data(), n);
+  if (n > 0)
+    memcpy(target.data(), source.data(), n);
   return n;
 }
 

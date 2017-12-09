@@ -511,6 +511,10 @@ struct handler_type_requirements
     handler_type, handler) \
   typedef int NET_TS_UNUSED_TYPEDEF
 
+#define NET_TS_MOVE_ACCEPT_HANDLER_CHECK( \
+    handler_type, handler, socket_type) \
+  typedef int NET_TS_UNUSED_TYPEDEF
+
 #define NET_TS_CONNECT_HANDLER_CHECK( \
     handler_type, handler) \
   typedef int NET_TS_UNUSED_TYPEDEF
