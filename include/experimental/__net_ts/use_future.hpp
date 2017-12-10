@@ -47,7 +47,7 @@ class packaged_handler;
  * std::experimental::net::v1::use_future. For example:
  *
  * @code std::future<std::size_t> my_future
- *   = my_socket.async_read_some(my_buffer, std::experimental::net::v1::use_future); @endcode
+ *   = my_socket.async_read_some(my_buffer, std::experimental::net::use_future); @endcode
  *
  * The initiating function (async_read_some in the above example) returns a
  * future that will receive the result of the operation. If the operation

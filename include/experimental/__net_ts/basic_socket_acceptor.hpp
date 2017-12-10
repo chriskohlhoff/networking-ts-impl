@@ -58,10 +58,10 @@ inline namespace v1 {
  * @par Example
  * Opening a socket acceptor with the SO_REUSEADDR option enabled:
  * @code
- * std::experimental::net::v1::ip::tcp::acceptor acceptor(io_context);
- * std::experimental::net::v1::ip::tcp::endpoint endpoint(std::experimental::net::v1::ip::tcp::v4(), port);
+ * std::experimental::net::ip::tcp::acceptor acceptor(io_context);
+ * std::experimental::net::ip::tcp::endpoint endpoint(std::experimental::net::ip::tcp::v4(), port);
  * acceptor.open(endpoint.protocol());
- * acceptor.set_option(std::experimental::net::v1::ip::tcp::acceptor::reuse_address(true));
+ * acceptor.set_option(std::experimental::net::ip::tcp::acceptor::reuse_address(true));
  * acceptor.bind(endpoint);
  * acceptor.listen();
  * @endcode
@@ -303,8 +303,8 @@ public:
    *
    * @par Example
    * @code
-   * std::experimental::net::v1::ip::tcp::acceptor acceptor(io_context);
-   * acceptor.open(std::experimental::net::v1::ip::tcp::v4());
+   * std::experimental::net::ip::tcp::acceptor acceptor(io_context);
+   * acceptor.open(std::experimental::net::ip::tcp::v4());
    * @endcode
    */
   void open(const protocol_type& protocol = protocol_type())
@@ -325,9 +325,9 @@ public:
    *
    * @par Example
    * @code
-   * std::experimental::net::v1::ip::tcp::acceptor acceptor(io_context);
+   * std::experimental::net::ip::tcp::acceptor acceptor(io_context);
    * std::error_code ec;
-   * acceptor.open(std::experimental::net::v1::ip::tcp::v4(), ec);
+   * acceptor.open(std::experimental::net::ip::tcp::v4(), ec);
    * if (ec)
    * {
    *   // An error occurred.
@@ -396,8 +396,8 @@ public:
    *
    * @par Example
    * @code
-   * std::experimental::net::v1::ip::tcp::acceptor acceptor(io_context);
-   * std::experimental::net::v1::ip::tcp::endpoint endpoint(std::experimental::net::v1::ip::tcp::v4(), 12345);
+   * std::experimental::net::ip::tcp::acceptor acceptor(io_context);
+   * std::experimental::net::ip::tcp::endpoint endpoint(std::experimental::net::ip::tcp::v4(), 12345);
    * acceptor.open(endpoint.protocol());
    * acceptor.bind(endpoint);
    * @endcode
@@ -421,8 +421,8 @@ public:
    *
    * @par Example
    * @code
-   * std::experimental::net::v1::ip::tcp::acceptor acceptor(io_context);
-   * std::experimental::net::v1::ip::tcp::endpoint endpoint(std::experimental::net::v1::ip::tcp::v4(), 12345);
+   * std::experimental::net::ip::tcp::acceptor acceptor(io_context);
+   * std::experimental::net::ip::tcp::endpoint endpoint(std::experimental::net::ip::tcp::v4(), 12345);
    * acceptor.open(endpoint.protocol());
    * std::error_code ec;
    * acceptor.bind(endpoint, ec);
@@ -468,10 +468,10 @@ public:
    *
    * @par Example
    * @code
-   * std::experimental::net::v1::ip::tcp::acceptor acceptor(io_context);
+   * std::experimental::net::ip::tcp::acceptor acceptor(io_context);
    * ...
    * std::error_code ec;
-   * acceptor.listen(std::experimental::net::v1::socket_base::max_listen_connections, ec);
+   * acceptor.listen(std::experimental::net::socket_base::max_listen_connections, ec);
    * if (ec)
    * {
    *   // An error occurred.
@@ -513,7 +513,7 @@ public:
    *
    * @par Example
    * @code
-   * std::experimental::net::v1::ip::tcp::acceptor acceptor(io_context);
+   * std::experimental::net::ip::tcp::acceptor acceptor(io_context);
    * ...
    * std::error_code ec;
    * acceptor.close(ec);
@@ -636,9 +636,9 @@ public:
    * @par Example
    * Setting the SOL_SOCKET/SO_REUSEADDR option:
    * @code
-   * std::experimental::net::v1::ip::tcp::acceptor acceptor(io_context);
+   * std::experimental::net::ip::tcp::acceptor acceptor(io_context);
    * ...
-   * std::experimental::net::v1::ip::tcp::acceptor::reuse_address option(true);
+   * std::experimental::net::ip::tcp::acceptor::reuse_address option(true);
    * acceptor.set_option(option);
    * @endcode
    */
@@ -665,9 +665,9 @@ public:
    * @par Example
    * Setting the SOL_SOCKET/SO_REUSEADDR option:
    * @code
-   * std::experimental::net::v1::ip::tcp::acceptor acceptor(io_context);
+   * std::experimental::net::ip::tcp::acceptor acceptor(io_context);
    * ...
-   * std::experimental::net::v1::ip::tcp::acceptor::reuse_address option(true);
+   * std::experimental::net::ip::tcp::acceptor::reuse_address option(true);
    * std::error_code ec;
    * acceptor.set_option(option, ec);
    * if (ec)
@@ -699,9 +699,9 @@ public:
    * @par Example
    * Getting the value of the SOL_SOCKET/SO_REUSEADDR option:
    * @code
-   * std::experimental::net::v1::ip::tcp::acceptor acceptor(io_context);
+   * std::experimental::net::ip::tcp::acceptor acceptor(io_context);
    * ...
-   * std::experimental::net::v1::ip::tcp::acceptor::reuse_address option;
+   * std::experimental::net::ip::tcp::acceptor::reuse_address option;
    * acceptor.get_option(option);
    * bool is_set = option.get();
    * @endcode
@@ -729,9 +729,9 @@ public:
    * @par Example
    * Getting the value of the SOL_SOCKET/SO_REUSEADDR option:
    * @code
-   * std::experimental::net::v1::ip::tcp::acceptor acceptor(io_context);
+   * std::experimental::net::ip::tcp::acceptor acceptor(io_context);
    * ...
-   * std::experimental::net::v1::ip::tcp::acceptor::reuse_address option;
+   * std::experimental::net::ip::tcp::acceptor::reuse_address option;
    * std::error_code ec;
    * acceptor.get_option(option, ec);
    * if (ec)
@@ -763,9 +763,9 @@ public:
    * @par Example
    * Getting the number of bytes ready to read:
    * @code
-   * std::experimental::net::v1::ip::tcp::acceptor acceptor(io_context);
+   * std::experimental::net::ip::tcp::acceptor acceptor(io_context);
    * ...
-   * std::experimental::net::v1::ip::tcp::acceptor::non_blocking_io command(true);
+   * std::experimental::net::ip::tcp::acceptor::non_blocking_io command(true);
    * socket.io_control(command);
    * @endcode
    */
@@ -791,9 +791,9 @@ public:
    * @par Example
    * Getting the number of bytes ready to read:
    * @code
-   * std::experimental::net::v1::ip::tcp::acceptor acceptor(io_context);
+   * std::experimental::net::ip::tcp::acceptor acceptor(io_context);
    * ...
-   * std::experimental::net::v1::ip::tcp::acceptor::non_blocking_io command(true);
+   * std::experimental::net::ip::tcp::acceptor::non_blocking_io command(true);
    * std::error_code ec;
    * socket.io_control(command, ec);
    * if (ec)
@@ -941,9 +941,9 @@ public:
    *
    * @par Example
    * @code
-   * std::experimental::net::v1::ip::tcp::acceptor acceptor(io_context);
+   * std::experimental::net::ip::tcp::acceptor acceptor(io_context);
    * ...
-   * std::experimental::net::v1::ip::tcp::endpoint endpoint = acceptor.local_endpoint();
+   * std::experimental::net::ip::tcp::endpoint endpoint = acceptor.local_endpoint();
    * @endcode
    */
   endpoint_type local_endpoint() const
@@ -967,10 +967,10 @@ public:
    *
    * @par Example
    * @code
-   * std::experimental::net::v1::ip::tcp::acceptor acceptor(io_context);
+   * std::experimental::net::ip::tcp::acceptor acceptor(io_context);
    * ...
    * std::error_code ec;
-   * std::experimental::net::v1::ip::tcp::endpoint endpoint = acceptor.local_endpoint(ec);
+   * std::experimental::net::ip::tcp::endpoint endpoint = acceptor.local_endpoint(ec);
    * if (ec)
    * {
    *   // An error occurred.
@@ -993,9 +993,9 @@ public:
    * @par Example
    * Waiting for an acceptor to become readable.
    * @code
-   * std::experimental::net::v1::ip::tcp::acceptor acceptor(io_context);
+   * std::experimental::net::ip::tcp::acceptor acceptor(io_context);
    * ...
-   * acceptor.wait(std::experimental::net::v1::ip::tcp::acceptor::wait_read);
+   * acceptor.wait(std::experimental::net::ip::tcp::acceptor::wait_read);
    * @endcode
    */
   void wait(wait_type w)
@@ -1018,10 +1018,10 @@ public:
    * @par Example
    * Waiting for an acceptor to become readable.
    * @code
-   * std::experimental::net::v1::ip::tcp::acceptor acceptor(io_context);
+   * std::experimental::net::ip::tcp::acceptor acceptor(io_context);
    * ...
    * std::error_code ec;
-   * acceptor.wait(std::experimental::net::v1::ip::tcp::acceptor::wait_read, ec);
+   * acceptor.wait(std::experimental::net::ip::tcp::acceptor::wait_read, ec);
    * @endcode
    */
   NET_TS_SYNC_OP_VOID wait(wait_type w, std::error_code& ec)
@@ -1061,10 +1061,10 @@ public:
    *
    * ...
    *
-   * std::experimental::net::v1::ip::tcp::acceptor acceptor(io_context);
+   * std::experimental::net::ip::tcp::acceptor acceptor(io_context);
    * ...
    * acceptor.async_wait(
-   *     std::experimental::net::v1::ip::tcp::acceptor::wait_read,
+   *     std::experimental::net::ip::tcp::acceptor::wait_read,
    *     wait_handler);
    * @endcode
    */
@@ -1102,9 +1102,9 @@ public:
    *
    * @par Example
    * @code
-   * std::experimental::net::v1::ip::tcp::acceptor acceptor(io_context);
+   * std::experimental::net::ip::tcp::acceptor acceptor(io_context);
    * ...
-   * std::experimental::net::v1::ip::tcp::socket socket(acceptor.accept());
+   * std::experimental::net::ip::tcp::socket socket(acceptor.accept());
    * @endcode
    */
   typename Protocol::socket accept()
@@ -1133,9 +1133,9 @@ public:
    *
    * @par Example
    * @code
-   * std::experimental::net::v1::ip::tcp::acceptor acceptor(io_context);
+   * std::experimental::net::ip::tcp::acceptor acceptor(io_context);
    * ...
-   * std::experimental::net::v1::ip::tcp::socket socket(acceptor.accept(ec));
+   * std::experimental::net::ip::tcp::socket socket(acceptor.accept(ec));
    * if (ec)
    * {
    *   // An error occurred.
@@ -1170,7 +1170,7 @@ public:
    * @par Example
    * @code
    * void accept_handler(const std::error_code& error,
-   *     std::experimental::net::v1::ip::tcp::socket peer)
+   *     std::experimental::net::ip::tcp::socket peer)
    * {
    *   if (!error)
    *   {
@@ -1180,7 +1180,7 @@ public:
    *
    * ...
    *
-   * std::experimental::net::v1::ip::tcp::acceptor acceptor(io_context);
+   * std::experimental::net::ip::tcp::acceptor acceptor(io_context);
    * ...
    * acceptor.async_accept(accept_handler);
    * @endcode
@@ -1224,9 +1224,9 @@ public:
    *
    * @par Example
    * @code
-   * std::experimental::net::v1::ip::tcp::acceptor acceptor(io_context);
+   * std::experimental::net::ip::tcp::acceptor acceptor(io_context);
    * ...
-   * std::experimental::net::v1::ip::tcp::socket socket(acceptor.accept());
+   * std::experimental::net::ip::tcp::socket socket(acceptor.accept());
    * @endcode
    */
   typename Protocol::socket accept(std::experimental::net::v1::io_context& io_context)
@@ -1258,9 +1258,9 @@ public:
    *
    * @par Example
    * @code
-   * std::experimental::net::v1::ip::tcp::acceptor acceptor(io_context);
+   * std::experimental::net::ip::tcp::acceptor acceptor(io_context);
    * ...
-   * std::experimental::net::v1::ip::tcp::socket socket(acceptor.accept(io_context2, ec));
+   * std::experimental::net::ip::tcp::socket socket(acceptor.accept(io_context2, ec));
    * if (ec)
    * {
    *   // An error occurred.
@@ -1300,7 +1300,7 @@ public:
    * @par Example
    * @code
    * void accept_handler(const std::error_code& error,
-   *     std::experimental::net::v1::ip::tcp::socket peer)
+   *     std::experimental::net::ip::tcp::socket peer)
    * {
    *   if (!error)
    *   {
@@ -1310,7 +1310,7 @@ public:
    *
    * ...
    *
-   * std::experimental::net::v1::ip::tcp::acceptor acceptor(io_context);
+   * std::experimental::net::ip::tcp::acceptor acceptor(io_context);
    * ...
    * acceptor.async_accept(io_context2, accept_handler);
    * @endcode
@@ -1354,10 +1354,10 @@ public:
    *
    * @par Example
    * @code
-   * std::experimental::net::v1::ip::tcp::acceptor acceptor(io_context);
+   * std::experimental::net::ip::tcp::acceptor acceptor(io_context);
    * ...
-   * std::experimental::net::v1::ip::tcp::endpoint endpoint;
-   * std::experimental::net::v1::ip::tcp::socket socket(acceptor.accept(endpoint));
+   * std::experimental::net::ip::tcp::endpoint endpoint;
+   * std::experimental::net::ip::tcp::socket socket(acceptor.accept(endpoint));
    * @endcode
    */
   typename Protocol::socket accept(endpoint_type& peer_endpoint)
@@ -1389,10 +1389,10 @@ public:
    *
    * @par Example
    * @code
-   * std::experimental::net::v1::ip::tcp::acceptor acceptor(io_context);
+   * std::experimental::net::ip::tcp::acceptor acceptor(io_context);
    * ...
-   * std::experimental::net::v1::ip::tcp::endpoint endpoint;
-   * std::experimental::net::v1::ip::tcp::socket socket(acceptor.accept(endpoint, ec));
+   * std::experimental::net::ip::tcp::endpoint endpoint;
+   * std::experimental::net::ip::tcp::socket socket(acceptor.accept(endpoint, ec));
    * if (ec)
    * {
    *   // An error occurred.
@@ -1434,7 +1434,7 @@ public:
    * @par Example
    * @code
    * void accept_handler(const std::error_code& error,
-   *     std::experimental::net::v1::ip::tcp::socket peer)
+   *     std::experimental::net::ip::tcp::socket peer)
    * {
    *   if (!error)
    *   {
@@ -1444,9 +1444,9 @@ public:
    *
    * ...
    *
-   * std::experimental::net::v1::ip::tcp::acceptor acceptor(io_context);
+   * std::experimental::net::ip::tcp::acceptor acceptor(io_context);
    * ...
-   * std::experimental::net::v1::ip::tcp::endpoint endpoint;
+   * std::experimental::net::ip::tcp::endpoint endpoint;
    * acceptor.async_accept(endpoint, accept_handler);
    * @endcode
    */
@@ -1493,10 +1493,10 @@ public:
    *
    * @par Example
    * @code
-   * std::experimental::net::v1::ip::tcp::acceptor acceptor(io_context);
+   * std::experimental::net::ip::tcp::acceptor acceptor(io_context);
    * ...
-   * std::experimental::net::v1::ip::tcp::endpoint endpoint;
-   * std::experimental::net::v1::ip::tcp::socket socket(
+   * std::experimental::net::ip::tcp::endpoint endpoint;
+   * std::experimental::net::ip::tcp::socket socket(
    *     acceptor.accept(io_context2, endpoint));
    * @endcode
    */
@@ -1533,10 +1533,10 @@ public:
    *
    * @par Example
    * @code
-   * std::experimental::net::v1::ip::tcp::acceptor acceptor(io_context);
+   * std::experimental::net::ip::tcp::acceptor acceptor(io_context);
    * ...
-   * std::experimental::net::v1::ip::tcp::endpoint endpoint;
-   * std::experimental::net::v1::ip::tcp::socket socket(
+   * std::experimental::net::ip::tcp::endpoint endpoint;
+   * std::experimental::net::ip::tcp::socket socket(
    *     acceptor.accept(io_context2, endpoint, ec));
    * if (ec)
    * {
@@ -1582,7 +1582,7 @@ public:
    * @par Example
    * @code
    * void accept_handler(const std::error_code& error,
-   *     std::experimental::net::v1::ip::tcp::socket peer)
+   *     std::experimental::net::ip::tcp::socket peer)
    * {
    *   if (!error)
    *   {
@@ -1592,9 +1592,9 @@ public:
    *
    * ...
    *
-   * std::experimental::net::v1::ip::tcp::acceptor acceptor(io_context);
+   * std::experimental::net::ip::tcp::acceptor acceptor(io_context);
    * ...
-   * std::experimental::net::v1::ip::tcp::endpoint endpoint;
+   * std::experimental::net::ip::tcp::endpoint endpoint;
    * acceptor.async_accept(io_context2, endpoint, accept_handler);
    * @endcode
    */

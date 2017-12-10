@@ -109,8 +109,8 @@ struct is_match_condition
  * @par Example
  * To read data into a @c std::string until a newline is encountered:
  * @code std::string data;
- * std::string n = std::experimental::net::v1::read_until(s,
- *     std::experimental::net::v1::dynamic_buffer(data), '\n');
+ * std::string n = std::experimental::net::read_until(s,
+ *     std::experimental::net::dynamic_buffer(data), '\n');
  * std::string line = data.substr(0, n);
  * data.erase(0, n); @endcode
  * After the @c read_until operation completes successfully, the string @c data
@@ -203,8 +203,8 @@ std::size_t read_until(SyncReadStream& s,
  * @par Example
  * To read data into a @c std::string until a CR-LF sequence is encountered:
  * @code std::string data;
- * std::string n = std::experimental::net::v1::read_until(s,
- *     std::experimental::net::v1::dynamic_buffer(data), "\r\n");
+ * std::string n = std::experimental::net::read_until(s,
+ *     std::experimental::net::dynamic_buffer(data), "\r\n");
  * std::string line = data.substr(0, n);
  * data.erase(0, n); @endcode
  * After the @c read_until operation completes successfully, the string @c data
@@ -343,7 +343,7 @@ std::size_t read_until(SyncReadStream& s,
  *   }
  * }
  * ...
- * std::experimental::net::v1::async_read_until(s, data, '\n', handler); @endcode
+ * std::experimental::net::async_read_until(s, data, '\n', handler); @endcode
  * After the @c async_read_until operation completes successfully, the buffer
  * @c data contains the delimiter:
  * @code { 'a', 'b', ..., 'c', '\n', 'd', 'e', ... } @endcode
@@ -433,7 +433,7 @@ async_read_until(AsyncReadStream& s,
  *   }
  * }
  * ...
- * std::experimental::net::v1::async_read_until(s, data, "\r\n", handler); @endcode
+ * std::experimental::net::async_read_until(s, data, "\r\n", handler); @endcode
  * After the @c async_read_until operation completes successfully, the string
  * @c data contains the delimiter:
  * @code { 'a', 'b', ..., 'c', '\r', '\n', 'd', 'e', ... } @endcode

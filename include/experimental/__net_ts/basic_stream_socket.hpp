@@ -235,7 +235,7 @@ public:
    * @par Example
    * To send a single data buffer use the @ref buffer function as follows:
    * @code
-   * socket.send(std::experimental::net::v1::buffer(data, size));
+   * socket.send(std::experimental::net::buffer(data, size));
    * @endcode
    * See the @ref buffer documentation for information on sending multiple
    * buffers in one go, and how to use it with arrays, boost::array or
@@ -272,7 +272,7 @@ public:
    * @par Example
    * To send a single data buffer use the @ref buffer function as follows:
    * @code
-   * socket.send(std::experimental::net::v1::buffer(data, size), 0);
+   * socket.send(std::experimental::net::buffer(data, size), 0);
    * @endcode
    * See the @ref buffer documentation for information on sending multiple
    * buffers in one go, and how to use it with arrays, boost::array or
@@ -344,7 +344,7 @@ public:
    * @par Example
    * To send a single data buffer use the @ref buffer function as follows:
    * @code
-   * socket.async_send(std::experimental::net::v1::buffer(data, size), handler);
+   * socket.async_send(std::experimental::net::buffer(data, size), handler);
    * @endcode
    * See the @ref buffer documentation for information on sending multiple
    * buffers in one go, and how to use it with arrays, boost::array or
@@ -401,7 +401,7 @@ public:
    * @par Example
    * To send a single data buffer use the @ref buffer function as follows:
    * @code
-   * socket.async_send(std::experimental::net::v1::buffer(data, size), 0, handler);
+   * socket.async_send(std::experimental::net::buffer(data, size), 0, handler);
    * @endcode
    * See the @ref buffer documentation for information on sending multiple
    * buffers in one go, and how to use it with arrays, boost::array or
@@ -450,7 +450,7 @@ public:
    * To receive into a single data buffer use the @ref buffer function as
    * follows:
    * @code
-   * socket.receive(std::experimental::net::v1::buffer(data, size));
+   * socket.receive(std::experimental::net::buffer(data, size));
    * @endcode
    * See the @ref buffer documentation for information on receiving into
    * multiple buffers in one go, and how to use it with arrays, boost::array or
@@ -490,7 +490,7 @@ public:
    * To receive into a single data buffer use the @ref buffer function as
    * follows:
    * @code
-   * socket.receive(std::experimental::net::v1::buffer(data, size), 0);
+   * socket.receive(std::experimental::net::buffer(data, size), 0);
    * @endcode
    * See the @ref buffer documentation for information on receiving into
    * multiple buffers in one go, and how to use it with arrays, boost::array or
@@ -564,7 +564,7 @@ public:
    * To receive into a single data buffer use the @ref buffer function as
    * follows:
    * @code
-   * socket.async_receive(std::experimental::net::v1::buffer(data, size), handler);
+   * socket.async_receive(std::experimental::net::buffer(data, size), handler);
    * @endcode
    * See the @ref buffer documentation for information on receiving into
    * multiple buffers in one go, and how to use it with arrays, boost::array or
@@ -622,7 +622,7 @@ public:
    * To receive into a single data buffer use the @ref buffer function as
    * follows:
    * @code
-   * socket.async_receive(std::experimental::net::v1::buffer(data, size), 0, handler);
+   * socket.async_receive(std::experimental::net::buffer(data, size), 0, handler);
    * @endcode
    * See the @ref buffer documentation for information on receiving into
    * multiple buffers in one go, and how to use it with arrays, boost::array or
@@ -669,7 +669,7 @@ public:
    * @par Example
    * To write a single data buffer use the @ref buffer function as follows:
    * @code
-   * socket.write_some(std::experimental::net::v1::buffer(data, size));
+   * socket.write_some(std::experimental::net::buffer(data, size));
    * @endcode
    * See the @ref buffer documentation for information on writing multiple
    * buffers in one go, and how to use it with arrays, boost::array or
@@ -737,7 +737,7 @@ public:
    * @par Example
    * To write a single data buffer use the @ref buffer function as follows:
    * @code
-   * socket.async_write_some(std::experimental::net::v1::buffer(data, size), handler);
+   * socket.async_write_some(std::experimental::net::buffer(data, size), handler);
    * @endcode
    * See the @ref buffer documentation for information on writing multiple
    * buffers in one go, and how to use it with arrays, boost::array or
@@ -784,7 +784,7 @@ public:
    * @par Example
    * To read into a single data buffer use the @ref buffer function as follows:
    * @code
-   * socket.read_some(std::experimental::net::v1::buffer(data, size));
+   * socket.read_some(std::experimental::net::buffer(data, size));
    * @endcode
    * See the @ref buffer documentation for information on reading into multiple
    * buffers in one go, and how to use it with arrays, boost::array or
@@ -855,7 +855,7 @@ public:
    * @par Example
    * To read into a single data buffer use the @ref buffer function as follows:
    * @code
-   * socket.async_read_some(std::experimental::net::v1::buffer(data, size), handler);
+   * socket.async_read_some(std::experimental::net::buffer(data, size), handler);
    * @endcode
    * See the @ref buffer documentation for information on reading into multiple
    * buffers in one go, and how to use it with arrays, boost::array or

@@ -105,7 +105,7 @@ namespace detail {
  * For example:
  *
  * @code
- * std::experimental::net::v1::io_context io_context;
+ * std::experimental::net::io_context io_context;
  * ...
  * for (;;)
  * {
@@ -135,13 +135,13 @@ namespace detail {
  *
  * ...
  *
- * std::experimental::net::v1::io_context io_context;
+ * std::experimental::net::io_context io_context;
  *
  * // Submit a function to the io_context.
- * std::experimental::net::v1::post(io_context, my_task);
+ * std::experimental::net::post(io_context, my_task);
  *
  * // Submit a lambda object to the io_context.
- * std::experimental::net::v1::post(io_context,
+ * std::experimental::net::post(io_context,
  *     []()
  *     {
  *       ...
@@ -159,9 +159,9 @@ namespace detail {
  * creating an object of type
  * std::experimental::net::v1::executor_work_guard<io_context::executor_type>:
  *
- * @code std::experimental::net::v1::io_context io_context;
- * std::experimental::net::v1::executor_work_guard<std::experimental::net::v1::io_context::executor_type>
- *   = std::experimental::net::v1::make_work_guard(io_context);
+ * @code std::experimental::net::io_context io_context;
+ * std::experimental::net::executor_work_guard<std::experimental::net::io_context::executor_type>
+ *   = std::experimental::net::make_work_guard(io_context);
  * ... @endcode
  *
  * To effect a shutdown, the application will then need to call the io_context
@@ -172,9 +172,9 @@ namespace detail {
  * Alternatively, if the application requires that all operations and handlers
  * be allowed to finish normally, the work object may be explicitly reset.
  *
- * @code std::experimental::net::v1::io_context io_context;
- * std::experimental::net::v1::executor_work_guard<std::experimental::net::v1::io_context::executor_type>
- *   = std::experimental::net::v1::make_work_guard(io_context);
+ * @code std::experimental::net::io_context io_context;
+ * std::experimental::net::executor_work_guard<std::experimental::net::io_context::executor_type>
+ *   = std::experimental::net::make_work_guard(io_context);
  * ...
  * work.reset(); // Allow run() to exit. @endcode
  */

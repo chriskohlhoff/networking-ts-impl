@@ -72,12 +72,12 @@ public:
    * @par Examples
    * To initialise an IPv4 TCP endpoint for port 1234, use:
    * @code
-   * std::experimental::net::v1::ip::tcp::endpoint ep(std::experimental::net::v1::ip::tcp::v4(), 1234);
+   * std::experimental::net::ip::tcp::endpoint ep(std::experimental::net::ip::tcp::v4(), 1234);
    * @endcode
    *
    * To specify an IPv6 UDP endpoint for port 9876, use:
    * @code
-   * std::experimental::net::v1::ip::udp::endpoint ep(std::experimental::net::v1::ip::udp::v6(), 9876);
+   * std::experimental::net::ip::udp::endpoint ep(std::experimental::net::ip::udp::v6(), 9876);
    * @endcode
    */
   basic_endpoint(const InternetProtocol& internet_protocol,

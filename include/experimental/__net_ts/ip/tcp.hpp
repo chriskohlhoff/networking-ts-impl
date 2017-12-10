@@ -102,18 +102,18 @@ public:
    * @par Examples
    * Setting the option:
    * @code
-   * std::experimental::net::v1::ip::tcp::socket socket(io_context); 
+   * std::experimental::net::ip::tcp::socket socket(io_context); 
    * ...
-   * std::experimental::net::v1::ip::tcp::no_delay option(true);
+   * std::experimental::net::ip::tcp::no_delay option(true);
    * socket.set_option(option);
    * @endcode
    *
    * @par
    * Getting the current option value:
    * @code
-   * std::experimental::net::v1::ip::tcp::socket socket(io_context); 
+   * std::experimental::net::ip::tcp::socket socket(io_context); 
    * ...
-   * std::experimental::net::v1::ip::tcp::no_delay option;
+   * std::experimental::net::ip::tcp::no_delay option;
    * socket.get_option(option);
    * bool is_set = option.value();
    * @endcode

@@ -35,18 +35,18 @@ namespace unicast {
  * @par Examples
  * Setting the option:
  * @code
- * std::experimental::net::v1::ip::udp::socket socket(io_context); 
+ * std::experimental::net::ip::udp::socket socket(io_context); 
  * ...
- * std::experimental::net::v1::ip::unicast::hops option(4);
+ * std::experimental::net::ip::unicast::hops option(4);
  * socket.set_option(option);
  * @endcode
  *
  * @par
  * Getting the current option value:
  * @code
- * std::experimental::net::v1::ip::udp::socket socket(io_context); 
+ * std::experimental::net::ip::udp::socket socket(io_context); 
  * ...
- * std::experimental::net::v1::ip::unicast::hops option;
+ * std::experimental::net::ip::unicast::hops option;
  * socket.get_option(option);
  * int ttl = option.value();
  * @endcode

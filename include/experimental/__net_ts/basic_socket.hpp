@@ -251,8 +251,8 @@ public:
    *
    * @par Example
    * @code
-   * std::experimental::net::v1::ip::tcp::socket socket(io_context);
-   * socket.open(std::experimental::net::v1::ip::tcp::v4());
+   * std::experimental::net::ip::tcp::socket socket(io_context);
+   * socket.open(std::experimental::net::ip::tcp::v4());
    * @endcode
    */
   void open(const protocol_type& protocol = protocol_type())
@@ -272,9 +272,9 @@ public:
    *
    * @par Example
    * @code
-   * std::experimental::net::v1::ip::tcp::socket socket(io_context);
+   * std::experimental::net::ip::tcp::socket socket(io_context);
    * std::error_code ec;
-   * socket.open(std::experimental::net::v1::ip::tcp::v4(), ec);
+   * socket.open(std::experimental::net::ip::tcp::v4(), ec);
    * if (ec)
    * {
    *   // An error occurred.
@@ -361,7 +361,7 @@ public:
    *
    * @par Example
    * @code
-   * std::experimental::net::v1::ip::tcp::socket socket(io_context);
+   * std::experimental::net::ip::tcp::socket socket(io_context);
    * ...
    * std::error_code ec;
    * socket.close(ec);
@@ -617,10 +617,10 @@ public:
    *
    * @par Example
    * @code
-   * std::experimental::net::v1::ip::tcp::socket socket(io_context);
-   * socket.open(std::experimental::net::v1::ip::tcp::v4());
-   * socket.bind(std::experimental::net::v1::ip::tcp::endpoint(
-   *       std::experimental::net::v1::ip::tcp::v4(), 12345));
+   * std::experimental::net::ip::tcp::socket socket(io_context);
+   * socket.open(std::experimental::net::ip::tcp::v4());
+   * socket.bind(std::experimental::net::ip::tcp::endpoint(
+   *       std::experimental::net::ip::tcp::v4(), 12345));
    * @endcode
    */
   void bind(const endpoint_type& endpoint)
@@ -642,11 +642,11 @@ public:
    *
    * @par Example
    * @code
-   * std::experimental::net::v1::ip::tcp::socket socket(io_context);
-   * socket.open(std::experimental::net::v1::ip::tcp::v4());
+   * std::experimental::net::ip::tcp::socket socket(io_context);
+   * socket.open(std::experimental::net::ip::tcp::v4());
    * std::error_code ec;
-   * socket.bind(std::experimental::net::v1::ip::tcp::endpoint(
-   *       std::experimental::net::v1::ip::tcp::v4(), 12345), ec);
+   * socket.bind(std::experimental::net::ip::tcp::endpoint(
+   *       std::experimental::net::ip::tcp::v4(), 12345), ec);
    * if (ec)
    * {
    *   // An error occurred.
@@ -677,9 +677,9 @@ public:
    *
    * @par Example
    * @code
-   * std::experimental::net::v1::ip::tcp::socket socket(io_context);
-   * std::experimental::net::v1::ip::tcp::endpoint endpoint(
-   *     std::experimental::net::v1::ip::address::from_string("1.2.3.4"), 12345);
+   * std::experimental::net::ip::tcp::socket socket(io_context);
+   * std::experimental::net::ip::tcp::endpoint endpoint(
+   *     std::experimental::net::ip::address::from_string("1.2.3.4"), 12345);
    * socket.connect(endpoint);
    * @endcode
    */
@@ -713,9 +713,9 @@ public:
    *
    * @par Example
    * @code
-   * std::experimental::net::v1::ip::tcp::socket socket(io_context);
-   * std::experimental::net::v1::ip::tcp::endpoint endpoint(
-   *     std::experimental::net::v1::ip::address::from_string("1.2.3.4"), 12345);
+   * std::experimental::net::ip::tcp::socket socket(io_context);
+   * std::experimental::net::ip::tcp::endpoint endpoint(
+   *     std::experimental::net::ip::address::from_string("1.2.3.4"), 12345);
    * std::error_code ec;
    * socket.connect(endpoint, ec);
    * if (ec)
@@ -776,9 +776,9 @@ public:
    *
    * ...
    *
-   * std::experimental::net::v1::ip::tcp::socket socket(io_context);
-   * std::experimental::net::v1::ip::tcp::endpoint endpoint(
-   *     std::experimental::net::v1::ip::address::from_string("1.2.3.4"), 12345);
+   * std::experimental::net::ip::tcp::socket socket(io_context);
+   * std::experimental::net::ip::tcp::endpoint endpoint(
+   *     std::experimental::net::ip::address::from_string("1.2.3.4"), 12345);
    * socket.async_connect(endpoint, connect_handler);
    * @endcode
    */
@@ -849,9 +849,9 @@ public:
    * @par Example
    * Setting the IPPROTO_TCP/TCP_NODELAY option:
    * @code
-   * std::experimental::net::v1::ip::tcp::socket socket(io_context);
+   * std::experimental::net::ip::tcp::socket socket(io_context);
    * ...
-   * std::experimental::net::v1::ip::tcp::no_delay option(true);
+   * std::experimental::net::ip::tcp::no_delay option(true);
    * socket.set_option(option);
    * @endcode
    */
@@ -891,9 +891,9 @@ public:
    * @par Example
    * Setting the IPPROTO_TCP/TCP_NODELAY option:
    * @code
-   * std::experimental::net::v1::ip::tcp::socket socket(io_context);
+   * std::experimental::net::ip::tcp::socket socket(io_context);
    * ...
-   * std::experimental::net::v1::ip::tcp::no_delay option(true);
+   * std::experimental::net::ip::tcp::no_delay option(true);
    * std::error_code ec;
    * socket.set_option(option, ec);
    * if (ec)
@@ -938,9 +938,9 @@ public:
    * @par Example
    * Getting the value of the SOL_SOCKET/SO_KEEPALIVE option:
    * @code
-   * std::experimental::net::v1::ip::tcp::socket socket(io_context);
+   * std::experimental::net::ip::tcp::socket socket(io_context);
    * ...
-   * std::experimental::net::v1::ip::tcp::socket::keep_alive option;
+   * std::experimental::net::ip::tcp::socket::keep_alive option;
    * socket.get_option(option);
    * bool is_set = option.value();
    * @endcode
@@ -981,9 +981,9 @@ public:
    * @par Example
    * Getting the value of the SOL_SOCKET/SO_KEEPALIVE option:
    * @code
-   * std::experimental::net::v1::ip::tcp::socket socket(io_context);
+   * std::experimental::net::ip::tcp::socket socket(io_context);
    * ...
-   * std::experimental::net::v1::ip::tcp::socket::keep_alive option;
+   * std::experimental::net::ip::tcp::socket::keep_alive option;
    * std::error_code ec;
    * socket.get_option(option, ec);
    * if (ec)
@@ -1016,9 +1016,9 @@ public:
    * @par Example
    * Getting the number of bytes ready to read:
    * @code
-   * std::experimental::net::v1::ip::tcp::socket socket(io_context);
+   * std::experimental::net::ip::tcp::socket socket(io_context);
    * ...
-   * std::experimental::net::v1::ip::tcp::socket::bytes_readable command;
+   * std::experimental::net::ip::tcp::socket::bytes_readable command;
    * socket.io_control(command);
    * std::size_t bytes_readable = command.get();
    * @endcode
@@ -1046,9 +1046,9 @@ public:
    * @par Example
    * Getting the number of bytes ready to read:
    * @code
-   * std::experimental::net::v1::ip::tcp::socket socket(io_context);
+   * std::experimental::net::ip::tcp::socket socket(io_context);
    * ...
-   * std::experimental::net::v1::ip::tcp::socket::bytes_readable command;
+   * std::experimental::net::ip::tcp::socket::bytes_readable command;
    * std::error_code ec;
    * socket.io_control(command, ec);
    * if (ec)
@@ -1167,16 +1167,16 @@ public:
    *         errno = 0;
    *         int n = ::sendfile(sock_.native_handle(), fd_, &offset_, 65536);
    *         ec = std::error_code(n < 0 ? errno : 0,
-   *             std::experimental::net::v1::error::get_system_category());
+   *             std::experimental::net::error::get_system_category());
    *         total_bytes_transferred_ += ec ? 0 : n;
    *
    *         // Retry operation immediately if interrupted by signal.
-   *         if (ec == std::experimental::net::v1::error::interrupted)
+   *         if (ec == std::experimental::net::error::interrupted)
    *           continue;
    *
    *         // Check if we need to run the operation again.
-   *         if (ec == std::experimental::net::v1::error::would_block
-   *             || ec == std::experimental::net::v1::error::try_again)
+   *         if (ec == std::experimental::net::error::would_block
+   *             || ec == std::experimental::net::error::try_again)
    *         {
    *           // We have to wait for the socket to become ready again.
    *           sock_.async_wait(tcp::socket::wait_write, *this);
@@ -1257,16 +1257,16 @@ public:
    *         errno = 0;
    *         int n = ::sendfile(sock_.native_handle(), fd_, &offset_, 65536);
    *         ec = std::error_code(n < 0 ? errno : 0,
-   *             std::experimental::net::v1::error::get_system_category());
+   *             std::experimental::net::error::get_system_category());
    *         total_bytes_transferred_ += ec ? 0 : n;
    *
    *         // Retry operation immediately if interrupted by signal.
-   *         if (ec == std::experimental::net::v1::error::interrupted)
+   *         if (ec == std::experimental::net::error::interrupted)
    *           continue;
    *
    *         // Check if we need to run the operation again.
-   *         if (ec == std::experimental::net::v1::error::would_block
-   *             || ec == std::experimental::net::v1::error::try_again)
+   *         if (ec == std::experimental::net::error::would_block
+   *             || ec == std::experimental::net::error::try_again)
    *         {
    *           // We have to wait for the socket to become ready again.
    *           sock_.async_wait(tcp::socket::wait_write, *this);
@@ -1350,16 +1350,16 @@ public:
    *         errno = 0;
    *         int n = ::sendfile(sock_.native_handle(), fd_, &offset_, 65536);
    *         ec = std::error_code(n < 0 ? errno : 0,
-   *             std::experimental::net::v1::error::get_system_category());
+   *             std::experimental::net::error::get_system_category());
    *         total_bytes_transferred_ += ec ? 0 : n;
    *
    *         // Retry operation immediately if interrupted by signal.
-   *         if (ec == std::experimental::net::v1::error::interrupted)
+   *         if (ec == std::experimental::net::error::interrupted)
    *           continue;
    *
    *         // Check if we need to run the operation again.
-   *         if (ec == std::experimental::net::v1::error::would_block
-   *             || ec == std::experimental::net::v1::error::try_again)
+   *         if (ec == std::experimental::net::error::would_block
+   *             || ec == std::experimental::net::error::try_again)
    *         {
    *           // We have to wait for the socket to become ready again.
    *           sock_.async_wait(tcp::socket::wait_write, *this);
@@ -1407,9 +1407,9 @@ public:
    *
    * @par Example
    * @code
-   * std::experimental::net::v1::ip::tcp::socket socket(io_context);
+   * std::experimental::net::ip::tcp::socket socket(io_context);
    * ...
-   * std::experimental::net::v1::ip::tcp::endpoint endpoint = socket.local_endpoint();
+   * std::experimental::net::ip::tcp::endpoint endpoint = socket.local_endpoint();
    * @endcode
    */
   endpoint_type local_endpoint() const
@@ -1432,10 +1432,10 @@ public:
    *
    * @par Example
    * @code
-   * std::experimental::net::v1::ip::tcp::socket socket(io_context);
+   * std::experimental::net::ip::tcp::socket socket(io_context);
    * ...
    * std::error_code ec;
-   * std::experimental::net::v1::ip::tcp::endpoint endpoint = socket.local_endpoint(ec);
+   * std::experimental::net::ip::tcp::endpoint endpoint = socket.local_endpoint(ec);
    * if (ec)
    * {
    *   // An error occurred.
@@ -1457,9 +1457,9 @@ public:
    *
    * @par Example
    * @code
-   * std::experimental::net::v1::ip::tcp::socket socket(io_context);
+   * std::experimental::net::ip::tcp::socket socket(io_context);
    * ...
-   * std::experimental::net::v1::ip::tcp::endpoint endpoint = socket.remote_endpoint();
+   * std::experimental::net::ip::tcp::endpoint endpoint = socket.remote_endpoint();
    * @endcode
    */
   endpoint_type remote_endpoint() const
@@ -1482,10 +1482,10 @@ public:
    *
    * @par Example
    * @code
-   * std::experimental::net::v1::ip::tcp::socket socket(io_context);
+   * std::experimental::net::ip::tcp::socket socket(io_context);
    * ...
    * std::error_code ec;
-   * std::experimental::net::v1::ip::tcp::endpoint endpoint = socket.remote_endpoint(ec);
+   * std::experimental::net::ip::tcp::endpoint endpoint = socket.remote_endpoint(ec);
    * if (ec)
    * {
    *   // An error occurred.
@@ -1509,9 +1509,9 @@ public:
    * @par Example
    * Shutting down the send side of the socket:
    * @code
-   * std::experimental::net::v1::ip::tcp::socket socket(io_context);
+   * std::experimental::net::ip::tcp::socket socket(io_context);
    * ...
-   * socket.shutdown(std::experimental::net::v1::ip::tcp::socket::shutdown_send);
+   * socket.shutdown(std::experimental::net::ip::tcp::socket::shutdown_send);
    * @endcode
    */
   void shutdown(shutdown_type what)
@@ -1533,10 +1533,10 @@ public:
    * @par Example
    * Shutting down the send side of the socket:
    * @code
-   * std::experimental::net::v1::ip::tcp::socket socket(io_context);
+   * std::experimental::net::ip::tcp::socket socket(io_context);
    * ...
    * std::error_code ec;
-   * socket.shutdown(std::experimental::net::v1::ip::tcp::socket::shutdown_send, ec);
+   * socket.shutdown(std::experimental::net::ip::tcp::socket::shutdown_send, ec);
    * if (ec)
    * {
    *   // An error occurred.
@@ -1561,9 +1561,9 @@ public:
    * @par Example
    * Waiting for a socket to become readable.
    * @code
-   * std::experimental::net::v1::ip::tcp::socket socket(io_context);
+   * std::experimental::net::ip::tcp::socket socket(io_context);
    * ...
-   * socket.wait(std::experimental::net::v1::ip::tcp::socket::wait_read);
+   * socket.wait(std::experimental::net::ip::tcp::socket::wait_read);
    * @endcode
    */
   void wait(wait_type w)
@@ -1586,10 +1586,10 @@ public:
    * @par Example
    * Waiting for a socket to become readable.
    * @code
-   * std::experimental::net::v1::ip::tcp::socket socket(io_context);
+   * std::experimental::net::ip::tcp::socket socket(io_context);
    * ...
    * std::error_code ec;
-   * socket.wait(std::experimental::net::v1::ip::tcp::socket::wait_read, ec);
+   * socket.wait(std::experimental::net::ip::tcp::socket::wait_read, ec);
    * @endcode
    */
   NET_TS_SYNC_OP_VOID wait(wait_type w, std::error_code& ec)
@@ -1629,9 +1629,9 @@ public:
    *
    * ...
    *
-   * std::experimental::net::v1::ip::tcp::socket socket(io_context);
+   * std::experimental::net::ip::tcp::socket socket(io_context);
    * ...
-   * socket.async_wait(std::experimental::net::v1::ip::tcp::socket::wait_read, wait_handler);
+   * socket.async_wait(std::experimental::net::ip::tcp::socket::wait_read, wait_handler);
    * @endcode
    */
   template <typename WaitHandler>

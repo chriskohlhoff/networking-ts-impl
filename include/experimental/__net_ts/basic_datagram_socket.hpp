@@ -235,7 +235,7 @@ public:
    *
    * @par Example
    * To send a single data buffer use the @ref buffer function as follows:
-   * @code socket.send(std::experimental::net::v1::buffer(data, size)); @endcode
+   * @code socket.send(std::experimental::net::buffer(data, size)); @endcode
    * See the @ref buffer documentation for information on sending multiple
    * buffers in one go, and how to use it with arrays, boost::array or
    * std::vector.
@@ -332,7 +332,7 @@ public:
    * @par Example
    * To send a single data buffer use the @ref buffer function as follows:
    * @code
-   * socket.async_send(std::experimental::net::v1::buffer(data, size), handler);
+   * socket.async_send(std::experimental::net::buffer(data, size), handler);
    * @endcode
    * See the @ref buffer documentation for information on sending multiple
    * buffers in one go, and how to use it with arrays, boost::array or
@@ -422,9 +422,9 @@ public:
    * @par Example
    * To send a single data buffer use the @ref buffer function as follows:
    * @code
-   * std::experimental::net::v1::ip::udp::endpoint destination(
-   *     std::experimental::net::v1::ip::address::from_string("1.2.3.4"), 12345);
-   * socket.send_to(std::experimental::net::v1::buffer(data, size), destination);
+   * std::experimental::net::ip::udp::endpoint destination(
+   *     std::experimental::net::ip::address::from_string("1.2.3.4"), 12345);
+   * socket.send_to(std::experimental::net::buffer(data, size), destination);
    * @endcode
    * See the @ref buffer documentation for information on sending multiple
    * buffers in one go, and how to use it with arrays, boost::array or
@@ -521,10 +521,10 @@ public:
    * @par Example
    * To send a single data buffer use the @ref buffer function as follows:
    * @code
-   * std::experimental::net::v1::ip::udp::endpoint destination(
-   *     std::experimental::net::v1::ip::address::from_string("1.2.3.4"), 12345);
+   * std::experimental::net::ip::udp::endpoint destination(
+   *     std::experimental::net::ip::address::from_string("1.2.3.4"), 12345);
    * socket.async_send_to(
-   *     std::experimental::net::v1::buffer(data, size), destination, handler);
+   *     std::experimental::net::buffer(data, size), destination, handler);
    * @endcode
    * See the @ref buffer documentation for information on sending multiple
    * buffers in one go, and how to use it with arrays, boost::array or
@@ -618,7 +618,7 @@ public:
    * @par Example
    * To receive into a single data buffer use the @ref buffer function as
    * follows:
-   * @code socket.receive(std::experimental::net::v1::buffer(data, size)); @endcode
+   * @code socket.receive(std::experimental::net::buffer(data, size)); @endcode
    * See the @ref buffer documentation for information on receiving into
    * multiple buffers in one go, and how to use it with arrays, boost::array or
    * std::vector.
@@ -718,7 +718,7 @@ public:
    * To receive into a single data buffer use the @ref buffer function as
    * follows:
    * @code
-   * socket.async_receive(std::experimental::net::v1::buffer(data, size), handler);
+   * socket.async_receive(std::experimental::net::buffer(data, size), handler);
    * @endcode
    * See the @ref buffer documentation for information on receiving into
    * multiple buffers in one go, and how to use it with arrays, boost::array or
@@ -809,9 +809,9 @@ public:
    * To receive into a single data buffer use the @ref buffer function as
    * follows:
    * @code
-   * std::experimental::net::v1::ip::udp::endpoint sender_endpoint;
+   * std::experimental::net::ip::udp::endpoint sender_endpoint;
    * socket.receive_from(
-   *     std::experimental::net::v1::buffer(data, size), sender_endpoint);
+   *     std::experimental::net::buffer(data, size), sender_endpoint);
    * @endcode
    * See the @ref buffer documentation for information on receiving into
    * multiple buffers in one go, and how to use it with arrays, boost::array or
@@ -911,7 +911,7 @@ public:
    * To receive into a single data buffer use the @ref buffer function as
    * follows:
    * @code socket.async_receive_from(
-   *     std::experimental::net::v1::buffer(data, size), sender_endpoint, handler); @endcode
+   *     std::experimental::net::buffer(data, size), sender_endpoint, handler); @endcode
    * See the @ref buffer documentation for information on receiving into
    * multiple buffers in one go, and how to use it with arrays, boost::array or
    * std::vector.

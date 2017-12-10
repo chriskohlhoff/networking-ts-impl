@@ -62,15 +62,15 @@ inline namespace v1 {
  *
  * @par Example
  * To read into a single data buffer use the @ref buffer function as follows:
- * @code std::experimental::net::v1::read(s, std::experimental::net::v1::buffer(data, size)); @endcode
+ * @code std::experimental::net::read(s, std::experimental::net::buffer(data, size)); @endcode
  * See the @ref buffer documentation for information on reading into multiple
  * buffers in one go, and how to use it with arrays, boost::array or
  * std::vector.
  *
  * @note This overload is equivalent to calling:
- * @code std::experimental::net::v1::read(
+ * @code std::experimental::net::read(
  *     s, buffers,
- *     std::experimental::net::v1::transfer_all()); @endcode
+ *     std::experimental::net::transfer_all()); @endcode
  */
 template <typename SyncReadStream, typename MutableBufferSequence>
 std::size_t read(SyncReadStream& s, const MutableBufferSequence& buffers,
@@ -104,15 +104,15 @@ std::size_t read(SyncReadStream& s, const MutableBufferSequence& buffers,
  *
  * @par Example
  * To read into a single data buffer use the @ref buffer function as follows:
- * @code std::experimental::net::v1::read(s, std::experimental::net::v1::buffer(data, size), ec); @endcode
+ * @code std::experimental::net::read(s, std::experimental::net::buffer(data, size), ec); @endcode
  * See the @ref buffer documentation for information on reading into multiple
  * buffers in one go, and how to use it with arrays, boost::array or
  * std::vector.
  *
  * @note This overload is equivalent to calling:
- * @code std::experimental::net::v1::read(
+ * @code std::experimental::net::read(
  *     s, buffers,
- *     std::experimental::net::v1::transfer_all(), ec); @endcode
+ *     std::experimental::net::transfer_all(), ec); @endcode
  */
 template <typename SyncReadStream, typename MutableBufferSequence>
 std::size_t read(SyncReadStream& s, const MutableBufferSequence& buffers,
@@ -161,8 +161,8 @@ std::size_t read(SyncReadStream& s, const MutableBufferSequence& buffers,
  *
  * @par Example
  * To read into a single data buffer use the @ref buffer function as follows:
- * @code std::experimental::net::v1::read(s, std::experimental::net::v1::buffer(data, size),
- *     std::experimental::net::v1::transfer_at_least(32)); @endcode
+ * @code std::experimental::net::read(s, std::experimental::net::buffer(data, size),
+ *     std::experimental::net::transfer_at_least(32)); @endcode
  * See the @ref buffer documentation for information on reading into multiple
  * buffers in one go, and how to use it with arrays, boost::array or
  * std::vector.
@@ -245,9 +245,9 @@ std::size_t read(SyncReadStream& s, const MutableBufferSequence& buffers,
  * @throws std::system_error Thrown on failure.
  *
  * @note This overload is equivalent to calling:
- * @code std::experimental::net::v1::read(
+ * @code std::experimental::net::read(
  *     s, buffers,
- *     std::experimental::net::v1::transfer_all()); @endcode
+ *     std::experimental::net::transfer_all()); @endcode
  */
 template <typename SyncReadStream, typename DynamicBuffer>
 std::size_t read(SyncReadStream& s,
@@ -278,9 +278,9 @@ std::size_t read(SyncReadStream& s,
  * @returns The number of bytes transferred.
  *
  * @note This overload is equivalent to calling:
- * @code std::experimental::net::v1::read(
+ * @code std::experimental::net::read(
  *     s, buffers,
- *     std::experimental::net::v1::transfer_all(), ec); @endcode
+ *     std::experimental::net::transfer_all(), ec); @endcode
  */
 template <typename SyncReadStream, typename DynamicBuffer>
 std::size_t read(SyncReadStream& s,
@@ -438,16 +438,16 @@ std::size_t read(SyncReadStream& s,
  * @par Example
  * To read into a single data buffer use the @ref buffer function as follows:
  * @code
- * std::experimental::net::v1::async_read(s, std::experimental::net::v1::buffer(data, size), handler);
+ * std::experimental::net::async_read(s, std::experimental::net::buffer(data, size), handler);
  * @endcode
  * See the @ref buffer documentation for information on reading into multiple
  * buffers in one go, and how to use it with arrays, boost::array or
  * std::vector.
  *
  * @note This overload is equivalent to calling:
- * @code std::experimental::net::v1::async_read(
+ * @code std::experimental::net::async_read(
  *     s, buffers,
- *     std::experimental::net::v1::transfer_all(),
+ *     std::experimental::net::transfer_all(),
  *     handler); @endcode
  */
 template <typename AsyncReadStream, typename MutableBufferSequence,
@@ -515,9 +515,9 @@ async_read(AsyncReadStream& s, const MutableBufferSequence& buffers,
  *
  * @par Example
  * To read into a single data buffer use the @ref buffer function as follows:
- * @code std::experimental::net::v1::async_read(s,
- *     std::experimental::net::v1::buffer(data, size),
- *     std::experimental::net::v1::transfer_at_least(32),
+ * @code std::experimental::net::async_read(s,
+ *     std::experimental::net::buffer(data, size),
+ *     std::experimental::net::transfer_at_least(32),
  *     handler); @endcode
  * See the @ref buffer documentation for information on reading into multiple
  * buffers in one go, and how to use it with arrays, boost::array or
@@ -579,9 +579,9 @@ async_read(AsyncReadStream& s, const MutableBufferSequence& buffers,
  * std::experimental::net::v1::io_context::post().
  *
  * @note This overload is equivalent to calling:
- * @code std::experimental::net::v1::async_read(
+ * @code std::experimental::net::async_read(
  *     s, buffers,
- *     std::experimental::net::v1::transfer_all(),
+ *     std::experimental::net::transfer_all(),
  *     handler); @endcode
  */
 template <typename AsyncReadStream,

@@ -87,7 +87,7 @@ struct is_endpoint_sequence
  * @code tcp::resolver r(io_context);
  * tcp::resolver::query q("host", "service");
  * tcp::socket s(io_context);
- * std::experimental::net::v1::connect(s, r.resolve(q)); @endcode
+ * std::experimental::net::connect(s, r.resolve(q)); @endcode
  */
 template <typename Protocol NET_TS_SVC_TPARAM, typename EndpointSequence>
 typename Protocol::endpoint connect(
@@ -120,7 +120,7 @@ typename Protocol::endpoint connect(
  * tcp::resolver::query q("host", "service");
  * tcp::socket s(io_context);
  * std::error_code ec;
- * std::experimental::net::v1::connect(s, r.resolve(q), ec);
+ * std::experimental::net::connect(s, r.resolve(q), ec);
  * if (ec)
  * {
  *   // An error occurred.
@@ -158,7 +158,7 @@ typename Protocol::endpoint connect(
  * tcp::resolver::query q("host", "service");
  * tcp::resolver::results_type e = r.resolve(q);
  * tcp::socket s(io_context);
- * std::experimental::net::v1::connect(s, e.begin(), e.end()); @endcode
+ * std::experimental::net::connect(s, e.begin(), e.end()); @endcode
  */
 template <typename Protocol NET_TS_SVC_TPARAM, typename Iterator>
 Iterator connect(basic_socket<Protocol NET_TS_SVC_TARG>& s,
@@ -191,7 +191,7 @@ Iterator connect(basic_socket<Protocol NET_TS_SVC_TARG>& s,
  * tcp::resolver::results_type e = r.resolve(q);
  * tcp::socket s(io_context);
  * std::error_code ec;
- * std::experimental::net::v1::connect(s, e.begin(), e.end(), ec);
+ * std::experimental::net::connect(s, e.begin(), e.end(), ec);
  * if (ec)
  * {
  *   // An error occurred.
@@ -248,7 +248,7 @@ Iterator connect(basic_socket<Protocol NET_TS_SVC_TARG>& s,
  * @code tcp::resolver r(io_context);
  * tcp::resolver::query q("host", "service");
  * tcp::socket s(io_context);
- * tcp::endpoint e = std::experimental::net::v1::connect(s,
+ * tcp::endpoint e = std::experimental::net::connect(s,
  *     r.resolve(q), my_connect_condition());
  * std::cout << "Connected to: " << e << std::endl; @endcode
  */
@@ -309,7 +309,7 @@ typename Protocol::endpoint connect(
  * tcp::resolver::query q("host", "service");
  * tcp::socket s(io_context);
  * std::error_code ec;
- * tcp::endpoint e = std::experimental::net::v1::connect(s,
+ * tcp::endpoint e = std::experimental::net::connect(s,
  *     r.resolve(q), my_connect_condition(), ec);
  * if (ec)
  * {
@@ -379,7 +379,7 @@ typename Protocol::endpoint connect(
  * tcp::resolver::query q("host", "service");
  * tcp::resolver::results_type e = r.resolve(q);
  * tcp::socket s(io_context);
- * tcp::resolver::results_type::iterator i = std::experimental::net::v1::connect(
+ * tcp::resolver::results_type::iterator i = std::experimental::net::connect(
  *     s, e.begin(), e.end(), my_connect_condition());
  * std::cout << "Connected to: " << i->endpoint() << std::endl; @endcode
  */
@@ -440,7 +440,7 @@ Iterator connect(basic_socket<Protocol NET_TS_SVC_TARG>& s, Iterator begin,
  * tcp::resolver::results_type e = r.resolve(q);
  * tcp::socket s(io_context);
  * std::error_code ec;
- * tcp::resolver::results_type::iterator i = std::experimental::net::v1::connect(
+ * tcp::resolver::results_type::iterator i = std::experimental::net::connect(
  *     s, e.begin(), e.end(), my_connect_condition());
  * if (ec)
  * {
@@ -485,7 +485,7 @@ Iterator connect(basic_socket<Protocol NET_TS_SVC_TARG>& s,
  * signature of the handler must be:
  * @code void handler(
  *   // Result of operation. if the sequence is empty, set to
- *   // std::experimental::net::v1::error::not_found. Otherwise, contains the
+ *   // std::experimental::net::error::not_found. Otherwise, contains the
  *   // error from the last connection attempt.
  *   const std::error_code& error,
  *
@@ -515,7 +515,7 @@ Iterator connect(basic_socket<Protocol NET_TS_SVC_TARG>& s,
  * {
  *   if (!ec)
  *   {
- *     std::experimental::net::v1::async_connect(s, results, connect_handler);
+ *     std::experimental::net::async_connect(s, results, connect_handler);
  *   }
  * }
  *
@@ -558,7 +558,7 @@ async_connect(basic_socket<Protocol NET_TS_SVC_TARG>& s,
  * signature of the handler must be:
  * @code void handler(
  *   // Result of operation. if the sequence is empty, set to
- *   // std::experimental::net::v1::error::not_found. Otherwise, contains the
+ *   // std::experimental::net::error::not_found. Otherwise, contains the
  *   // error from the last connection attempt.
  *   const std::error_code& error,
  *
@@ -574,7 +574,7 @@ async_connect(basic_socket<Protocol NET_TS_SVC_TARG>& s,
  * @par Example
  * @code std::vector<tcp::endpoint> endpoints = ...;
  * tcp::socket s(io_context);
- * std::experimental::net::v1::async_connect(s,
+ * std::experimental::net::async_connect(s,
  *     endpoints.begin(), endpoints.end(),
  *     connect_handler);
  *
@@ -624,7 +624,7 @@ async_connect(basic_socket<Protocol NET_TS_SVC_TARG>& s,
  * signature of the handler must be:
  * @code void handler(
  *   // Result of operation. if the sequence is empty, set to
- *   // std::experimental::net::v1::error::not_found. Otherwise, contains the
+ *   // std::experimental::net::error::not_found. Otherwise, contains the
  *   // error from the last connection attempt.
  *   const std::error_code& error,
  *
@@ -668,7 +668,7 @@ async_connect(basic_socket<Protocol NET_TS_SVC_TARG>& s,
  * {
  *   if (!ec)
  *   {
- *     std::experimental::net::v1::async_connect(s, results,
+ *     std::experimental::net::async_connect(s, results,
  *         my_connect_condition(),
  *         connect_handler);
  *   }
@@ -731,7 +731,7 @@ async_connect(basic_socket<Protocol NET_TS_SVC_TARG>& s,
  * signature of the handler must be:
  * @code void handler(
  *   // Result of operation. if the sequence is empty, set to
- *   // std::experimental::net::v1::error::not_found. Otherwise, contains the
+ *   // std::experimental::net::error::not_found. Otherwise, contains the
  *   // error from the last connection attempt.
  *   const std::error_code& error,
  *
@@ -776,7 +776,7 @@ async_connect(basic_socket<Protocol NET_TS_SVC_TARG>& s,
  *   if (!ec)
  *   {
  *     tcp::resolver::iterator end;
- *     std::experimental::net::v1::async_connect(s, i, end,
+ *     std::experimental::net::async_connect(s, i, end,
  *         my_connect_condition(),
  *         connect_handler);
  *   }

@@ -74,7 +74,7 @@ class basic_waitable_timer;
  * Performing a blocking wait (C++11):
  * @code
  * // Construct a timer without setting an expiry time.
- * std::experimental::net::v1::steady_timer timer(io_context);
+ * std::experimental::net::steady_timer timer(io_context);
  *
  * // Set an expiry time relative to now.
  * timer.expires_after(std::chrono::seconds(5));
@@ -97,7 +97,7 @@ class basic_waitable_timer;
  * ...
  *
  * // Construct a timer with an absolute expiry time.
- * std::experimental::net::v1::steady_timer timer(io_context,
+ * std::experimental::net::steady_timer timer(io_context,
  *     std::chrono::steady_clock::now() + std::chrono::seconds(60));
  *
  * // Start an asynchronous wait.
@@ -127,7 +127,7 @@ class basic_waitable_timer;
  *
  * void on_timeout(const std::error_code& e)
  * {
- *   if (e != std::experimental::net::v1::error::operation_aborted)
+ *   if (e != std::experimental::net::error::operation_aborted)
  *   {
  *     // Timer was not cancelled, take necessary action.
  *   }

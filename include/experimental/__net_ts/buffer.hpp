@@ -82,7 +82,7 @@ class const_buffer;
  * The contents of a buffer may be accessed using the @c data() and @c size()
  * member functions:
  *
- * @code std::experimental::net::v1::mutable_buffer b1 = ...;
+ * @code std::experimental::net::mutable_buffer b1 = ...;
  * std::size_t s1 = b1.size();
  * unsigned char* p1 = static_cast<unsigned char*>(b1.data());
  * @endcode
@@ -167,7 +167,7 @@ private:
  * The contents of a buffer may be accessed using the @c data() and @c size()
  * member functions:
  *
- * @code std::experimental::net::v1::const_buffer b1 = ...;
+ * @code std::experimental::net::const_buffer b1 = ...;
  * std::size_t s1 = b1.size();
  * const unsigned char* p1 = static_cast<const unsigned char*>(b1.data());
  * @endcode
@@ -465,8 +465,8 @@ inline std::size_t buffer_size(multiple_buffers,
  * buffer sequence, as if computed as follows:
  *
  * @code size_t total_size = 0;
- * auto i = std::experimental::net::v1::buffer_sequence_begin(buffers);
- * auto end = std::experimental::net::v1::buffer_sequence_end(buffers);
+ * auto i = std::experimental::net::buffer_sequence_begin(buffers);
+ * auto end = std::experimental::net::buffer_sequence_end(buffers);
  * for (; i != end; ++i)
  * {
  *   const_buffer b(*i);
@@ -592,7 +592,7 @@ private:
  * The simplest use case involves reading or writing a single buffer of a
  * specified size:
  *
- * @code sock.send(std::experimental::net::v1::buffer(data, size)); @endcode
+ * @code sock.send(std::experimental::net::buffer(data, size)); @endcode
  *
  * In the above example, the return value of std::experimental::net::v1::buffer meets the
  * requirements of the ConstBufferSequence concept so that it may be directly
@@ -604,16 +604,16 @@ private:
  * overruns by automatically determining the size of the buffer:
  *
  * @code char d1[128];
- * size_t bytes_transferred = sock.receive(std::experimental::net::v1::buffer(d1));
+ * size_t bytes_transferred = sock.receive(std::experimental::net::buffer(d1));
  *
  * std::vector<char> d2(128);
- * bytes_transferred = sock.receive(std::experimental::net::v1::buffer(d2));
+ * bytes_transferred = sock.receive(std::experimental::net::buffer(d2));
  *
  * std::array<char, 128> d3;
- * bytes_transferred = sock.receive(std::experimental::net::v1::buffer(d3));
+ * bytes_transferred = sock.receive(std::experimental::net::buffer(d3));
  *
  * boost::array<char, 128> d4;
- * bytes_transferred = sock.receive(std::experimental::net::v1::buffer(d4)); @endcode
+ * bytes_transferred = sock.receive(std::experimental::net::buffer(d4)); @endcode
  *
  * In all three cases above, the buffers created are exactly 128 bytes long.
  * Note that a vector is @e never automatically resized when creating or using
@@ -625,11 +625,11 @@ private:
  * The contents of a buffer may be accessed using the @c data() and @c size()
  * member functions:
  *
- * @code std::experimental::net::v1::mutable_buffer b1 = ...;
+ * @code std::experimental::net::mutable_buffer b1 = ...;
  * std::size_t s1 = b1.size();
  * unsigned char* p1 = static_cast<unsigned char*>(b1.data());
  *
- * std::experimental::net::v1::const_buffer b2 = ...;
+ * std::experimental::net::const_buffer b2 = ...;
  * std::size_t s2 = b2.size();
  * const void* p2 = b2.data(); @endcode
  *
@@ -652,8 +652,8 @@ private:
  *
  * @code vector<const_buffer> buffers = ...;
  *
- * vector<unsigned char> data(std::experimental::net::v1::buffer_size(buffers));
- * std::experimental::net::v1::buffer_copy(std::experimental::net::v1::buffer(data), buffers); @endcode
+ * vector<unsigned char> data(std::experimental::net::buffer_size(buffers));
+ * std::experimental::net::buffer_copy(std::experimental::net::buffer(data), buffers); @endcode
  *
  * Note that @ref buffer_copy is implemented in terms of @c memcpy, and
  * consequently it cannot be used to copy between overlapping memory regions.
@@ -685,13 +685,13 @@ private:
  *
  * A buffer object @c b1 created using:
  *
- * @code b1 = std::experimental::net::v1::buffer(a); @endcode
+ * @code b1 = std::experimental::net::buffer(a); @endcode
  *
  * represents the entire array, <tt>{ 'a', 'b', 'c', 'd', 'e' }</tt>. An
  * optional second argument to the std::experimental::net::v1::buffer function may be used to
  * limit the size, in bytes, of the buffer:
  *
- * @code b2 = std::experimental::net::v1::buffer(a, 3); @endcode
+ * @code b2 = std::experimental::net::buffer(a, 3); @endcode
  *
  * such that @c b2 represents the data <tt>{ 'a', 'b', 'c' }</tt>. Even if the
  * size argument exceeds the actual size of the array, the size of the buffer
@@ -708,7 +708,7 @@ private:
  * Both an offset and size may be specified to create a buffer that corresponds
  * to a specific range of bytes within an existing buffer:
  *
- * @code b4 = std::experimental::net::v1::buffer(b1 + 1, 3); @endcode
+ * @code b4 = std::experimental::net::buffer(b1 + 1, 3); @endcode
  *
  * so that @c b4 will refer to the bytes <tt>{ 'b', 'c', 'd' }</tt>.
  *
@@ -724,15 +724,15 @@ private:
  * boost::array<char, 128> d3;
  *
  * boost::array<mutable_buffer, 3> bufs1 = {
- *   std::experimental::net::v1::buffer(d1),
- *   std::experimental::net::v1::buffer(d2),
- *   std::experimental::net::v1::buffer(d3) };
+ *   std::experimental::net::buffer(d1),
+ *   std::experimental::net::buffer(d2),
+ *   std::experimental::net::buffer(d3) };
  * bytes_transferred = sock.receive(bufs1);
  *
  * std::vector<const_buffer> bufs2;
- * bufs2.push_back(std::experimental::net::v1::buffer(d1));
- * bufs2.push_back(std::experimental::net::v1::buffer(d2));
- * bufs2.push_back(std::experimental::net::v1::buffer(d3));
+ * bufs2.push_back(std::experimental::net::buffer(d1));
+ * bufs2.push_back(std::experimental::net::buffer(d2));
+ * bufs2.push_back(std::experimental::net::buffer(d3));
  * bytes_transferred = sock.send(bufs2); @endcode
  */
 /*@{*/
