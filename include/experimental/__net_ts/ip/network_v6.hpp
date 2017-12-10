@@ -32,7 +32,7 @@ namespace ip {
 
 /// Represents an IPv6 network.
 /**
- * The std::experimental::net::ip::network_v6 class provides the ability to use and
+ * The std::experimental::net::v1::ip::network_v6 class provides the ability to use and
  * manipulate IP version 6 networks.
  *
  * @par Thread Safety
@@ -217,7 +217,7 @@ NET_TS_DECL network_v6 make_network_v6(
  *
  * @return The output stream.
  *
- * @relates std::experimental::net::ip::address_v6
+ * @relates std::experimental::net::v1::ip::address_v6
  */
 template <typename Elem, typename Traits>
 std::basic_ostream<Elem, Traits>& operator<<(

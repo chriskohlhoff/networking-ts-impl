@@ -33,7 +33,7 @@ inline namespace v1 {
 namespace detail {
 
 winrt_ssocket_service_base::winrt_ssocket_service_base(
-    std::experimental::net::io_context& io_context)
+    std::experimental::net::v1::io_context& io_context)
   : io_context_(use_service<io_context_impl>(io_context)),
     async_manager_(use_service<winrt_async_manager>(io_context)),
     mutex_(),
@@ -44,7 +44,7 @@ winrt_ssocket_service_base::winrt_ssocket_service_base(
 void winrt_ssocket_service_base::base_shutdown()
 {
   // Close all implementations, causing all operations to complete.
-  std::experimental::net::detail::mutex::scoped_lock lock(mutex_);
+  std::experimental::net::v1::detail::mutex::scoped_lock lock(mutex_);
   base_implementation_type* impl = impl_list_;
   while (impl)
   {
@@ -58,7 +58,7 @@ void winrt_ssocket_service_base::construct(
     winrt_ssocket_service_base::base_implementation_type& impl)
 {
   // Insert implementation into linked list of all implementations.
-  std::experimental::net::detail::mutex::scoped_lock lock(mutex_);
+  std::experimental::net::v1::detail::mutex::scoped_lock lock(mutex_);
   impl.next_ = impl_list_;
   impl.prev_ = 0;
   if (impl_list_)
@@ -74,7 +74,7 @@ void winrt_ssocket_service_base::base_move_construct(
   other_impl.socket_ = nullptr;
 
   // Insert implementation into linked list of all implementations.
-  std::experimental::net::detail::mutex::scoped_lock lock(mutex_);
+  std::experimental::net::v1::detail::mutex::scoped_lock lock(mutex_);
   impl.next_ = impl_list_;
   impl.prev_ = 0;
   if (impl_list_)
@@ -93,7 +93,7 @@ void winrt_ssocket_service_base::base_move_assign(
   if (this != &other_service)
   {
     // Remove implementation from linked list of all implementations.
-    std::experimental::net::detail::mutex::scoped_lock lock(mutex_);
+    std::experimental::net::v1::detail::mutex::scoped_lock lock(mutex_);
     if (impl_list_ == &impl)
       impl_list_ = impl.next_;
     if (impl.prev_)
@@ -110,7 +110,7 @@ void winrt_ssocket_service_base::base_move_assign(
   if (this != &other_service)
   {
     // Insert implementation into linked list of all implementations.
-    std::experimental::net::detail::mutex::scoped_lock lock(other_service.mutex_);
+    std::experimental::net::v1::detail::mutex::scoped_lock lock(other_service.mutex_);
     impl.next_ = other_service.impl_list_;
     impl.prev_ = 0;
     if (other_service.impl_list_)
@@ -126,7 +126,7 @@ void winrt_ssocket_service_base::destroy(
   close(impl, ignored_ec);
 
   // Remove implementation from linked list of all implementations.
-  std::experimental::net::detail::mutex::scoped_lock lock(mutex_);
+  std::experimental::net::v1::detail::mutex::scoped_lock lock(mutex_);
   if (impl_list_ == &impl)
     impl_list_ = impl.next_;
   if (impl.prev_)
@@ -174,7 +174,7 @@ std::size_t winrt_ssocket_service_base::do_get_endpoint(
 {
   if (!is_open(impl))
   {
-    ec = std::experimental::net::error::bad_descriptor;
+    ec = std::experimental::net::v1::error::bad_descriptor;
     return addr_len;
   }
 
@@ -193,7 +193,7 @@ std::size_t winrt_ssocket_service_base::do_get_endpoint(
     case NET_TS_OS_DEF(AF_INET):
       if (addr_len < sizeof(sockaddr_in4_type))
       {
-        ec = std::experimental::net::error::invalid_argument;
+        ec = std::experimental::net::v1::error::invalid_argument;
         return addr_len;
       }
       else
@@ -208,7 +208,7 @@ std::size_t winrt_ssocket_service_base::do_get_endpoint(
     case NET_TS_OS_DEF(AF_INET6):
       if (addr_len < sizeof(sockaddr_in6_type))
       {
-        ec = std::experimental::net::error::invalid_argument;
+        ec = std::experimental::net::v1::error::invalid_argument;
         return addr_len;
       }
       else
@@ -221,7 +221,7 @@ std::size_t winrt_ssocket_service_base::do_get_endpoint(
         return sizeof(sockaddr_in6_type);
       }
     default:
-      ec = std::experimental::net::error::address_family_not_supported;
+      ec = std::experimental::net::v1::error::address_family_not_supported;
       return addr_len;
     }
   }
@@ -240,7 +240,7 @@ std::error_code winrt_ssocket_service_base::do_set_option(
 {
   if (!is_open(impl))
   {
-    ec = std::experimental::net::error::bad_descriptor;
+    ec = std::experimental::net::v1::error::bad_descriptor;
     return ec;
   }
 
@@ -258,7 +258,7 @@ std::error_code winrt_ssocket_service_base::do_set_option(
       }
       else
       {
-        ec = std::experimental::net::error::invalid_argument;
+        ec = std::experimental::net::v1::error::invalid_argument;
       }
     }
     else if (level == NET_TS_OS_DEF(IPPROTO_TCP)
@@ -273,12 +273,12 @@ std::error_code winrt_ssocket_service_base::do_set_option(
       }
       else
       {
-        ec = std::experimental::net::error::invalid_argument;
+        ec = std::experimental::net::v1::error::invalid_argument;
       }
     }
     else
     {
-      ec = std::experimental::net::error::invalid_argument;
+      ec = std::experimental::net::v1::error::invalid_argument;
     }
   }
   catch (Platform::Exception^ e)
@@ -297,7 +297,7 @@ void winrt_ssocket_service_base::do_get_option(
 {
   if (!is_open(impl))
   {
-    ec = std::experimental::net::error::bad_descriptor;
+    ec = std::experimental::net::v1::error::bad_descriptor;
     return;
   }
 
@@ -315,7 +315,7 @@ void winrt_ssocket_service_base::do_get_option(
       }
       else
       {
-        ec = std::experimental::net::error::invalid_argument;
+        ec = std::experimental::net::v1::error::invalid_argument;
       }
     }
     else if (level == NET_TS_OS_DEF(IPPROTO_TCP)
@@ -330,12 +330,12 @@ void winrt_ssocket_service_base::do_get_option(
       }
       else
       {
-        ec = std::experimental::net::error::invalid_argument;
+        ec = std::experimental::net::v1::error::invalid_argument;
       }
     }
     else
     {
-      ec = std::experimental::net::error::invalid_argument;
+      ec = std::experimental::net::v1::error::invalid_argument;
     }
   }
   catch (Platform::Exception^ e)
@@ -351,7 +351,7 @@ std::error_code winrt_ssocket_service_base::do_connect(
 {
   if (!is_open(impl))
   {
-    ec = std::experimental::net::error::bad_descriptor;
+    ec = std::experimental::net::v1::error::bad_descriptor;
     return ec;
   }
 
@@ -374,7 +374,7 @@ std::error_code winrt_ssocket_service_base::do_connect(
         reinterpret_cast<const sockaddr_in6_type*>(addr)->sin6_port);
     break;
   default:
-    ec = std::experimental::net::error::address_family_not_supported;
+    ec = std::experimental::net::v1::error::address_family_not_supported;
     return ec;
   }
 
@@ -400,7 +400,7 @@ void winrt_ssocket_service_base::start_connect_op(
 {
   if (!is_open(impl))
   {
-    op->ec_ = std::experimental::net::error::bad_descriptor;
+    op->ec_ = std::experimental::net::v1::error::bad_descriptor;
     io_context_.post_immediate_completion(op, is_continuation);
     return;
   }
@@ -424,7 +424,7 @@ void winrt_ssocket_service_base::start_connect_op(
         reinterpret_cast<const sockaddr_in6_type*>(addr)->sin6_port);
     break;
   default:
-    op->ec_ = std::experimental::net::error::address_family_not_supported;
+    op->ec_ = std::experimental::net::v1::error::address_family_not_supported;
     break;
   }
 
@@ -451,25 +451,25 @@ void winrt_ssocket_service_base::start_connect_op(
 
 std::size_t winrt_ssocket_service_base::do_send(
     winrt_ssocket_service_base::base_implementation_type& impl,
-    const std::experimental::net::const_buffer& data,
+    const std::experimental::net::v1::const_buffer& data,
     socket_base::message_flags flags, std::error_code& ec)
 {
   if (flags)
   {
-    ec = std::experimental::net::error::operation_not_supported;
+    ec = std::experimental::net::v1::error::operation_not_supported;
     return 0;
   }
 
   if (!is_open(impl))
   {
-    ec = std::experimental::net::error::bad_descriptor;
+    ec = std::experimental::net::v1::error::bad_descriptor;
     return 0;
   }
 
   try
   {
-    buffer_sequence_adapter<std::experimental::net::const_buffer,
-      std::experimental::net::const_buffer> bufs(std::experimental::net::buffer(data));
+    buffer_sequence_adapter<std::experimental::net::v1::const_buffer,
+      std::experimental::net::v1::const_buffer> bufs(std::experimental::net::v1::buffer(data));
 
     if (bufs.all_empty())
     {
@@ -490,27 +490,27 @@ std::size_t winrt_ssocket_service_base::do_send(
 
 void winrt_ssocket_service_base::start_send_op(
       winrt_ssocket_service_base::base_implementation_type& impl,
-      const std::experimental::net::const_buffer& data, socket_base::message_flags flags,
+      const std::experimental::net::v1::const_buffer& data, socket_base::message_flags flags,
       winrt_async_op<unsigned int>* op, bool is_continuation)
 {
   if (flags)
   {
-    op->ec_ = std::experimental::net::error::operation_not_supported;
+    op->ec_ = std::experimental::net::v1::error::operation_not_supported;
     io_context_.post_immediate_completion(op, is_continuation);
     return;
   }
 
   if (!is_open(impl))
   {
-    op->ec_ = std::experimental::net::error::bad_descriptor;
+    op->ec_ = std::experimental::net::v1::error::bad_descriptor;
     io_context_.post_immediate_completion(op, is_continuation);
     return;
   }
 
   try
   {
-    buffer_sequence_adapter<std::experimental::net::const_buffer,
-        std::experimental::net::const_buffer> bufs(std::experimental::net::buffer(data));
+    buffer_sequence_adapter<std::experimental::net::v1::const_buffer,
+        std::experimental::net::v1::const_buffer> bufs(std::experimental::net::v1::buffer(data));
 
     if (bufs.all_empty())
     {
@@ -531,25 +531,25 @@ void winrt_ssocket_service_base::start_send_op(
 
 std::size_t winrt_ssocket_service_base::do_receive(
     winrt_ssocket_service_base::base_implementation_type& impl,
-    const std::experimental::net::mutable_buffer& data,
+    const std::experimental::net::v1::mutable_buffer& data,
     socket_base::message_flags flags, std::error_code& ec)
 {
   if (flags)
   {
-    ec = std::experimental::net::error::operation_not_supported;
+    ec = std::experimental::net::v1::error::operation_not_supported;
     return 0;
   }
 
   if (!is_open(impl))
   {
-    ec = std::experimental::net::error::bad_descriptor;
+    ec = std::experimental::net::v1::error::bad_descriptor;
     return 0;
   }
 
   try
   {
-    buffer_sequence_adapter<std::experimental::net::mutable_buffer,
-        std::experimental::net::mutable_buffer> bufs(std::experimental::net::buffer(data));
+    buffer_sequence_adapter<std::experimental::net::v1::mutable_buffer,
+        std::experimental::net::v1::mutable_buffer> bufs(std::experimental::net::v1::buffer(data));
 
     if (bufs.all_empty())
     {
@@ -565,7 +565,7 @@ std::size_t winrt_ssocket_service_base::do_receive(
     std::size_t bytes_transferred = bufs.buffers()[0]->Length;
     if (bytes_transferred == 0 && !ec)
     {
-      ec = std::experimental::net::error::eof;
+      ec = std::experimental::net::v1::error::eof;
     }
 
     return bytes_transferred;
@@ -580,28 +580,28 @@ std::size_t winrt_ssocket_service_base::do_receive(
 
 void winrt_ssocket_service_base::start_receive_op(
       winrt_ssocket_service_base::base_implementation_type& impl,
-      const std::experimental::net::mutable_buffer& data, socket_base::message_flags flags,
+      const std::experimental::net::v1::mutable_buffer& data, socket_base::message_flags flags,
       winrt_async_op<Windows::Storage::Streams::IBuffer^>* op,
       bool is_continuation)
 {
   if (flags)
   {
-    op->ec_ = std::experimental::net::error::operation_not_supported;
+    op->ec_ = std::experimental::net::v1::error::operation_not_supported;
     io_context_.post_immediate_completion(op, is_continuation);
     return;
   }
 
   if (!is_open(impl))
   {
-    op->ec_ = std::experimental::net::error::bad_descriptor;
+    op->ec_ = std::experimental::net::v1::error::bad_descriptor;
     io_context_.post_immediate_completion(op, is_continuation);
     return;
   }
 
   try
   {
-    buffer_sequence_adapter<std::experimental::net::mutable_buffer,
-        std::experimental::net::mutable_buffer> bufs(std::experimental::net::buffer(data));
+    buffer_sequence_adapter<std::experimental::net::v1::mutable_buffer,
+        std::experimental::net::v1::mutable_buffer> bufs(std::experimental::net::v1::buffer(data));
 
     if (bufs.all_empty())
     {

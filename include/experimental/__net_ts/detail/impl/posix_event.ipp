@@ -48,8 +48,8 @@ posix_event::posix_event()
        // || (defined(__ANDROID__) && (__ANDROID_API__ < 21))
 
   std::error_code ec(error,
-      std::experimental::net::error::get_system_category());
-  std::experimental::net::detail::throw_error(ec, "event");
+      std::experimental::net::v1::error::get_system_category());
+  std::experimental::net::v1::detail::throw_error(ec, "event");
 }
 
 } // namespace detail

@@ -39,7 +39,7 @@ namespace ip {
 
 /// Implements version-independent IP addresses.
 /**
- * The std::experimental::net::ip::address class provides the ability to use either IP
+ * The std::experimental::net::v1::ip::address class provides the ability to use either IP
  * version 4 or version 6 addresses.
  *
  * @par Thread Safety
@@ -53,10 +53,10 @@ public:
   NET_TS_DECL address();
 
   /// Construct an address from an IPv4 address.
-  NET_TS_DECL address(const std::experimental::net::ip::address_v4& ipv4_address);
+  NET_TS_DECL address(const std::experimental::net::v1::ip::address_v4& ipv4_address);
 
   /// Construct an address from an IPv6 address.
-  NET_TS_DECL address(const std::experimental::net::ip::address_v6& ipv6_address);
+  NET_TS_DECL address(const std::experimental::net::v1::ip::address_v6& ipv6_address);
 
   /// Copy constructor.
   NET_TS_DECL address(const address& other);
@@ -76,11 +76,11 @@ public:
 
   /// Assign from an IPv4 address.
   NET_TS_DECL address& operator=(
-      const std::experimental::net::ip::address_v4& ipv4_address);
+      const std::experimental::net::v1::ip::address_v4& ipv4_address);
 
   /// Assign from an IPv6 address.
   NET_TS_DECL address& operator=(
-      const std::experimental::net::ip::address_v6& ipv6_address);
+      const std::experimental::net::v1::ip::address_v6& ipv6_address);
 
   /// Get whether the address is an IP version 4 address.
   bool is_v4() const
@@ -95,10 +95,10 @@ public:
   }
 
   /// Get the address as an IP version 4 address.
-  NET_TS_DECL std::experimental::net::ip::address_v4 to_v4() const;
+  NET_TS_DECL std::experimental::net::v1::ip::address_v4 to_v4() const;
 
   /// Get the address as an IP version 6 address.
-  NET_TS_DECL std::experimental::net::ip::address_v6 to_v6() const;
+  NET_TS_DECL std::experimental::net::v1::ip::address_v6 to_v6() const;
 
   /// Get the address as a string.
   NET_TS_DECL std::string to_string() const;
@@ -147,10 +147,10 @@ private:
   enum { ipv4, ipv6 } type_;
 
   // The underlying IPv4 address.
-  std::experimental::net::ip::address_v4 ipv4_address_;
+  std::experimental::net::v1::ip::address_v4 ipv4_address_;
 
   // The underlying IPv6 address.
-  std::experimental::net::ip::address_v6 ipv6_address_;
+  std::experimental::net::v1::ip::address_v6 ipv6_address_;
 };
 
 /// Create an address from an IPv4 address string in dotted decimal form,
@@ -216,7 +216,7 @@ NET_TS_DECL address make_address(
  *
  * @return The output stream.
  *
- * @relates std::experimental::net::ip::address
+ * @relates std::experimental::net::v1::ip::address
  */
 template <typename Elem, typename Traits>
 std::basic_ostream<Elem, Traits>& operator<<(

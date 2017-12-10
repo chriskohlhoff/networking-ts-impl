@@ -45,7 +45,7 @@ inline std::size_t read_until(SyncReadStream& s,
   std::error_code ec;
   std::size_t bytes_transferred = read_until(s,
       NET_TS_MOVE_CAST(DynamicBuffer)(buffers), delim, ec);
-  std::experimental::net::detail::throw_error(ec, "read_until");
+  std::experimental::net::v1::detail::throw_error(ec, "read_until");
   return bytes_transferred;
 }
 
@@ -107,7 +107,7 @@ inline std::size_t read_until(SyncReadStream& s,
   std::error_code ec;
   std::size_t bytes_transferred = read_until(s,
       NET_TS_MOVE_CAST(DynamicBuffer)(buffers), delim, ec);
-  std::experimental::net::detail::throw_error(ec, "read_until");
+  std::experimental::net::v1::detail::throw_error(ec, "read_until");
   return bytes_transferred;
 }
 

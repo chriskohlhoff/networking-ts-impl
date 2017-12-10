@@ -30,7 +30,7 @@ inline namespace v1 {
 namespace detail {
 
 win_iocp_socket_service_base::win_iocp_socket_service_base(
-    std::experimental::net::io_context& io_context)
+    std::experimental::net::v1::io_context& io_context)
   : io_context_(io_context),
     iocp_service_(use_service<win_iocp_io_context>(io_context)),
     reactor_(0),
@@ -44,7 +44,7 @@ win_iocp_socket_service_base::win_iocp_socket_service_base(
 void win_iocp_socket_service_base::base_shutdown()
 {
   // Close all implementations, causing all operations to complete.
-  std::experimental::net::detail::mutex::scoped_lock lock(mutex_);
+  std::experimental::net::v1::detail::mutex::scoped_lock lock(mutex_);
   base_implementation_type* impl = impl_list_;
   while (impl)
   {
@@ -64,7 +64,7 @@ void win_iocp_socket_service_base::construct(
 #endif // defined(NET_TS_ENABLE_CANCELIO)
 
   // Insert implementation into linked list of all implementations.
-  std::experimental::net::detail::mutex::scoped_lock lock(mutex_);
+  std::experimental::net::v1::detail::mutex::scoped_lock lock(mutex_);
   impl.next_ = impl_list_;
   impl.prev_ = 0;
   if (impl_list_)
@@ -91,7 +91,7 @@ void win_iocp_socket_service_base::base_move_construct(
 #endif // defined(NET_TS_ENABLE_CANCELIO)
 
   // Insert implementation into linked list of all implementations.
-  std::experimental::net::detail::mutex::scoped_lock lock(mutex_);
+  std::experimental::net::v1::detail::mutex::scoped_lock lock(mutex_);
   impl.next_ = impl_list_;
   impl.prev_ = 0;
   if (impl_list_)
@@ -109,7 +109,7 @@ void win_iocp_socket_service_base::base_move_assign(
   if (this != &other_service)
   {
     // Remove implementation from linked list of all implementations.
-    std::experimental::net::detail::mutex::scoped_lock lock(mutex_);
+    std::experimental::net::v1::detail::mutex::scoped_lock lock(mutex_);
     if (impl_list_ == &impl)
       impl_list_ = impl.next_;
     if (impl.prev_)
@@ -137,7 +137,7 @@ void win_iocp_socket_service_base::base_move_assign(
   if (this != &other_service)
   {
     // Insert implementation into linked list of all implementations.
-    std::experimental::net::detail::mutex::scoped_lock lock(other_service.mutex_);
+    std::experimental::net::v1::detail::mutex::scoped_lock lock(other_service.mutex_);
     impl.next_ = other_service.impl_list_;
     impl.prev_ = 0;
     if (other_service.impl_list_)
@@ -152,7 +152,7 @@ void win_iocp_socket_service_base::destroy(
   close_for_destruction(impl);
 
   // Remove implementation from linked list of all implementations.
-  std::experimental::net::detail::mutex::scoped_lock lock(mutex_);
+  std::experimental::net::v1::detail::mutex::scoped_lock lock(mutex_);
   if (impl_list_ == &impl)
     impl_list_ = impl.next_;
   if (impl.prev_)
@@ -215,7 +215,7 @@ socket_type win_iocp_socket_service_base::release(
   nt_set_info_fn fn = get_nt_set_info();
   if (fn == 0)
   {
-    ec = std::experimental::net::error::operation_not_supported;
+    ec = std::experimental::net::v1::error::operation_not_supported;
     return invalid_socket;
   }
 
@@ -225,7 +225,7 @@ socket_type win_iocp_socket_service_base::release(
   if (fn(sock_as_handle, iosb, &info, sizeof(info),
         61 /* FileReplaceCompletionInformation */))
   {
-    ec = std::experimental::net::error::operation_not_supported;
+    ec = std::experimental::net::v1::error::operation_not_supported;
     return invalid_socket;
   }
 
@@ -240,7 +240,7 @@ std::error_code win_iocp_socket_service_base::cancel(
 {
   if (!is_open(impl))
   {
-    ec = std::experimental::net::error::bad_descriptor;
+    ec = std::experimental::net::v1::error::bad_descriptor;
     return ec;
   }
 
@@ -268,7 +268,7 @@ std::error_code win_iocp_socket_service_base::cancel(
       else
       {
         ec = std::error_code(last_error,
-            std::experimental::net::error::get_system_category());
+            std::experimental::net::v1::error::get_system_category());
       }
     }
     else
@@ -292,7 +292,7 @@ std::error_code win_iocp_socket_service_base::cancel(
     {
       DWORD last_error = ::GetLastError();
       ec = std::error_code(last_error,
-          std::experimental::net::error::get_system_category());
+          std::experimental::net::v1::error::get_system_category());
     }
     else
     {
@@ -303,13 +303,13 @@ std::error_code win_iocp_socket_service_base::cancel(
   {
     // Asynchronous operations have been started from more than one thread,
     // so cancellation is not safe.
-    ec = std::experimental::net::error::operation_not_supported;
+    ec = std::experimental::net::v1::error::operation_not_supported;
   }
 #else // defined(NET_TS_ENABLE_CANCELIO)
   else
   {
     // Cancellation is not supported as CancelIo may not be used.
-    ec = std::experimental::net::error::operation_not_supported;
+    ec = std::experimental::net::v1::error::operation_not_supported;
   }
 #endif // defined(NET_TS_ENABLE_CANCELIO)
 
@@ -332,7 +332,7 @@ std::error_code win_iocp_socket_service_base::do_open(
 {
   if (is_open(impl))
   {
-    ec = std::experimental::net::error::already_open;
+    ec = std::experimental::net::v1::error::already_open;
     return ec;
   }
 
@@ -362,7 +362,7 @@ std::error_code win_iocp_socket_service_base::do_assign(
 {
   if (is_open(impl))
   {
-    ec = std::experimental::net::error::already_open;
+    ec = std::experimental::net::v1::error::already_open;
     return ec;
   }
 
@@ -393,7 +393,7 @@ void win_iocp_socket_service_base::start_send_op(
   if (noop)
     iocp_service_.on_completion(op);
   else if (!is_open(impl))
-    iocp_service_.on_completion(op, std::experimental::net::error::bad_descriptor);
+    iocp_service_.on_completion(op, std::experimental::net::v1::error::bad_descriptor);
   else
   {
     DWORD bytes_transferred = 0;
@@ -419,7 +419,7 @@ void win_iocp_socket_service_base::start_send_to_op(
   iocp_service_.work_started();
 
   if (!is_open(impl))
-    iocp_service_.on_completion(op, std::experimental::net::error::bad_descriptor);
+    iocp_service_.on_completion(op, std::experimental::net::v1::error::bad_descriptor);
   else
   {
     DWORD bytes_transferred = 0;
@@ -447,7 +447,7 @@ void win_iocp_socket_service_base::start_receive_op(
   if (noop)
     iocp_service_.on_completion(op);
   else if (!is_open(impl))
-    iocp_service_.on_completion(op, std::experimental::net::error::bad_descriptor);
+    iocp_service_.on_completion(op, std::experimental::net::v1::error::bad_descriptor);
   else
   {
     DWORD bytes_transferred = 0;
@@ -496,7 +496,7 @@ void win_iocp_socket_service_base::start_receive_from_op(
   iocp_service_.work_started();
 
   if (!is_open(impl))
-    iocp_service_.on_completion(op, std::experimental::net::error::bad_descriptor);
+    iocp_service_.on_completion(op, std::experimental::net::v1::error::bad_descriptor);
   else
   {
     DWORD bytes_transferred = 0;
@@ -523,9 +523,9 @@ void win_iocp_socket_service_base::start_accept_op(
   iocp_service_.work_started();
 
   if (!is_open(impl))
-    iocp_service_.on_completion(op, std::experimental::net::error::bad_descriptor);
+    iocp_service_.on_completion(op, std::experimental::net::v1::error::bad_descriptor);
   else if (peer_is_open)
-    iocp_service_.on_completion(op, std::experimental::net::error::already_open);
+    iocp_service_.on_completion(op, std::experimental::net::v1::error::already_open);
   else
   {
     std::error_code ec;
@@ -583,7 +583,7 @@ void win_iocp_socket_service_base::start_reactor_op(
     return;
   }
   else
-    op->ec_ = std::experimental::net::error::bad_descriptor;
+    op->ec_ = std::experimental::net::v1::error::bad_descriptor;
 
   iocp_service_.post_immediate_completion(op, false);
 }
@@ -613,7 +613,7 @@ void win_iocp_socket_service_base::start_connect_op(
       socket_ops::bind(impl.socket_, &a.base,
           family == NET_TS_OS_DEF(AF_INET)
           ? sizeof(a.v4) : sizeof(a.v6), op->ec_);
-      if (op->ec_ && op->ec_ != std::experimental::net::error::invalid_argument)
+      if (op->ec_ && op->ec_ != std::experimental::net::v1::error::invalid_argument)
       {
         iocp_service_.post_immediate_completion(op, false);
         return;
@@ -644,8 +644,8 @@ void win_iocp_socket_service_base::start_connect_op(
   {
     if (socket_ops::connect(impl.socket_, addr, addrlen, op->ec_) != 0)
     {
-      if (op->ec_ == std::experimental::net::error::in_progress
-          || op->ec_ == std::experimental::net::error::would_block)
+      if (op->ec_ == std::experimental::net::v1::error::in_progress
+          || op->ec_ == std::experimental::net::v1::error::would_block)
       {
         op->ec_ = std::error_code();
         r.start_op(select_reactor::connect_op, impl.socket_,

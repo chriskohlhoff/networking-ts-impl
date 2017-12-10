@@ -45,7 +45,7 @@ struct executor_arg_t
 /// A special value, similar to std::nothrow, used to disambiguate constructors
 /// that accept executor arguments.
 /**
- * See std::experimental::net::executor_arg_t and std::experimental::net::uses_executor
+ * See std::experimental::net::v1::executor_arg_t and std::experimental::net::v1::uses_executor
  * for more information.
  */
 #if defined(NET_TS_HAS_CONSTEXPR) || defined(GENERATING_DOCUMENTATION)

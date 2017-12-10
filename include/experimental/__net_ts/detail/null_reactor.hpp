@@ -35,7 +35,7 @@ class null_reactor
 {
 public:
   // Constructor.
-  null_reactor(std::experimental::net::execution_context& ctx)
+  null_reactor(std::experimental::net::v1::execution_context& ctx)
     : execution_context_service_base<null_reactor>(ctx)
   {
   }

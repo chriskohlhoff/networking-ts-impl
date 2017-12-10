@@ -46,8 +46,8 @@ public:
   NET_TS_DEFINE_HANDLER_PTR(winrt_resolve_op);
 
   typedef typename Protocol::endpoint endpoint_type;
-  typedef std::experimental::net::ip::basic_resolver_query<Protocol> query_type;
-  typedef std::experimental::net::ip::basic_resolver_results<Protocol> results_type;
+  typedef std::experimental::net::v1::ip::basic_resolver_query<Protocol> query_type;
+  typedef std::experimental::net::v1::ip::basic_resolver_results<Protocol> results_type;
 
   winrt_resolve_op(const query_type& query, Handler& handler)
     : winrt_async_op<
@@ -65,7 +65,7 @@ public:
   {
     // Take ownership of the operation object.
     winrt_resolve_op* o(static_cast<winrt_resolve_op*>(base));
-    ptr p = { std::experimental::net::detail::addressof(o->handler_), o, o };
+    ptr p = { std::experimental::net::v1::detail::addressof(o->handler_), o, o };
     handler_work<Handler> w(o->handler_);
 
     NET_TS_HANDLER_COMPLETION((*o));
@@ -93,7 +93,7 @@ public:
     // deallocated the memory here.
     detail::binder2<Handler, std::error_code, results_type>
       handler(o->handler_, o->ec_, results);
-    p.h = std::experimental::net::detail::addressof(handler.handler_);
+    p.h = std::experimental::net::v1::detail::addressof(handler.handler_);
     p.reset();
 
     // Make the upcall if required.

@@ -64,8 +64,8 @@ void posix_thread::start_thread(func_base* arg)
   {
     delete arg;
     std::error_code ec(error,
-        std::experimental::net::error::get_system_category());
-    std::experimental::net::detail::throw_error(ec, "thread");
+        std::experimental::net::v1::error::get_system_category());
+    std::experimental::net::v1::detail::throw_error(ec, "thread");
   }
 }
 

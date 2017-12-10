@@ -38,7 +38,7 @@ namespace ip {
 
 /// Implements IP version 4 style addresses.
 /**
- * The std::experimental::net::ip::address_v4 class provides the ability to use and
+ * The std::experimental::net::v1::ip::address_v4 class provides the ability to use and
  * manipulate IP version 4 addresses.
  *
  * @par Thread Safety
@@ -59,7 +59,7 @@ public:
 #if defined(GENERATING_DOCUMENTATION)
   typedef array<unsigned char, 4> bytes_type;
 #else
-  typedef std::experimental::net::detail::array<unsigned char, 4> bytes_type;
+  typedef std::experimental::net::v1::detail::array<unsigned char, 4> bytes_type;
 #endif
 
   /// Default constructor.
@@ -178,7 +178,7 @@ public:
 
 private:
   // The underlying IPv4 address.
-  std::experimental::net::detail::in4_addr_type addr_;
+  std::experimental::net::v1::detail::in4_addr_type addr_;
 };
 
 /// Create an IPv4 address from raw bytes in network order.
@@ -256,7 +256,7 @@ NET_TS_DECL address_v4 make_address_v4(
  *
  * @return The output stream.
  *
- * @relates std::experimental::net::ip::address_v4
+ * @relates std::experimental::net::v1::ip::address_v4
  */
 template <typename Elem, typename Traits>
 std::basic_ostream<Elem, Traits>& operator<<(

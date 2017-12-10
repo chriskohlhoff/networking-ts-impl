@@ -55,7 +55,7 @@ public:
   {
     // Take ownership of the operation object.
     winrt_socket_connect_op* o(static_cast<winrt_socket_connect_op*>(base));
-    ptr p = { std::experimental::net::detail::addressof(o->handler_), o, o };
+    ptr p = { std::experimental::net::v1::detail::addressof(o->handler_), o, o };
     handler_work<Handler> w(o->handler_);
 
     NET_TS_HANDLER_COMPLETION((*o));
@@ -68,7 +68,7 @@ public:
     // deallocated the memory here.
     detail::binder1<Handler, std::error_code>
       handler(o->handler_, o->ec_);
-    p.h = std::experimental::net::detail::addressof(handler.handler_);
+    p.h = std::experimental::net::v1::detail::addressof(handler.handler_);
     p.reset();
 
     // Make the upcall if required.

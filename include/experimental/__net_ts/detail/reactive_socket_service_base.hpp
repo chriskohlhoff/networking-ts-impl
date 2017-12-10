@@ -66,7 +66,7 @@ public:
 
   // Constructor.
   NET_TS_DECL reactive_socket_service_base(
-      std::experimental::net::io_context& io_context);
+      std::experimental::net::v1::io_context& io_context);
 
   // Destroy all user-defined handler objects owned by the service.
   NET_TS_DECL void base_shutdown();
@@ -187,7 +187,7 @@ public:
       socket_ops::poll_error(impl.socket_, impl.state_, -1, ec);
       break;
     default:
-      ec = std::experimental::net::error::invalid_argument;
+      ec = std::experimental::net::v1::error::invalid_argument;
       break;
     }
 
@@ -205,7 +205,7 @@ public:
 
     // Allocate and construct an operation to wrap the handler.
     typedef reactive_wait_op<Handler> op;
-    typename op::ptr p = { std::experimental::net::detail::addressof(handler),
+    typename op::ptr p = { std::experimental::net::v1::detail::addressof(handler),
       op::ptr::allocate(handler), 0 };
     p.p = new (p.v) op(handler);
 
@@ -225,7 +225,7 @@ public:
         op_type = reactor::except_op;
         break;
       default:
-        p.p->ec_ = std::experimental::net::error::invalid_argument;
+        p.p->ec_ = std::experimental::net::v1::error::invalid_argument;
         reactor_.post_immediate_completion(p.p, is_continuation);
         p.v = p.p = 0;
         return;
@@ -241,7 +241,7 @@ public:
       const ConstBufferSequence& buffers,
       socket_base::message_flags flags, std::error_code& ec)
   {
-    buffer_sequence_adapter<std::experimental::net::const_buffer,
+    buffer_sequence_adapter<std::experimental::net::v1::const_buffer,
         ConstBufferSequence> bufs(buffers);
 
     return socket_ops::sync_send(impl.socket_, impl.state_,
@@ -270,7 +270,7 @@ public:
 
     // Allocate and construct an operation to wrap the handler.
     typedef reactive_socket_send_op<ConstBufferSequence, Handler> op;
-    typename op::ptr p = { std::experimental::net::detail::addressof(handler),
+    typename op::ptr p = { std::experimental::net::v1::detail::addressof(handler),
       op::ptr::allocate(handler), 0 };
     p.p = new (p.v) op(impl.socket_, impl.state_, buffers, flags, handler);
 
@@ -279,7 +279,7 @@ public:
 
     start_op(impl, reactor::write_op, p.p, is_continuation, true,
         ((impl.state_ & socket_ops::stream_oriented)
-          && buffer_sequence_adapter<std::experimental::net::const_buffer,
+          && buffer_sequence_adapter<std::experimental::net::v1::const_buffer,
             ConstBufferSequence>::all_empty(buffers)));
     p.v = p.p = 0;
   }
@@ -294,7 +294,7 @@ public:
 
     // Allocate and construct an operation to wrap the handler.
     typedef reactive_null_buffers_op<Handler> op;
-    typename op::ptr p = { std::experimental::net::detail::addressof(handler),
+    typename op::ptr p = { std::experimental::net::v1::detail::addressof(handler),
       op::ptr::allocate(handler), 0 };
     p.p = new (p.v) op(handler);
 
@@ -311,7 +311,7 @@ public:
       const MutableBufferSequence& buffers,
       socket_base::message_flags flags, std::error_code& ec)
   {
-    buffer_sequence_adapter<std::experimental::net::mutable_buffer,
+    buffer_sequence_adapter<std::experimental::net::v1::mutable_buffer,
         MutableBufferSequence> bufs(buffers);
 
     return socket_ops::sync_recv(impl.socket_, impl.state_,
@@ -340,7 +340,7 @@ public:
 
     // Allocate and construct an operation to wrap the handler.
     typedef reactive_socket_recv_op<MutableBufferSequence, Handler> op;
-    typename op::ptr p = { std::experimental::net::detail::addressof(handler),
+    typename op::ptr p = { std::experimental::net::v1::detail::addressof(handler),
       op::ptr::allocate(handler), 0 };
     p.p = new (p.v) op(impl.socket_, impl.state_, buffers, flags, handler);
 
@@ -353,7 +353,7 @@ public:
         p.p, is_continuation,
         (flags & socket_base::message_out_of_band) == 0,
         ((impl.state_ & socket_ops::stream_oriented)
-          && buffer_sequence_adapter<std::experimental::net::mutable_buffer,
+          && buffer_sequence_adapter<std::experimental::net::v1::mutable_buffer,
             MutableBufferSequence>::all_empty(buffers)));
     p.v = p.p = 0;
   }
@@ -368,7 +368,7 @@ public:
 
     // Allocate and construct an operation to wrap the handler.
     typedef reactive_null_buffers_op<Handler> op;
-    typename op::ptr p = { std::experimental::net::detail::addressof(handler),
+    typename op::ptr p = { std::experimental::net::v1::detail::addressof(handler),
       op::ptr::allocate(handler), 0 };
     p.p = new (p.v) op(handler);
 
@@ -390,7 +390,7 @@ public:
       socket_base::message_flags in_flags,
       socket_base::message_flags& out_flags, std::error_code& ec)
   {
-    buffer_sequence_adapter<std::experimental::net::mutable_buffer,
+    buffer_sequence_adapter<std::experimental::net::v1::mutable_buffer,
         MutableBufferSequence> bufs(buffers);
 
     return socket_ops::sync_recvmsg(impl.socket_, impl.state_,
@@ -424,7 +424,7 @@ public:
 
     // Allocate and construct an operation to wrap the handler.
     typedef reactive_socket_recvmsg_op<MutableBufferSequence, Handler> op;
-    typename op::ptr p = { std::experimental::net::detail::addressof(handler),
+    typename op::ptr p = { std::experimental::net::v1::detail::addressof(handler),
       op::ptr::allocate(handler), 0 };
     p.p = new (p.v) op(impl.socket_, buffers, in_flags, out_flags, handler);
 
@@ -450,7 +450,7 @@ public:
 
     // Allocate and construct an operation to wrap the handler.
     typedef reactive_null_buffers_op<Handler> op;
-    typename op::ptr p = { std::experimental::net::detail::addressof(handler),
+    typename op::ptr p = { std::experimental::net::v1::detail::addressof(handler),
       op::ptr::allocate(handler), 0 };
     p.p = new (p.v) op(handler);
 

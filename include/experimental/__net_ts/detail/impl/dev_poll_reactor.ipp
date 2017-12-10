@@ -32,8 +32,8 @@ namespace net {
 inline namespace v1 {
 namespace detail {
 
-dev_poll_reactor::dev_poll_reactor(std::experimental::net::execution_context& ctx)
-  : std::experimental::net::detail::execution_context_service_base<dev_poll_reactor>(ctx),
+dev_poll_reactor::dev_poll_reactor(std::experimental::net::v1::execution_context& ctx)
+  : std::experimental::net::v1::detail::execution_context_service_base<dev_poll_reactor>(ctx),
     scheduler_(use_service<scheduler>(ctx)),
     mutex_(),
     dev_poll_fd_(do_dev_poll_create()),
@@ -56,7 +56,7 @@ dev_poll_reactor::~dev_poll_reactor()
 
 void dev_poll_reactor::shutdown()
 {
-  std::experimental::net::detail::mutex::scoped_lock lock(mutex_);
+  std::experimental::net::v1::detail::mutex::scoped_lock lock(mutex_);
   shutdown_ = true;
   lock.unlock();
 
@@ -71,9 +71,9 @@ void dev_poll_reactor::shutdown()
 } 
 
 void dev_poll_reactor::notify_fork(
-    std::experimental::net::execution_context::fork_event fork_ev)
+    std::experimental::net::v1::execution_context::fork_event fork_ev)
 {
-  if (fork_ev == std::experimental::net::execution_context::fork_child)
+  if (fork_ev == std::experimental::net::v1::execution_context::fork_child)
   {
     detail::mutex::scoped_lock lock(mutex_);
 
@@ -127,7 +127,7 @@ int dev_poll_reactor::register_descriptor(socket_type, per_descriptor_data&)
 int dev_poll_reactor::register_internal_descriptor(int op_type,
     socket_type descriptor, per_descriptor_data&, reactor_op* op)
 {
-  std::experimental::net::detail::mutex::scoped_lock lock(mutex_);
+  std::experimental::net::v1::detail::mutex::scoped_lock lock(mutex_);
 
   op_queue_[op_type].enqueue_operation(descriptor, op);
   ::pollfd& ev = add_pending_event_change(descriptor);
@@ -154,7 +154,7 @@ void dev_poll_reactor::start_op(int op_type, socket_type descriptor,
     dev_poll_reactor::per_descriptor_data&, reactor_op* op,
     bool is_continuation, bool allow_speculative)
 {
-  std::experimental::net::detail::mutex::scoped_lock lock(mutex_);
+  std::experimental::net::v1::detail::mutex::scoped_lock lock(mutex_);
 
   if (shutdown_)
   {
@@ -200,14 +200,14 @@ void dev_poll_reactor::start_op(int op_type, socket_type descriptor,
 void dev_poll_reactor::cancel_ops(socket_type descriptor,
     dev_poll_reactor::per_descriptor_data&)
 {
-  std::experimental::net::detail::mutex::scoped_lock lock(mutex_);
-  cancel_ops_unlocked(descriptor, std::experimental::net::error::operation_aborted);
+  std::experimental::net::v1::detail::mutex::scoped_lock lock(mutex_);
+  cancel_ops_unlocked(descriptor, std::experimental::net::v1::error::operation_aborted);
 }
 
 void dev_poll_reactor::deregister_descriptor(socket_type descriptor,
     dev_poll_reactor::per_descriptor_data&, bool)
 {
-  std::experimental::net::detail::mutex::scoped_lock lock(mutex_);
+  std::experimental::net::v1::detail::mutex::scoped_lock lock(mutex_);
 
   // Remove the descriptor from /dev/poll.
   ::pollfd& ev = add_pending_event_change(descriptor);
@@ -215,13 +215,13 @@ void dev_poll_reactor::deregister_descriptor(socket_type descriptor,
   interrupter_.interrupt();
 
   // Cancel any outstanding operations associated with the descriptor.
-  cancel_ops_unlocked(descriptor, std::experimental::net::error::operation_aborted);
+  cancel_ops_unlocked(descriptor, std::experimental::net::v1::error::operation_aborted);
 }
 
 void dev_poll_reactor::deregister_internal_descriptor(
     socket_type descriptor, dev_poll_reactor::per_descriptor_data&)
 {
-  std::experimental::net::detail::mutex::scoped_lock lock(mutex_);
+  std::experimental::net::v1::detail::mutex::scoped_lock lock(mutex_);
 
   // Remove the descriptor from /dev/poll. Since this function is only called
   // during a fork, we can apply the change immediately.
@@ -245,7 +245,7 @@ void dev_poll_reactor::cleanup_descriptor_data(
 
 void dev_poll_reactor::run(long usec, op_queue<operation>& ops)
 {
-  std::experimental::net::detail::mutex::scoped_lock lock(mutex_);
+  std::experimental::net::v1::detail::mutex::scoped_lock lock(mutex_);
 
   // We can return immediately if there's no work to do and the reactor is
   // not supposed to block.
@@ -263,7 +263,7 @@ void dev_poll_reactor::run(long usec, op_queue<operation>& ops)
     if (result != static_cast<int>(events_size))
     {
       std::error_code ec = std::error_code(
-          errno, std::experimental::net::error::get_system_category());
+          errno, std::experimental::net::v1::error::get_system_category());
       for (std::size_t i = 0; i < pending_event_changes_.size(); ++i)
       {
         int descriptor = pending_event_changes_[i].fd;
@@ -358,7 +358,7 @@ void dev_poll_reactor::run(long usec, op_queue<operation>& ops)
         if (result != sizeof(ev))
         {
           std::error_code ec(errno,
-              std::experimental::net::error::get_system_category());
+              std::experimental::net::v1::error::get_system_category());
           for (int j = 0; j < max_ops; ++j)
             op_queue_[j].cancel_operations(descriptor, ops, ec);
         }
@@ -379,8 +379,8 @@ int dev_poll_reactor::do_dev_poll_create()
   if (fd == -1)
   {
     std::error_code ec(errno,
-        std::experimental::net::error::get_system_category());
-    std::experimental::net::detail::throw_error(ec, "/dev/poll");
+        std::experimental::net::v1::error::get_system_category());
+    std::experimental::net::v1::detail::throw_error(ec, "/dev/poll");
   }
   return fd;
 }

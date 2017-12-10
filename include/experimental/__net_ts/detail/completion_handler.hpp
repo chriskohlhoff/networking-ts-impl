@@ -49,7 +49,7 @@ public:
   {
     // Take ownership of the handler object.
     completion_handler* h(static_cast<completion_handler*>(base));
-    ptr p = { std::experimental::net::detail::addressof(h->handler_), h, h };
+    ptr p = { std::experimental::net::v1::detail::addressof(h->handler_), h, h };
     handler_work<Handler> w(h->handler_);
 
     NET_TS_HANDLER_COMPLETION((*h));
@@ -61,7 +61,7 @@ public:
     // to ensure that any owning sub-object remains valid until after we have
     // deallocated the memory here.
     Handler handler(NET_TS_MOVE_CAST(Handler)(h->handler_));
-    p.h = std::experimental::net::detail::addressof(handler);
+    p.h = std::experimental::net::v1::detail::addressof(handler);
     p.reset();
 
     // Make the upcall if required.

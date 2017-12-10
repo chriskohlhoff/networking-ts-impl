@@ -176,19 +176,19 @@ private:
 };
 
 # define NET_TS_INHERIT_TRACKED_HANDLER \
-  : public std::experimental::net::detail::handler_tracking::tracked_handler
+  : public std::experimental::net::v1::detail::handler_tracking::tracked_handler
 
 # define NET_TS_ALSO_INHERIT_TRACKED_HANDLER \
-  , public std::experimental::net::detail::handler_tracking::tracked_handler
+  , public std::experimental::net::v1::detail::handler_tracking::tracked_handler
 
 # define NET_TS_HANDLER_TRACKING_INIT \
-  std::experimental::net::detail::handler_tracking::init()
+  std::experimental::net::v1::detail::handler_tracking::init()
 
 # define NET_TS_HANDLER_CREATION(args) \
-  std::experimental::net::detail::handler_tracking::creation args
+  std::experimental::net::v1::detail::handler_tracking::creation args
 
 # define NET_TS_HANDLER_COMPLETION(args) \
-  std::experimental::net::detail::handler_tracking::completion tracked_completion args
+  std::experimental::net::v1::detail::handler_tracking::completion tracked_completion args
 
 # define NET_TS_HANDLER_INVOCATION_BEGIN(args) \
   tracked_completion.invocation_begin args
@@ -197,23 +197,23 @@ private:
   tracked_completion.invocation_end()
 
 # define NET_TS_HANDLER_OPERATION(args) \
-  std::experimental::net::detail::handler_tracking::operation args
+  std::experimental::net::v1::detail::handler_tracking::operation args
 
 # define NET_TS_HANDLER_REACTOR_REGISTRATION(args) \
-  std::experimental::net::detail::handler_tracking::reactor_registration args
+  std::experimental::net::v1::detail::handler_tracking::reactor_registration args
 
 # define NET_TS_HANDLER_REACTOR_DEREGISTRATION(args) \
-  std::experimental::net::detail::handler_tracking::reactor_deregistration args
+  std::experimental::net::v1::detail::handler_tracking::reactor_deregistration args
 
 # define NET_TS_HANDLER_REACTOR_READ_EVENT 1
 # define NET_TS_HANDLER_REACTOR_WRITE_EVENT 2
 # define NET_TS_HANDLER_REACTOR_ERROR_EVENT 4
 
 # define NET_TS_HANDLER_REACTOR_EVENTS(args) \
-  std::experimental::net::detail::handler_tracking::reactor_events args
+  std::experimental::net::v1::detail::handler_tracking::reactor_events args
 
 # define NET_TS_HANDLER_REACTOR_OPERATION(args) \
-  std::experimental::net::detail::handler_tracking::reactor_operation args
+  std::experimental::net::v1::detail::handler_tracking::reactor_operation args
 
 #else // defined(NET_TS_ENABLE_HANDLER_TRACKING)
 

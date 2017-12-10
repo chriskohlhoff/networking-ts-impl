@@ -33,7 +33,7 @@ namespace ip {
 
 /// Describes an endpoint for a version-independent IP socket.
 /**
- * The std::experimental::net::ip::basic_endpoint class template describes an endpoint that
+ * The std::experimental::net::v1::ip::basic_endpoint class template describes an endpoint that
  * may be associated with a particular socket.
  *
  * @par Thread Safety
@@ -55,7 +55,7 @@ public:
 #if defined(GENERATING_DOCUMENTATION)
   typedef implementation_defined data_type;
 #else
-  typedef std::experimental::net::detail::socket_addr_type data_type;
+  typedef std::experimental::net::v1::detail::socket_addr_type data_type;
 #endif
 
   /// Default constructor.
@@ -72,12 +72,12 @@ public:
    * @par Examples
    * To initialise an IPv4 TCP endpoint for port 1234, use:
    * @code
-   * std::experimental::net::ip::tcp::endpoint ep(std::experimental::net::ip::tcp::v4(), 1234);
+   * std::experimental::net::v1::ip::tcp::endpoint ep(std::experimental::net::v1::ip::tcp::v4(), 1234);
    * @endcode
    *
    * To specify an IPv6 UDP endpoint for port 9876, use:
    * @code
-   * std::experimental::net::ip::udp::endpoint ep(std::experimental::net::ip::udp::v6(), 9876);
+   * std::experimental::net::v1::ip::udp::endpoint ep(std::experimental::net::v1::ip::udp::v6(), 9876);
    * @endcode
    */
   basic_endpoint(const InternetProtocol& internet_protocol,
@@ -89,7 +89,7 @@ public:
   /// Construct an endpoint using a port number and an IP address. This
   /// constructor may be used for accepting connections on a specific interface
   /// or for making a connection to a remote endpoint.
-  basic_endpoint(const std::experimental::net::ip::address& addr, unsigned short port_num)
+  basic_endpoint(const std::experimental::net::v1::ip::address& addr, unsigned short port_num)
     : impl_(addr, port_num)
   {
   }
@@ -177,13 +177,13 @@ public:
   }
 
   /// Get the IP address associated with the endpoint.
-  std::experimental::net::ip::address address() const
+  std::experimental::net::v1::ip::address address() const
   {
     return impl_.address();
   }
 
   /// Set the IP address associated with the endpoint.
-  void address(const std::experimental::net::ip::address& addr)
+  void address(const std::experimental::net::v1::ip::address& addr)
   {
     impl_.address(addr);
   }
@@ -232,7 +232,7 @@ public:
 
 private:
   // The underlying IP endpoint.
-  std::experimental::net::ip::detail::endpoint impl_;
+  std::experimental::net::v1::ip::detail::endpoint impl_;
 };
 
 #if !defined(NET_TS_NO_IOSTREAM)
@@ -247,7 +247,7 @@ private:
  *
  * @return The output stream.
  *
- * @relates std::experimental::net::ip::basic_endpoint
+ * @relates std::experimental::net::v1::ip::basic_endpoint
  */
 template <typename Elem, typename Traits, typename InternetProtocol>
 std::basic_ostream<Elem, Traits>& operator<<(

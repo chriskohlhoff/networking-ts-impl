@@ -35,8 +35,8 @@ win_mutex::win_mutex()
 {
   int error = do_init();
   std::error_code ec(error,
-      std::experimental::net::error::get_system_category());
-  std::experimental::net::detail::throw_error(ec, "mutex");
+      std::experimental::net::v1::error::get_system_category());
+  std::experimental::net::v1::detail::throw_error(ec, "mutex");
 }
 
 int win_mutex::do_init()

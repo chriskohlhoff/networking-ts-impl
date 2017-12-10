@@ -29,7 +29,7 @@ namespace net {
 inline namespace v1 {
 
 /**
- * @defgroup write std::experimental::net::write
+ * @defgroup write std::experimental::net::v1::write
  *
  * @brief Write a certain amount of data to a stream before returning.
  */
@@ -61,15 +61,15 @@ inline namespace v1 {
  *
  * @par Example
  * To write a single data buffer use the @ref buffer function as follows:
- * @code std::experimental::net::write(s, std::experimental::net::buffer(data, size)); @endcode
+ * @code std::experimental::net::v1::write(s, std::experimental::net::v1::buffer(data, size)); @endcode
  * See the @ref buffer documentation for information on writing multiple
  * buffers in one go, and how to use it with arrays, boost::array or
  * std::vector.
  *
  * @note This overload is equivalent to calling:
- * @code std::experimental::net::write(
+ * @code std::experimental::net::v1::write(
  *     s, buffers,
- *     std::experimental::net::transfer_all()); @endcode
+ *     std::experimental::net::v1::transfer_all()); @endcode
  */
 template <typename SyncWriteStream, typename ConstBufferSequence>
 std::size_t write(SyncWriteStream& s, const ConstBufferSequence& buffers,
@@ -103,15 +103,15 @@ std::size_t write(SyncWriteStream& s, const ConstBufferSequence& buffers,
  *
  * @par Example
  * To write a single data buffer use the @ref buffer function as follows:
- * @code std::experimental::net::write(s, std::experimental::net::buffer(data, size), ec); @endcode
+ * @code std::experimental::net::v1::write(s, std::experimental::net::v1::buffer(data, size), ec); @endcode
  * See the @ref buffer documentation for information on writing multiple
  * buffers in one go, and how to use it with arrays, boost::array or
  * std::vector.
  *
  * @note This overload is equivalent to calling:
- * @code std::experimental::net::write(
+ * @code std::experimental::net::v1::write(
  *     s, buffers,
- *     std::experimental::net::transfer_all(), ec); @endcode
+ *     std::experimental::net::v1::transfer_all(), ec); @endcode
  */
 template <typename SyncWriteStream, typename ConstBufferSequence>
 std::size_t write(SyncWriteStream& s, const ConstBufferSequence& buffers,
@@ -160,8 +160,8 @@ std::size_t write(SyncWriteStream& s, const ConstBufferSequence& buffers,
  *
  * @par Example
  * To write a single data buffer use the @ref buffer function as follows:
- * @code std::experimental::net::write(s, std::experimental::net::buffer(data, size),
- *     std::experimental::net::transfer_at_least(32)); @endcode
+ * @code std::experimental::net::v1::write(s, std::experimental::net::v1::buffer(data, size),
+ *     std::experimental::net::v1::transfer_at_least(32)); @endcode
  * See the @ref buffer documentation for information on writing multiple
  * buffers in one go, and how to use it with arrays, boost::array or
  * std::vector.
@@ -244,9 +244,9 @@ std::size_t write(SyncWriteStream& s, const ConstBufferSequence& buffers,
  * @throws std::system_error Thrown on failure.
  *
  * @note This overload is equivalent to calling:
- * @code std::experimental::net::write(
+ * @code std::experimental::net::v1::write(
  *     s, buffers,
- *     std::experimental::net::transfer_all()); @endcode
+ *     std::experimental::net::v1::transfer_all()); @endcode
  */
 template <typename SyncWriteStream, typename DynamicBuffer>
 std::size_t write(SyncWriteStream& s,
@@ -278,9 +278,9 @@ std::size_t write(SyncWriteStream& s,
  * @returns The number of bytes transferred.
  *
  * @note This overload is equivalent to calling:
- * @code std::experimental::net::write(
+ * @code std::experimental::net::v1::write(
  *     s, buffers,
- *     std::experimental::net::transfer_all(), ec); @endcode
+ *     std::experimental::net::v1::transfer_all(), ec); @endcode
  */
 template <typename SyncWriteStream, typename DynamicBuffer>
 std::size_t write(SyncWriteStream& s,
@@ -383,7 +383,7 @@ std::size_t write(SyncWriteStream& s,
 
 /*@}*/
 /**
- * @defgroup async_write std::experimental::net::async_write
+ * @defgroup async_write std::experimental::net::v1::async_write
  *
  * @brief Start an asynchronous operation to write a certain amount of data to a
  * stream.
@@ -431,12 +431,12 @@ std::size_t write(SyncWriteStream& s,
  * Regardless of whether the asynchronous operation completes immediately or
  * not, the handler will not be invoked from within this function. Invocation of
  * the handler will be performed in a manner equivalent to using
- * std::experimental::net::io_context::post().
+ * std::experimental::net::v1::io_context::post().
  *
  * @par Example
  * To write a single data buffer use the @ref buffer function as follows:
  * @code
- * std::experimental::net::async_write(s, std::experimental::net::buffer(data, size), handler);
+ * std::experimental::net::v1::async_write(s, std::experimental::net::v1::buffer(data, size), handler);
  * @endcode
  * See the @ref buffer documentation for information on writing multiple
  * buffers in one go, and how to use it with arrays, boost::array or
@@ -507,13 +507,13 @@ async_write(AsyncWriteStream& s, const ConstBufferSequence& buffers,
  * Regardless of whether the asynchronous operation completes immediately or
  * not, the handler will not be invoked from within this function. Invocation of
  * the handler will be performed in a manner equivalent to using
- * std::experimental::net::io_context::post().
+ * std::experimental::net::v1::io_context::post().
  *
  * @par Example
  * To write a single data buffer use the @ref buffer function as follows:
- * @code std::experimental::net::async_write(s,
- *     std::experimental::net::buffer(data, size),
- *     std::experimental::net::transfer_at_least(32),
+ * @code std::experimental::net::v1::async_write(s,
+ *     std::experimental::net::v1::buffer(data, size),
+ *     std::experimental::net::v1::transfer_at_least(32),
  *     handler); @endcode
  * See the @ref buffer documentation for information on writing multiple
  * buffers in one go, and how to use it with arrays, boost::array or
@@ -571,7 +571,7 @@ async_write(AsyncWriteStream& s, const ConstBufferSequence& buffers,
  * Regardless of whether the asynchronous operation completes immediately or
  * not, the handler will not be invoked from within this function. Invocation of
  * the handler will be performed in a manner equivalent to using
- * std::experimental::net::io_context::post().
+ * std::experimental::net::v1::io_context::post().
  */
 template <typename AsyncWriteStream,
     typename DynamicBuffer, typename WriteHandler>
@@ -639,7 +639,7 @@ async_write(AsyncWriteStream& s,
  * Regardless of whether the asynchronous operation completes immediately or
  * not, the handler will not be invoked from within this function. Invocation of
  * the handler will be performed in a manner equivalent to using
- * std::experimental::net::io_context::post().
+ * std::experimental::net::v1::io_context::post().
  */
 template <typename AsyncWriteStream, typename DynamicBuffer,
     typename CompletionCondition, typename WriteHandler>

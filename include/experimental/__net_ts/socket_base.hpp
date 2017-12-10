@@ -101,18 +101,18 @@ public:
    * @par Examples
    * Setting the option:
    * @code
-   * std::experimental::net::ip::udp::socket socket(io_context); 
+   * std::experimental::net::v1::ip::udp::socket socket(io_context); 
    * ...
-   * std::experimental::net::socket_base::broadcast option(true);
+   * std::experimental::net::v1::socket_base::broadcast option(true);
    * socket.set_option(option);
    * @endcode
    *
    * @par
    * Getting the current option value:
    * @code
-   * std::experimental::net::ip::udp::socket socket(io_context); 
+   * std::experimental::net::v1::ip::udp::socket socket(io_context); 
    * ...
-   * std::experimental::net::socket_base::broadcast option;
+   * std::experimental::net::v1::socket_base::broadcast option;
    * socket.get_option(option);
    * bool is_set = option.value();
    * @endcode
@@ -123,7 +123,7 @@ public:
 #if defined(GENERATING_DOCUMENTATION)
   typedef implementation_defined broadcast;
 #else
-  typedef std::experimental::net::detail::socket_option::boolean<
+  typedef std::experimental::net::v1::detail::socket_option::boolean<
     NET_TS_OS_DEF(SOL_SOCKET), NET_TS_OS_DEF(SO_BROADCAST)>
       broadcast;
 #endif
@@ -135,18 +135,18 @@ public:
    * @par Examples
    * Setting the option:
    * @code
-   * std::experimental::net::ip::tcp::socket socket(io_context); 
+   * std::experimental::net::v1::ip::tcp::socket socket(io_context); 
    * ...
-   * std::experimental::net::socket_base::debug option(true);
+   * std::experimental::net::v1::socket_base::debug option(true);
    * socket.set_option(option);
    * @endcode
    *
    * @par
    * Getting the current option value:
    * @code
-   * std::experimental::net::ip::tcp::socket socket(io_context); 
+   * std::experimental::net::v1::ip::tcp::socket socket(io_context); 
    * ...
-   * std::experimental::net::socket_base::debug option;
+   * std::experimental::net::v1::socket_base::debug option;
    * socket.get_option(option);
    * bool is_set = option.value();
    * @endcode
@@ -157,7 +157,7 @@ public:
 #if defined(GENERATING_DOCUMENTATION)
   typedef implementation_defined debug;
 #else
-  typedef std::experimental::net::detail::socket_option::boolean<
+  typedef std::experimental::net::v1::detail::socket_option::boolean<
     NET_TS_OS_DEF(SOL_SOCKET), NET_TS_OS_DEF(SO_DEBUG)> debug;
 #endif
 
@@ -168,18 +168,18 @@ public:
    * @par Examples
    * Setting the option:
    * @code
-   * std::experimental::net::ip::udp::socket socket(io_context); 
+   * std::experimental::net::v1::ip::udp::socket socket(io_context); 
    * ...
-   * std::experimental::net::socket_base::do_not_route option(true);
+   * std::experimental::net::v1::socket_base::do_not_route option(true);
    * socket.set_option(option);
    * @endcode
    *
    * @par
    * Getting the current option value:
    * @code
-   * std::experimental::net::ip::udp::socket socket(io_context); 
+   * std::experimental::net::v1::ip::udp::socket socket(io_context); 
    * ...
-   * std::experimental::net::socket_base::do_not_route option;
+   * std::experimental::net::v1::socket_base::do_not_route option;
    * socket.get_option(option);
    * bool is_set = option.value();
    * @endcode
@@ -190,7 +190,7 @@ public:
 #if defined(GENERATING_DOCUMENTATION)
   typedef implementation_defined do_not_route;
 #else
-  typedef std::experimental::net::detail::socket_option::boolean<
+  typedef std::experimental::net::v1::detail::socket_option::boolean<
     NET_TS_OS_DEF(SOL_SOCKET), NET_TS_OS_DEF(SO_DONTROUTE)>
       do_not_route;
 #endif
@@ -202,18 +202,18 @@ public:
    * @par Examples
    * Setting the option:
    * @code
-   * std::experimental::net::ip::tcp::socket socket(io_context); 
+   * std::experimental::net::v1::ip::tcp::socket socket(io_context); 
    * ...
-   * std::experimental::net::socket_base::keep_alive option(true);
+   * std::experimental::net::v1::socket_base::keep_alive option(true);
    * socket.set_option(option);
    * @endcode
    *
    * @par
    * Getting the current option value:
    * @code
-   * std::experimental::net::ip::tcp::socket socket(io_context); 
+   * std::experimental::net::v1::ip::tcp::socket socket(io_context); 
    * ...
-   * std::experimental::net::socket_base::keep_alive option;
+   * std::experimental::net::v1::socket_base::keep_alive option;
    * socket.get_option(option);
    * bool is_set = option.value();
    * @endcode
@@ -224,7 +224,7 @@ public:
 #if defined(GENERATING_DOCUMENTATION)
   typedef implementation_defined keep_alive;
 #else
-  typedef std::experimental::net::detail::socket_option::boolean<
+  typedef std::experimental::net::v1::detail::socket_option::boolean<
     NET_TS_OS_DEF(SOL_SOCKET), NET_TS_OS_DEF(SO_KEEPALIVE)> keep_alive;
 #endif
 
@@ -235,18 +235,18 @@ public:
    * @par Examples
    * Setting the option:
    * @code
-   * std::experimental::net::ip::tcp::socket socket(io_context); 
+   * std::experimental::net::v1::ip::tcp::socket socket(io_context); 
    * ...
-   * std::experimental::net::socket_base::send_buffer_size option(8192);
+   * std::experimental::net::v1::socket_base::send_buffer_size option(8192);
    * socket.set_option(option);
    * @endcode
    *
    * @par
    * Getting the current option value:
    * @code
-   * std::experimental::net::ip::tcp::socket socket(io_context); 
+   * std::experimental::net::v1::ip::tcp::socket socket(io_context); 
    * ...
-   * std::experimental::net::socket_base::send_buffer_size option;
+   * std::experimental::net::v1::socket_base::send_buffer_size option;
    * socket.get_option(option);
    * int size = option.value();
    * @endcode
@@ -257,7 +257,7 @@ public:
 #if defined(GENERATING_DOCUMENTATION)
   typedef implementation_defined send_buffer_size;
 #else
-  typedef std::experimental::net::detail::socket_option::integer<
+  typedef std::experimental::net::v1::detail::socket_option::integer<
     NET_TS_OS_DEF(SOL_SOCKET), NET_TS_OS_DEF(SO_SNDBUF)>
       send_buffer_size;
 #endif
@@ -269,18 +269,18 @@ public:
    * @par Examples
    * Setting the option:
    * @code
-   * std::experimental::net::ip::tcp::socket socket(io_context); 
+   * std::experimental::net::v1::ip::tcp::socket socket(io_context); 
    * ...
-   * std::experimental::net::socket_base::send_low_watermark option(1024);
+   * std::experimental::net::v1::socket_base::send_low_watermark option(1024);
    * socket.set_option(option);
    * @endcode
    *
    * @par
    * Getting the current option value:
    * @code
-   * std::experimental::net::ip::tcp::socket socket(io_context); 
+   * std::experimental::net::v1::ip::tcp::socket socket(io_context); 
    * ...
-   * std::experimental::net::socket_base::send_low_watermark option;
+   * std::experimental::net::v1::socket_base::send_low_watermark option;
    * socket.get_option(option);
    * int size = option.value();
    * @endcode
@@ -291,7 +291,7 @@ public:
 #if defined(GENERATING_DOCUMENTATION)
   typedef implementation_defined send_low_watermark;
 #else
-  typedef std::experimental::net::detail::socket_option::integer<
+  typedef std::experimental::net::v1::detail::socket_option::integer<
     NET_TS_OS_DEF(SOL_SOCKET), NET_TS_OS_DEF(SO_SNDLOWAT)>
       send_low_watermark;
 #endif
@@ -303,18 +303,18 @@ public:
    * @par Examples
    * Setting the option:
    * @code
-   * std::experimental::net::ip::tcp::socket socket(io_context); 
+   * std::experimental::net::v1::ip::tcp::socket socket(io_context); 
    * ...
-   * std::experimental::net::socket_base::receive_buffer_size option(8192);
+   * std::experimental::net::v1::socket_base::receive_buffer_size option(8192);
    * socket.set_option(option);
    * @endcode
    *
    * @par
    * Getting the current option value:
    * @code
-   * std::experimental::net::ip::tcp::socket socket(io_context); 
+   * std::experimental::net::v1::ip::tcp::socket socket(io_context); 
    * ...
-   * std::experimental::net::socket_base::receive_buffer_size option;
+   * std::experimental::net::v1::socket_base::receive_buffer_size option;
    * socket.get_option(option);
    * int size = option.value();
    * @endcode
@@ -325,7 +325,7 @@ public:
 #if defined(GENERATING_DOCUMENTATION)
   typedef implementation_defined receive_buffer_size;
 #else
-  typedef std::experimental::net::detail::socket_option::integer<
+  typedef std::experimental::net::v1::detail::socket_option::integer<
     NET_TS_OS_DEF(SOL_SOCKET), NET_TS_OS_DEF(SO_RCVBUF)>
       receive_buffer_size;
 #endif
@@ -337,18 +337,18 @@ public:
    * @par Examples
    * Setting the option:
    * @code
-   * std::experimental::net::ip::tcp::socket socket(io_context); 
+   * std::experimental::net::v1::ip::tcp::socket socket(io_context); 
    * ...
-   * std::experimental::net::socket_base::receive_low_watermark option(1024);
+   * std::experimental::net::v1::socket_base::receive_low_watermark option(1024);
    * socket.set_option(option);
    * @endcode
    *
    * @par
    * Getting the current option value:
    * @code
-   * std::experimental::net::ip::tcp::socket socket(io_context); 
+   * std::experimental::net::v1::ip::tcp::socket socket(io_context); 
    * ...
-   * std::experimental::net::socket_base::receive_low_watermark option;
+   * std::experimental::net::v1::socket_base::receive_low_watermark option;
    * socket.get_option(option);
    * int size = option.value();
    * @endcode
@@ -359,7 +359,7 @@ public:
 #if defined(GENERATING_DOCUMENTATION)
   typedef implementation_defined receive_low_watermark;
 #else
-  typedef std::experimental::net::detail::socket_option::integer<
+  typedef std::experimental::net::v1::detail::socket_option::integer<
     NET_TS_OS_DEF(SOL_SOCKET), NET_TS_OS_DEF(SO_RCVLOWAT)>
       receive_low_watermark;
 #endif
@@ -372,18 +372,18 @@ public:
    * @par Examples
    * Setting the option:
    * @code
-   * std::experimental::net::ip::tcp::acceptor acceptor(io_context); 
+   * std::experimental::net::v1::ip::tcp::acceptor acceptor(io_context); 
    * ...
-   * std::experimental::net::socket_base::reuse_address option(true);
+   * std::experimental::net::v1::socket_base::reuse_address option(true);
    * acceptor.set_option(option);
    * @endcode
    *
    * @par
    * Getting the current option value:
    * @code
-   * std::experimental::net::ip::tcp::acceptor acceptor(io_context); 
+   * std::experimental::net::v1::ip::tcp::acceptor acceptor(io_context); 
    * ...
-   * std::experimental::net::socket_base::reuse_address option;
+   * std::experimental::net::v1::socket_base::reuse_address option;
    * acceptor.get_option(option);
    * bool is_set = option.value();
    * @endcode
@@ -394,7 +394,7 @@ public:
 #if defined(GENERATING_DOCUMENTATION)
   typedef implementation_defined reuse_address;
 #else
-  typedef std::experimental::net::detail::socket_option::boolean<
+  typedef std::experimental::net::v1::detail::socket_option::boolean<
     NET_TS_OS_DEF(SOL_SOCKET), NET_TS_OS_DEF(SO_REUSEADDR)>
       reuse_address;
 #endif
@@ -407,18 +407,18 @@ public:
    * @par Examples
    * Setting the option:
    * @code
-   * std::experimental::net::ip::tcp::socket socket(io_context); 
+   * std::experimental::net::v1::ip::tcp::socket socket(io_context); 
    * ...
-   * std::experimental::net::socket_base::linger option(true, 30);
+   * std::experimental::net::v1::socket_base::linger option(true, 30);
    * socket.set_option(option);
    * @endcode
    *
    * @par
    * Getting the current option value:
    * @code
-   * std::experimental::net::ip::tcp::socket socket(io_context); 
+   * std::experimental::net::v1::ip::tcp::socket socket(io_context); 
    * ...
-   * std::experimental::net::socket_base::linger option;
+   * std::experimental::net::v1::socket_base::linger option;
    * socket.get_option(option);
    * bool is_set = option.enabled();
    * unsigned short timeout = option.timeout();
@@ -430,7 +430,7 @@ public:
 #if defined(GENERATING_DOCUMENTATION)
   typedef implementation_defined linger;
 #else
-  typedef std::experimental::net::detail::socket_option::linger<
+  typedef std::experimental::net::v1::detail::socket_option::linger<
     NET_TS_OS_DEF(SOL_SOCKET), NET_TS_OS_DEF(SO_LINGER)>
       linger;
 #endif
@@ -442,18 +442,18 @@ public:
    * @par Examples
    * Setting the option:
    * @code
-   * std::experimental::net::ip::tcp::socket socket(io_context);
+   * std::experimental::net::v1::ip::tcp::socket socket(io_context);
    * ...
-   * std::experimental::net::socket_base::out_of_band_inline option(true);
+   * std::experimental::net::v1::socket_base::out_of_band_inline option(true);
    * socket.set_option(option);
    * @endcode
    *
    * @par
    * Getting the current option value:
    * @code
-   * std::experimental::net::ip::tcp::socket socket(io_context);
+   * std::experimental::net::v1::ip::tcp::socket socket(io_context);
    * ...
-   * std::experimental::net::socket_base::out_of_band_inline option;
+   * std::experimental::net::v1::socket_base::out_of_band_inline option;
    * socket.get_option(option);
    * bool value = option.value();
    * @endcode
@@ -464,7 +464,7 @@ public:
 #if defined(GENERATING_DOCUMENTATION)
   typedef implementation_defined out_of_band_inline;
 #else
-  typedef std::experimental::net::detail::socket_option::boolean<
+  typedef std::experimental::net::v1::detail::socket_option::boolean<
     NET_TS_OS_DEF(SOL_SOCKET), NET_TS_OS_DEF(SO_OOBINLINE)>
       out_of_band_inline;
 #endif
@@ -472,24 +472,24 @@ public:
   /// Socket option to report aborted connections on accept.
   /**
    * Implements a custom socket option that determines whether or not an accept
-   * operation is permitted to fail with std::experimental::net::error::connection_aborted.
+   * operation is permitted to fail with std::experimental::net::v1::error::connection_aborted.
    * By default the option is false.
    *
    * @par Examples
    * Setting the option:
    * @code
-   * std::experimental::net::ip::tcp::acceptor acceptor(io_context); 
+   * std::experimental::net::v1::ip::tcp::acceptor acceptor(io_context); 
    * ...
-   * std::experimental::net::socket_base::enable_connection_aborted option(true);
+   * std::experimental::net::v1::socket_base::enable_connection_aborted option(true);
    * acceptor.set_option(option);
    * @endcode
    *
    * @par
    * Getting the current option value:
    * @code
-   * std::experimental::net::ip::tcp::acceptor acceptor(io_context); 
+   * std::experimental::net::v1::ip::tcp::acceptor acceptor(io_context); 
    * ...
-   * std::experimental::net::socket_base::enable_connection_aborted option;
+   * std::experimental::net::v1::socket_base::enable_connection_aborted option;
    * acceptor.get_option(option);
    * bool is_set = option.value();
    * @endcode
@@ -500,9 +500,9 @@ public:
 #if defined(GENERATING_DOCUMENTATION)
   typedef implementation_defined enable_connection_aborted;
 #else
-  typedef std::experimental::net::detail::socket_option::boolean<
-    std::experimental::net::detail::custom_socket_option_level,
-    std::experimental::net::detail::enable_connection_aborted_option>
+  typedef std::experimental::net::v1::detail::socket_option::boolean<
+    std::experimental::net::v1::detail::custom_socket_option_level,
+    std::experimental::net::v1::detail::enable_connection_aborted_option>
     enable_connection_aborted;
 #endif
 
@@ -513,9 +513,9 @@ public:
    *
    * @par Example
    * @code
-   * std::experimental::net::ip::tcp::socket socket(io_context); 
+   * std::experimental::net::v1::ip::tcp::socket socket(io_context); 
    * ...
-   * std::experimental::net::socket_base::bytes_readable command(true);
+   * std::experimental::net::v1::socket_base::bytes_readable command(true);
    * socket.io_control(command);
    * std::size_t bytes_readable = command.get();
    * @endcode
@@ -526,7 +526,7 @@ public:
 #if defined(GENERATING_DOCUMENTATION)
   typedef implementation_defined bytes_readable;
 #else
-  typedef std::experimental::net::detail::io_control::bytes_readable bytes_readable;
+  typedef std::experimental::net::v1::detail::io_control::bytes_readable bytes_readable;
 #endif
 
   /// The maximum length of the queue of pending incoming connections.

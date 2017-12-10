@@ -95,7 +95,7 @@ public:
     }
 
     // Get the underlying mutex.
-    std::experimental::net::detail::mutex& mutex()
+    std::experimental::net::v1::detail::mutex& mutex()
     {
       return mutex_.mutex_;
     }
@@ -140,7 +140,7 @@ public:
 private:
   friend class scoped_lock;
   friend class conditionally_enabled_event;
-  std::experimental::net::detail::mutex mutex_;
+  std::experimental::net::v1::detail::mutex mutex_;
   const bool enabled_;
 };
 

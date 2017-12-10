@@ -132,7 +132,7 @@ public:
   };
 
   // Constructor.
-  win_iocp_socket_service(std::experimental::net::io_context& io_context)
+  win_iocp_socket_service(std::experimental::net::v1::io_context& io_context)
     : service_base<win_iocp_socket_service<Protocol> >(io_context),
       win_iocp_socket_service_base(io_context)
   {
@@ -305,7 +305,7 @@ public:
       const endpoint_type& destination, socket_base::message_flags flags,
       std::error_code& ec)
   {
-    buffer_sequence_adapter<std::experimental::net::const_buffer,
+    buffer_sequence_adapter<std::experimental::net::v1::const_buffer,
         ConstBufferSequence> bufs(buffers);
 
     return socket_ops::sync_sendto(impl.socket_, impl.state_,
@@ -333,14 +333,14 @@ public:
   {
     // Allocate and construct an operation to wrap the handler.
     typedef win_iocp_socket_send_op<ConstBufferSequence, Handler> op;
-    typename op::ptr p = { std::experimental::net::detail::addressof(handler),
+    typename op::ptr p = { std::experimental::net::v1::detail::addressof(handler),
       op::ptr::allocate(handler), 0 };
     p.p = new (p.v) op(impl.cancel_token_, buffers, handler);
 
     NET_TS_HANDLER_CREATION((io_context_, *p.p, "socket",
           &impl, impl.socket_, "async_send_to"));
 
-    buffer_sequence_adapter<std::experimental::net::const_buffer,
+    buffer_sequence_adapter<std::experimental::net::v1::const_buffer,
         ConstBufferSequence> bufs(buffers);
 
     start_send_to_op(impl, bufs.buffers(), bufs.count(),
@@ -356,7 +356,7 @@ public:
   {
     // Allocate and construct an operation to wrap the handler.
     typedef win_iocp_null_buffers_op<Handler> op;
-    typename op::ptr p = { std::experimental::net::detail::addressof(handler),
+    typename op::ptr p = { std::experimental::net::v1::detail::addressof(handler),
       op::ptr::allocate(handler), 0 };
     p.p = new (p.v) op(impl.cancel_token_, handler);
 
@@ -375,7 +375,7 @@ public:
       endpoint_type& sender_endpoint, socket_base::message_flags flags,
       std::error_code& ec)
   {
-    buffer_sequence_adapter<std::experimental::net::mutable_buffer,
+    buffer_sequence_adapter<std::experimental::net::v1::mutable_buffer,
         MutableBufferSequence> bufs(buffers);
 
     std::size_t addr_len = sender_endpoint.capacity();
@@ -414,14 +414,14 @@ public:
     // Allocate and construct an operation to wrap the handler.
     typedef win_iocp_socket_recvfrom_op<
       MutableBufferSequence, endpoint_type, Handler> op;
-    typename op::ptr p = { std::experimental::net::detail::addressof(handler),
+    typename op::ptr p = { std::experimental::net::v1::detail::addressof(handler),
       op::ptr::allocate(handler), 0 };
     p.p = new (p.v) op(sender_endp, impl.cancel_token_, buffers, handler);
 
     NET_TS_HANDLER_CREATION((io_context_, *p.p, "socket",
           &impl, impl.socket_, "async_receive_from"));
 
-    buffer_sequence_adapter<std::experimental::net::mutable_buffer,
+    buffer_sequence_adapter<std::experimental::net::v1::mutable_buffer,
         MutableBufferSequence> bufs(buffers);
 
     start_receive_from_op(impl, bufs.buffers(), bufs.count(),
@@ -437,7 +437,7 @@ public:
   {
     // Allocate and construct an operation to wrap the handler.
     typedef win_iocp_null_buffers_op<Handler> op;
-    typename op::ptr p = { std::experimental::net::detail::addressof(handler),
+    typename op::ptr p = { std::experimental::net::v1::detail::addressof(handler),
       op::ptr::allocate(handler), 0 };
     p.p = new (p.v) op(impl.cancel_token_, handler);
 
@@ -459,7 +459,7 @@ public:
     // We cannot accept a socket that is already open.
     if (peer.is_open())
     {
-      ec = std::experimental::net::error::already_open;
+      ec = std::experimental::net::v1::error::already_open;
       return ec;
     }
 
@@ -517,7 +517,7 @@ public:
   {
     // Allocate and construct an operation to wrap the handler.
     typedef win_iocp_socket_accept_op<Socket, protocol_type, Handler> op;
-    typename op::ptr p = { std::experimental::net::detail::addressof(handler),
+    typename op::ptr p = { std::experimental::net::v1::detail::addressof(handler),
       op::ptr::allocate(handler), 0 };
     bool enable_connection_aborted =
       (impl.state_ & socket_ops::enable_connection_aborted) != 0;
@@ -539,12 +539,12 @@ public:
   // must be valid until the accept's handler is invoked.
   template <typename Handler>
   void async_accept(implementation_type& impl,
-      std::experimental::net::io_context* peer_io_context,
+      std::experimental::net::v1::io_context* peer_io_context,
       endpoint_type* peer_endpoint, Handler& handler)
   {
     // Allocate and construct an operation to wrap the handler.
     typedef win_iocp_socket_move_accept_op<protocol_type, Handler> op;
-    typename op::ptr p = { std::experimental::net::detail::addressof(handler),
+    typename op::ptr p = { std::experimental::net::v1::detail::addressof(handler),
       op::ptr::allocate(handler), 0 };
     bool enable_connection_aborted =
       (impl.state_ & socket_ops::enable_connection_aborted) != 0;
@@ -579,7 +579,7 @@ public:
   {
     // Allocate and construct an operation to wrap the handler.
     typedef win_iocp_socket_connect_op<Handler> op;
-    typename op::ptr p = { std::experimental::net::detail::addressof(handler),
+    typename op::ptr p = { std::experimental::net::v1::detail::addressof(handler),
       op::ptr::allocate(handler), 0 };
     p.p = new (p.v) op(impl.socket_, handler);
 

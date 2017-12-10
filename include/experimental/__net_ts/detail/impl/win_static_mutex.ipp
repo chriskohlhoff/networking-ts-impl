@@ -36,8 +36,8 @@ void win_static_mutex::init()
 {
   int error = do_init();
   std::error_code ec(error,
-      std::experimental::net::error::get_system_category());
-  std::experimental::net::detail::throw_error(ec, "static_mutex");
+      std::experimental::net::v1::error::get_system_category());
+  std::experimental::net::v1::detail::throw_error(ec, "static_mutex");
 }
 
 int win_static_mutex::do_init()

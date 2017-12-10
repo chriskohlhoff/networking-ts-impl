@@ -59,7 +59,7 @@ struct is_endpoint_sequence
 };
 
 /**
- * @defgroup connect std::experimental::net::connect
+ * @defgroup connect std::experimental::net::v1::connect
  *
  * @brief Establishes a socket connection by trying each endpoint in a sequence.
  */
@@ -80,14 +80,14 @@ struct is_endpoint_sequence
  * @returns The successfully connected endpoint.
  *
  * @throws std::system_error Thrown on failure. If the sequence is
- * empty, the associated @c error_code is std::experimental::net::error::not_found.
+ * empty, the associated @c error_code is std::experimental::net::v1::error::not_found.
  * Otherwise, contains the error from the last connection attempt.
  *
  * @par Example
  * @code tcp::resolver r(io_context);
  * tcp::resolver::query q("host", "service");
  * tcp::socket s(io_context);
- * std::experimental::net::connect(s, r.resolve(q)); @endcode
+ * std::experimental::net::v1::connect(s, r.resolve(q)); @endcode
  */
 template <typename Protocol NET_TS_SVC_TPARAM, typename EndpointSequence>
 typename Protocol::endpoint connect(
@@ -109,7 +109,7 @@ typename Protocol::endpoint connect(
  * @param endpoints A sequence of endpoints.
  *
  * @param ec Set to indicate what error occurred, if any. If the sequence is
- * empty, set to std::experimental::net::error::not_found. Otherwise, contains the error
+ * empty, set to std::experimental::net::v1::error::not_found. Otherwise, contains the error
  * from the last connection attempt.
  *
  * @returns On success, the successfully connected endpoint. Otherwise, a
@@ -120,7 +120,7 @@ typename Protocol::endpoint connect(
  * tcp::resolver::query q("host", "service");
  * tcp::socket s(io_context);
  * std::error_code ec;
- * std::experimental::net::connect(s, r.resolve(q), ec);
+ * std::experimental::net::v1::connect(s, r.resolve(q), ec);
  * if (ec)
  * {
  *   // An error occurred.
@@ -150,7 +150,7 @@ typename Protocol::endpoint connect(
  * @returns An iterator denoting the successfully connected endpoint.
  *
  * @throws std::system_error Thrown on failure. If the sequence is
- * empty, the associated @c error_code is std::experimental::net::error::not_found.
+ * empty, the associated @c error_code is std::experimental::net::v1::error::not_found.
  * Otherwise, contains the error from the last connection attempt.
  *
  * @par Example
@@ -158,7 +158,7 @@ typename Protocol::endpoint connect(
  * tcp::resolver::query q("host", "service");
  * tcp::resolver::results_type e = r.resolve(q);
  * tcp::socket s(io_context);
- * std::experimental::net::connect(s, e.begin(), e.end()); @endcode
+ * std::experimental::net::v1::connect(s, e.begin(), e.end()); @endcode
  */
 template <typename Protocol NET_TS_SVC_TPARAM, typename Iterator>
 Iterator connect(basic_socket<Protocol NET_TS_SVC_TARG>& s,
@@ -179,7 +179,7 @@ Iterator connect(basic_socket<Protocol NET_TS_SVC_TARG>& s,
  * @param end An iterator pointing to the end of a sequence of endpoints.
  *
  * @param ec Set to indicate what error occurred, if any. If the sequence is
- * empty, set to std::experimental::net::error::not_found. Otherwise, contains the error
+ * empty, set to std::experimental::net::v1::error::not_found. Otherwise, contains the error
  * from the last connection attempt.
  *
  * @returns On success, an iterator denoting the successfully connected
@@ -191,7 +191,7 @@ Iterator connect(basic_socket<Protocol NET_TS_SVC_TARG>& s,
  * tcp::resolver::results_type e = r.resolve(q);
  * tcp::socket s(io_context);
  * std::error_code ec;
- * std::experimental::net::connect(s, e.begin(), e.end(), ec);
+ * std::experimental::net::v1::connect(s, e.begin(), e.end(), ec);
  * if (ec)
  * {
  *   // An error occurred.
@@ -227,7 +227,7 @@ Iterator connect(basic_socket<Protocol NET_TS_SVC_TARG>& s,
  * @returns The successfully connected endpoint.
  *
  * @throws std::system_error Thrown on failure. If the sequence is
- * empty, the associated @c error_code is std::experimental::net::error::not_found.
+ * empty, the associated @c error_code is std::experimental::net::v1::error::not_found.
  * Otherwise, contains the error from the last connection attempt.
  *
  * @par Example
@@ -244,11 +244,11 @@ Iterator connect(basic_socket<Protocol NET_TS_SVC_TARG>& s,
  *     return true;
  *   }
  * }; @endcode
- * It would be used with the std::experimental::net::connect function as follows:
+ * It would be used with the std::experimental::net::v1::connect function as follows:
  * @code tcp::resolver r(io_context);
  * tcp::resolver::query q("host", "service");
  * tcp::socket s(io_context);
- * tcp::endpoint e = std::experimental::net::connect(s,
+ * tcp::endpoint e = std::experimental::net::v1::connect(s,
  *     r.resolve(q), my_connect_condition());
  * std::cout << "Connected to: " << e << std::endl; @endcode
  */
@@ -284,7 +284,7 @@ typename Protocol::endpoint connect(
  * and false if it should be skipped.
  *
  * @param ec Set to indicate what error occurred, if any. If the sequence is
- * empty, set to std::experimental::net::error::not_found. Otherwise, contains the error
+ * empty, set to std::experimental::net::v1::error::not_found. Otherwise, contains the error
  * from the last connection attempt.
  *
  * @returns On success, the successfully connected endpoint. Otherwise, a
@@ -304,12 +304,12 @@ typename Protocol::endpoint connect(
  *     return true;
  *   }
  * }; @endcode
- * It would be used with the std::experimental::net::connect function as follows:
+ * It would be used with the std::experimental::net::v1::connect function as follows:
  * @code tcp::resolver r(io_context);
  * tcp::resolver::query q("host", "service");
  * tcp::socket s(io_context);
  * std::error_code ec;
- * tcp::endpoint e = std::experimental::net::connect(s,
+ * tcp::endpoint e = std::experimental::net::v1::connect(s,
  *     r.resolve(q), my_connect_condition(), ec);
  * if (ec)
  * {
@@ -357,7 +357,7 @@ typename Protocol::endpoint connect(
  * @returns An iterator denoting the successfully connected endpoint.
  *
  * @throws std::system_error Thrown on failure. If the sequence is
- * empty, the associated @c error_code is std::experimental::net::error::not_found.
+ * empty, the associated @c error_code is std::experimental::net::v1::error::not_found.
  * Otherwise, contains the error from the last connection attempt.
  *
  * @par Example
@@ -374,12 +374,12 @@ typename Protocol::endpoint connect(
  *     return true;
  *   }
  * }; @endcode
- * It would be used with the std::experimental::net::connect function as follows:
+ * It would be used with the std::experimental::net::v1::connect function as follows:
  * @code tcp::resolver r(io_context);
  * tcp::resolver::query q("host", "service");
  * tcp::resolver::results_type e = r.resolve(q);
  * tcp::socket s(io_context);
- * tcp::resolver::results_type::iterator i = std::experimental::net::connect(
+ * tcp::resolver::results_type::iterator i = std::experimental::net::v1::connect(
  *     s, e.begin(), e.end(), my_connect_condition());
  * std::cout << "Connected to: " << i->endpoint() << std::endl; @endcode
  */
@@ -414,7 +414,7 @@ Iterator connect(basic_socket<Protocol NET_TS_SVC_TARG>& s, Iterator begin,
  * and false if it should be skipped.
  *
  * @param ec Set to indicate what error occurred, if any. If the sequence is
- * empty, set to std::experimental::net::error::not_found. Otherwise, contains the error
+ * empty, set to std::experimental::net::v1::error::not_found. Otherwise, contains the error
  * from the last connection attempt.
  *
  * @returns On success, an iterator denoting the successfully connected
@@ -434,13 +434,13 @@ Iterator connect(basic_socket<Protocol NET_TS_SVC_TARG>& s, Iterator begin,
  *     return true;
  *   }
  * }; @endcode
- * It would be used with the std::experimental::net::connect function as follows:
+ * It would be used with the std::experimental::net::v1::connect function as follows:
  * @code tcp::resolver r(io_context);
  * tcp::resolver::query q("host", "service");
  * tcp::resolver::results_type e = r.resolve(q);
  * tcp::socket s(io_context);
  * std::error_code ec;
- * tcp::resolver::results_type::iterator i = std::experimental::net::connect(
+ * tcp::resolver::results_type::iterator i = std::experimental::net::v1::connect(
  *     s, e.begin(), e.end(), my_connect_condition());
  * if (ec)
  * {
@@ -460,7 +460,7 @@ Iterator connect(basic_socket<Protocol NET_TS_SVC_TARG>& s,
 /*@}*/
 
 /**
- * @defgroup async_connect std::experimental::net::async_connect
+ * @defgroup async_connect std::experimental::net::v1::async_connect
  *
  * @brief Asynchronously establishes a socket connection by trying each
  * endpoint in a sequence.
@@ -485,7 +485,7 @@ Iterator connect(basic_socket<Protocol NET_TS_SVC_TARG>& s,
  * signature of the handler must be:
  * @code void handler(
  *   // Result of operation. if the sequence is empty, set to
- *   // std::experimental::net::error::not_found. Otherwise, contains the
+ *   // std::experimental::net::v1::error::not_found. Otherwise, contains the
  *   // error from the last connection attempt.
  *   const std::error_code& error,
  *
@@ -496,7 +496,7 @@ Iterator connect(basic_socket<Protocol NET_TS_SVC_TARG>& s,
  * Regardless of whether the asynchronous operation completes immediately or
  * not, the handler will not be invoked from within this function. Invocation
  * of the handler will be performed in a manner equivalent to using
- * std::experimental::net::io_context::post().
+ * std::experimental::net::v1::io_context::post().
  *
  * @par Example
  * @code tcp::resolver r(io_context);
@@ -515,7 +515,7 @@ Iterator connect(basic_socket<Protocol NET_TS_SVC_TARG>& s,
  * {
  *   if (!ec)
  *   {
- *     std::experimental::net::async_connect(s, results, connect_handler);
+ *     std::experimental::net::v1::async_connect(s, results, connect_handler);
  *   }
  * }
  *
@@ -558,7 +558,7 @@ async_connect(basic_socket<Protocol NET_TS_SVC_TARG>& s,
  * signature of the handler must be:
  * @code void handler(
  *   // Result of operation. if the sequence is empty, set to
- *   // std::experimental::net::error::not_found. Otherwise, contains the
+ *   // std::experimental::net::v1::error::not_found. Otherwise, contains the
  *   // error from the last connection attempt.
  *   const std::error_code& error,
  *
@@ -569,12 +569,12 @@ async_connect(basic_socket<Protocol NET_TS_SVC_TARG>& s,
  * Regardless of whether the asynchronous operation completes immediately or
  * not, the handler will not be invoked from within this function. Invocation
  * of the handler will be performed in a manner equivalent to using
- * std::experimental::net::io_context::post().
+ * std::experimental::net::v1::io_context::post().
  *
  * @par Example
  * @code std::vector<tcp::endpoint> endpoints = ...;
  * tcp::socket s(io_context);
- * std::experimental::net::async_connect(s,
+ * std::experimental::net::v1::async_connect(s,
  *     endpoints.begin(), endpoints.end(),
  *     connect_handler);
  *
@@ -624,7 +624,7 @@ async_connect(basic_socket<Protocol NET_TS_SVC_TARG>& s,
  * signature of the handler must be:
  * @code void handler(
  *   // Result of operation. if the sequence is empty, set to
- *   // std::experimental::net::error::not_found. Otherwise, contains the
+ *   // std::experimental::net::v1::error::not_found. Otherwise, contains the
  *   // error from the last connection attempt.
  *   const std::error_code& error,
  *
@@ -635,7 +635,7 @@ async_connect(basic_socket<Protocol NET_TS_SVC_TARG>& s,
  * Regardless of whether the asynchronous operation completes immediately or
  * not, the handler will not be invoked from within this function. Invocation
  * of the handler will be performed in a manner equivalent to using
- * std::experimental::net::io_context::post().
+ * std::experimental::net::v1::io_context::post().
  *
  * @par Example
  * The following connect condition function object can be used to output
@@ -651,7 +651,7 @@ async_connect(basic_socket<Protocol NET_TS_SVC_TARG>& s,
  *     return true;
  *   }
  * }; @endcode
- * It would be used with the std::experimental::net::connect function as follows:
+ * It would be used with the std::experimental::net::v1::connect function as follows:
  * @code tcp::resolver r(io_context);
  * tcp::resolver::query q("host", "service");
  * tcp::socket s(io_context);
@@ -668,7 +668,7 @@ async_connect(basic_socket<Protocol NET_TS_SVC_TARG>& s,
  * {
  *   if (!ec)
  *   {
- *     std::experimental::net::async_connect(s, results,
+ *     std::experimental::net::v1::async_connect(s, results,
  *         my_connect_condition(),
  *         connect_handler);
  *   }
@@ -731,7 +731,7 @@ async_connect(basic_socket<Protocol NET_TS_SVC_TARG>& s,
  * signature of the handler must be:
  * @code void handler(
  *   // Result of operation. if the sequence is empty, set to
- *   // std::experimental::net::error::not_found. Otherwise, contains the
+ *   // std::experimental::net::v1::error::not_found. Otherwise, contains the
  *   // error from the last connection attempt.
  *   const std::error_code& error,
  *
@@ -742,7 +742,7 @@ async_connect(basic_socket<Protocol NET_TS_SVC_TARG>& s,
  * Regardless of whether the asynchronous operation completes immediately or
  * not, the handler will not be invoked from within this function. Invocation
  * of the handler will be performed in a manner equivalent to using
- * std::experimental::net::io_context::post().
+ * std::experimental::net::v1::io_context::post().
  *
  * @par Example
  * The following connect condition function object can be used to output
@@ -758,7 +758,7 @@ async_connect(basic_socket<Protocol NET_TS_SVC_TARG>& s,
  *     return true;
  *   }
  * }; @endcode
- * It would be used with the std::experimental::net::connect function as follows:
+ * It would be used with the std::experimental::net::v1::connect function as follows:
  * @code tcp::resolver r(io_context);
  * tcp::resolver::query q("host", "service");
  * tcp::socket s(io_context);
@@ -776,7 +776,7 @@ async_connect(basic_socket<Protocol NET_TS_SVC_TARG>& s,
  *   if (!ec)
  *   {
  *     tcp::resolver::iterator end;
- *     std::experimental::net::async_connect(s, i, end,
+ *     std::experimental::net::v1::async_connect(s, i, end,
  *         my_connect_condition(),
  *         connect_handler);
  *   }

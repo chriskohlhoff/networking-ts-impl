@@ -40,7 +40,7 @@ template <typename> class basic_address_iterator;
 
 /// Implements IP version 6 style addresses.
 /**
- * The std::experimental::net::ip::address_v6 class provides the ability to use and
+ * The std::experimental::net::v1::ip::address_v6 class provides the ability to use and
  * manipulate IP version 6 addresses.
  *
  * @par Thread Safety
@@ -58,7 +58,7 @@ public:
 #if defined(GENERATING_DOCUMENTATION)
   typedef array<unsigned char, 16> bytes_type;
 #else
-  typedef std::experimental::net::detail::array<unsigned char, 16> bytes_type;
+  typedef std::experimental::net::v1::detail::array<unsigned char, 16> bytes_type;
 #endif
 
   /// Default constructor.
@@ -186,7 +186,7 @@ private:
   friend class basic_address_iterator<address_v6>;
 
   // The underlying IPv6 address.
-  std::experimental::net::detail::in6_addr_type addr_;
+  std::experimental::net::v1::detail::in6_addr_type addr_;
 
   // The scope ID associated with the address.
   unsigned long scope_id_;
@@ -277,7 +277,7 @@ NET_TS_DECL address_v6 make_address_v6(
  *
  * @return The output stream.
  *
- * @relates std::experimental::net::ip::address_v6
+ * @relates std::experimental::net::v1::ip::address_v6
  */
 template <typename Elem, typename Traits>
 std::basic_ostream<Elem, Traits>& operator<<(

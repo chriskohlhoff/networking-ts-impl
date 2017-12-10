@@ -65,7 +65,7 @@ void service_registry::notify_fork(execution_context::fork_event fork_ev)
   // back into this class.
   std::vector<execution_context::service*> services;
   {
-    std::experimental::net::detail::mutex::scoped_lock lock(mutex_);
+    std::experimental::net::v1::detail::mutex::scoped_lock lock(mutex_);
     execution_context::service* service = first_service_;
     while (service)
     {
@@ -116,7 +116,7 @@ execution_context::service* service_registry::do_use_service(
     const execution_context::service::key& key,
     factory_type factory, void* owner)
 {
-  std::experimental::net::detail::mutex::scoped_lock lock(mutex_);
+  std::experimental::net::v1::detail::mutex::scoped_lock lock(mutex_);
 
   // First see if there is an existing service object with the given key.
   execution_context::service* service = first_service_;
@@ -157,16 +157,16 @@ void service_registry::do_add_service(
     execution_context::service* new_service)
 {
   if (&owner_ != &new_service->context())
-    std::experimental::net::detail::throw_exception(invalid_service_owner());
+    std::experimental::net::v1::detail::throw_exception(invalid_service_owner());
 
-  std::experimental::net::detail::mutex::scoped_lock lock(mutex_);
+  std::experimental::net::v1::detail::mutex::scoped_lock lock(mutex_);
 
   // Check if there is an existing service object with the given key.
   execution_context::service* service = first_service_;
   while (service)
   {
     if (keys_match(service->key_, key))
-      std::experimental::net::detail::throw_exception(service_already_exists());
+      std::experimental::net::v1::detail::throw_exception(service_already_exists());
     service = service->next_;
   }
 
@@ -179,7 +179,7 @@ void service_registry::do_add_service(
 bool service_registry::do_has_service(
     const execution_context::service::key& key) const
 {
-  std::experimental::net::detail::mutex::scoped_lock lock(mutex_);
+  std::experimental::net::v1::detail::mutex::scoped_lock lock(mutex_);
 
   execution_context::service* service = first_service_;
   while (service)

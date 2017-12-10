@@ -39,8 +39,8 @@ public:
   template <typename Function>
   null_thread(Function, unsigned int = 0)
   {
-    std::experimental::net::detail::throw_error(
-        std::experimental::net::error::operation_not_supported, "thread");
+    std::experimental::net::v1::detail::throw_error(
+        std::experimental::net::v1::error::operation_not_supported, "thread");
   }
 
   // Destructor.

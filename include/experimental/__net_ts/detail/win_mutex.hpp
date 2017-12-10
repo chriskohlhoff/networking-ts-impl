@@ -35,7 +35,7 @@ class win_mutex
   : private noncopyable
 {
 public:
-  typedef std::experimental::net::detail::scoped_lock<win_mutex> scoped_lock;
+  typedef std::experimental::net::v1::detail::scoped_lock<win_mutex> scoped_lock;
 
   // Constructor.
   NET_TS_DECL win_mutex();

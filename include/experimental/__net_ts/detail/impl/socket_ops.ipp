@@ -82,10 +82,10 @@ inline ReturnType error_wrapper(ReturnType return_value,
 {
 #if defined(NET_TS_WINDOWS) || defined(__CYGWIN__)
   ec = std::error_code(WSAGetLastError(),
-      std::experimental::net::error::get_system_category());
+      std::experimental::net::v1::error::get_system_category());
 #else
   ec = std::error_code(errno,
-      std::experimental::net::error::get_system_category());
+      std::experimental::net::v1::error::get_system_category());
 #endif
   return return_value;
 }
@@ -106,7 +106,7 @@ socket_type accept(socket_type s, socket_addr_type* addr,
 {
   if (s == invalid_socket)
   {
-    ec = std::experimental::net::error::bad_descriptor;
+    ec = std::experimental::net::v1::error::bad_descriptor;
     return invalid_socket;
   }
 
@@ -146,14 +146,14 @@ socket_type sync_accept(socket_type s, state_type state,
       return new_socket;
 
     // Operation failed.
-    if (ec == std::experimental::net::error::would_block
-        || ec == std::experimental::net::error::try_again)
+    if (ec == std::experimental::net::v1::error::would_block
+        || ec == std::experimental::net::v1::error::try_again)
     {
       if (state & user_set_non_blocking)
         return invalid_socket;
       // Fall through to retry operation.
     }
-    else if (ec == std::experimental::net::error::connection_aborted)
+    else if (ec == std::experimental::net::v1::error::connection_aborted)
     {
       if (state & enable_connection_aborted)
         return invalid_socket;
@@ -185,7 +185,7 @@ void complete_iocp_accept(socket_type s,
 {
   // Map non-portable errors to their portable counterparts.
   if (ec.value() == ERROR_NETNAME_DELETED)
-    ec = std::experimental::net::error::connection_aborted;
+    ec = std::experimental::net::v1::error::connection_aborted;
 
   if (!ec)
   {
@@ -201,7 +201,7 @@ void complete_iocp_accept(socket_type s,
           &remote_addr, &remote_addr_length);
       if (static_cast<std::size_t>(remote_addr_length) > *addrlen)
       {
-        ec = std::experimental::net::error::invalid_argument;
+        ec = std::experimental::net::v1::error::invalid_argument;
       }
       else
       {
@@ -237,16 +237,16 @@ bool non_blocking_accept(socket_type s,
       return true;
 
     // Retry operation if interrupted by signal.
-    if (ec == std::experimental::net::error::interrupted)
+    if (ec == std::experimental::net::v1::error::interrupted)
       continue;
 
     // Operation failed.
-    if (ec == std::experimental::net::error::would_block
-        || ec == std::experimental::net::error::try_again)
+    if (ec == std::experimental::net::v1::error::would_block
+        || ec == std::experimental::net::v1::error::try_again)
     {
       // Fall through to retry operation.
     }
-    else if (ec == std::experimental::net::error::connection_aborted)
+    else if (ec == std::experimental::net::v1::error::connection_aborted)
     {
       if (state & enable_connection_aborted)
         return true;
@@ -281,7 +281,7 @@ int bind(socket_type s, const socket_addr_type* addr,
 {
   if (s == invalid_socket)
   {
-    ec = std::experimental::net::error::bad_descriptor;
+    ec = std::experimental::net::v1::error::bad_descriptor;
     return socket_error_retval;
   }
 
@@ -320,8 +320,8 @@ int close(socket_type s, state_type& state,
 #endif // defined(NET_TS_WINDOWS) || defined(__CYGWIN__)
 
     if (result != 0
-        && (ec == std::experimental::net::error::would_block
-          || ec == std::experimental::net::error::try_again))
+        && (ec == std::experimental::net::v1::error::would_block
+          || ec == std::experimental::net::v1::error::try_again))
     {
       // According to UNIX Network Programming Vol. 1, it is possible for
       // close() to fail with EWOULDBLOCK under certain circumstances. What
@@ -363,7 +363,7 @@ bool set_user_non_blocking(socket_type s,
 {
   if (s == invalid_socket)
   {
-    ec = std::experimental::net::error::bad_descriptor;
+    ec = std::experimental::net::v1::error::bad_descriptor;
     return false;
   }
 
@@ -407,7 +407,7 @@ bool set_internal_non_blocking(socket_type s,
 {
   if (s == invalid_socket)
   {
-    ec = std::experimental::net::error::bad_descriptor;
+    ec = std::experimental::net::v1::error::bad_descriptor;
     return false;
   }
 
@@ -416,7 +416,7 @@ bool set_internal_non_blocking(socket_type s,
     // It does not make sense to clear the internal non-blocking flag if the
     // user still wants non-blocking behaviour. Return an error and let the
     // caller figure out whether to update the user-set non-blocking flag.
-    ec = std::experimental::net::error::invalid_argument;
+    ec = std::experimental::net::v1::error::invalid_argument;
     return false;
   }
 
@@ -454,7 +454,7 @@ int shutdown(socket_type s, int what, std::error_code& ec)
 {
   if (s == invalid_socket)
   {
-    ec = std::experimental::net::error::bad_descriptor;
+    ec = std::experimental::net::v1::error::bad_descriptor;
     return socket_error_retval;
   }
 
@@ -477,7 +477,7 @@ int connect(socket_type s, const socket_addr_type* addr,
 {
   if (s == invalid_socket)
   {
-    ec = std::experimental::net::error::bad_descriptor;
+    ec = std::experimental::net::v1::error::bad_descriptor;
     return socket_error_retval;
   }
 
@@ -487,8 +487,8 @@ int connect(socket_type s, const socket_addr_type* addr,
   if (result == 0)
     ec = std::error_code();
 #if defined(__linux__)
-  else if (ec == std::experimental::net::error::try_again)
-    ec = std::experimental::net::error::no_buffer_space;
+  else if (ec == std::experimental::net::v1::error::try_again)
+    ec = std::experimental::net::v1::error::no_buffer_space;
 #endif // defined(__linux__)
   return result;
 }
@@ -498,8 +498,8 @@ void sync_connect(socket_type s, const socket_addr_type* addr,
 {
   // Perform the connect operation.
   socket_ops::connect(s, addr, addrlen, ec);
-  if (ec != std::experimental::net::error::in_progress
-      && ec != std::experimental::net::error::would_block)
+  if (ec != std::experimental::net::v1::error::in_progress
+      && ec != std::experimental::net::v1::error::would_block)
   {
     // The connect operation finished immediately.
     return;
@@ -518,7 +518,7 @@ void sync_connect(socket_type s, const socket_addr_type* addr,
 
   // Return the result of the connect operation.
   ec = std::error_code(connect_error,
-      std::experimental::net::error::get_system_category());
+      std::experimental::net::v1::error::get_system_category());
 }
 
 #if defined(NET_TS_HAS_IOCP)
@@ -529,16 +529,16 @@ void complete_iocp_connect(socket_type s, std::error_code& ec)
   switch (ec.value())
   {
   case ERROR_CONNECTION_REFUSED:
-    ec = std::experimental::net::error::connection_refused;
+    ec = std::experimental::net::v1::error::connection_refused;
     break;
   case ERROR_NETWORK_UNREACHABLE:
-    ec = std::experimental::net::error::network_unreachable;
+    ec = std::experimental::net::v1::error::network_unreachable;
     break;
   case ERROR_HOST_UNREACHABLE:
-    ec = std::experimental::net::error::host_unreachable;
+    ec = std::experimental::net::v1::error::host_unreachable;
     break;
   case ERROR_SEM_TIMEOUT:
-    ec = std::experimental::net::error::timed_out;
+    ec = std::experimental::net::v1::error::timed_out;
     break;
   default:
     break;
@@ -600,7 +600,7 @@ bool non_blocking_connect(socket_type s, std::error_code& ec)
     if (connect_error)
     {
       ec = std::error_code(connect_error,
-          std::experimental::net::error::get_system_category());
+          std::experimental::net::v1::error::get_system_category());
     }
     else
       ec = std::error_code();
@@ -617,7 +617,7 @@ int socketpair(int af, int type, int protocol,
   (void)(type);
   (void)(protocol);
   (void)(sv);
-  ec = std::experimental::net::error::operation_not_supported;
+  ec = std::experimental::net::v1::error::operation_not_supported;
   return socket_error_retval;
 #else
   clear_last_error();
@@ -632,7 +632,7 @@ bool sockatmark(socket_type s, std::error_code& ec)
 {
   if (s == invalid_socket)
   {
-    ec = std::experimental::net::error::bad_descriptor;
+    ec = std::experimental::net::v1::error::bad_descriptor;
     return false;
   }
 
@@ -647,7 +647,7 @@ bool sockatmark(socket_type s, std::error_code& ec)
     ec = std::error_code();
 # if defined(ENOTTY)
   if (ec.value() == ENOTTY)
-    ec = std::experimental::net::error::not_socket;
+    ec = std::experimental::net::v1::error::not_socket;
 # endif // defined(ENOTTY)
 #else // defined(SIOCATMARK)
   int value = error_wrapper(::sockatmark(s), ec);
@@ -662,7 +662,7 @@ size_t available(socket_type s, std::error_code& ec)
 {
   if (s == invalid_socket)
   {
-    ec = std::experimental::net::error::bad_descriptor;
+    ec = std::experimental::net::v1::error::bad_descriptor;
     return 0;
   }
 
@@ -676,7 +676,7 @@ size_t available(socket_type s, std::error_code& ec)
     ec = std::error_code();
 #if defined(ENOTTY)
   if (ec.value() == ENOTTY)
-    ec = std::experimental::net::error::not_socket;
+    ec = std::experimental::net::v1::error::not_socket;
 #endif // defined(ENOTTY)
 
   return ec ? static_cast<size_t>(0) : static_cast<size_t>(value);
@@ -686,7 +686,7 @@ int listen(socket_type s, int backlog, std::error_code& ec)
 {
   if (s == invalid_socket)
   {
-    ec = std::experimental::net::error::bad_descriptor;
+    ec = std::experimental::net::v1::error::bad_descriptor;
     return socket_error_retval;
   }
 
@@ -770,9 +770,9 @@ signed_size_type recv(socket_type s, buf* bufs, size_t count,
   int result = error_wrapper(::WSARecv(s, bufs,
         recv_buf_count, &bytes_transferred, &recv_flags, 0, 0), ec);
   if (ec.value() == ERROR_NETNAME_DELETED)
-    ec = std::experimental::net::error::connection_reset;
+    ec = std::experimental::net::v1::error::connection_reset;
   else if (ec.value() == ERROR_PORT_UNREACHABLE)
-    ec = std::experimental::net::error::connection_refused;
+    ec = std::experimental::net::v1::error::connection_refused;
   else if (ec.value() == WSAEMSGSIZE || ec.value() == ERROR_MORE_DATA)
     ec.assign(0, ec.category());
   if (result != 0)
@@ -795,7 +795,7 @@ size_t sync_recv(socket_type s, state_type state, buf* bufs,
 {
   if (s == invalid_socket)
   {
-    ec = std::experimental::net::error::bad_descriptor;
+    ec = std::experimental::net::v1::error::bad_descriptor;
     return 0;
   }
 
@@ -819,14 +819,14 @@ size_t sync_recv(socket_type s, state_type state, buf* bufs,
     // Check for EOF.
     if ((state & stream_oriented) && bytes == 0)
     {
-      ec = std::experimental::net::error::eof;
+      ec = std::experimental::net::v1::error::eof;
       return 0;
     }
 
     // Operation failed.
     if ((state & user_set_non_blocking)
-        || (ec != std::experimental::net::error::would_block
-          && ec != std::experimental::net::error::try_again))
+        || (ec != std::experimental::net::v1::error::would_block
+          && ec != std::experimental::net::v1::error::try_again))
       return 0;
 
     // Wait for socket to become ready.
@@ -845,13 +845,13 @@ void complete_iocp_recv(state_type state,
   if (ec.value() == ERROR_NETNAME_DELETED)
   {
     if (cancel_token.expired())
-      ec = std::experimental::net::error::operation_aborted;
+      ec = std::experimental::net::v1::error::operation_aborted;
     else
-      ec = std::experimental::net::error::connection_reset;
+      ec = std::experimental::net::v1::error::connection_reset;
   }
   else if (ec.value() == ERROR_PORT_UNREACHABLE)
   {
-    ec = std::experimental::net::error::connection_refused;
+    ec = std::experimental::net::v1::error::connection_refused;
   }
   else if (ec.value() == WSAEMSGSIZE || ec.value() == ERROR_MORE_DATA)
   {
@@ -863,7 +863,7 @@ void complete_iocp_recv(state_type state,
       && (state & stream_oriented) != 0
       && !all_empty)
   {
-    ec = std::experimental::net::error::eof;
+    ec = std::experimental::net::v1::error::eof;
   }
 }
 
@@ -881,17 +881,17 @@ bool non_blocking_recv(socket_type s,
     // Check for end of stream.
     if (is_stream && bytes == 0)
     {
-      ec = std::experimental::net::error::eof;
+      ec = std::experimental::net::v1::error::eof;
       return true;
     }
 
     // Retry operation if interrupted by signal.
-    if (ec == std::experimental::net::error::interrupted)
+    if (ec == std::experimental::net::v1::error::interrupted)
       continue;
 
     // Check if we need to run the operation again.
-    if (ec == std::experimental::net::error::would_block
-        || ec == std::experimental::net::error::try_again)
+    if (ec == std::experimental::net::v1::error::would_block
+        || ec == std::experimental::net::v1::error::try_again)
       return false;
 
     // Operation is complete.
@@ -924,9 +924,9 @@ signed_size_type recvfrom(socket_type s, buf* bufs, size_t count,
         &bytes_transferred, &recv_flags, addr, &tmp_addrlen, 0, 0), ec);
   *addrlen = (std::size_t)tmp_addrlen;
   if (ec.value() == ERROR_NETNAME_DELETED)
-    ec = std::experimental::net::error::connection_reset;
+    ec = std::experimental::net::v1::error::connection_reset;
   else if (ec.value() == ERROR_PORT_UNREACHABLE)
-    ec = std::experimental::net::error::connection_refused;
+    ec = std::experimental::net::v1::error::connection_refused;
   else if (ec.value() == WSAEMSGSIZE || ec.value() == ERROR_MORE_DATA)
     ec.assign(0, ec.category());
   if (result != 0)
@@ -953,7 +953,7 @@ size_t sync_recvfrom(socket_type s, state_type state, buf* bufs,
 {
   if (s == invalid_socket)
   {
-    ec = std::experimental::net::error::bad_descriptor;
+    ec = std::experimental::net::v1::error::bad_descriptor;
     return 0;
   }
 
@@ -970,8 +970,8 @@ size_t sync_recvfrom(socket_type s, state_type state, buf* bufs,
 
     // Operation failed.
     if ((state & user_set_non_blocking)
-        || (ec != std::experimental::net::error::would_block
-          && ec != std::experimental::net::error::try_again))
+        || (ec != std::experimental::net::v1::error::would_block
+          && ec != std::experimental::net::v1::error::try_again))
       return 0;
 
     // Wait for socket to become ready.
@@ -990,13 +990,13 @@ void complete_iocp_recvfrom(
   if (ec.value() == ERROR_NETNAME_DELETED)
   {
     if (cancel_token.expired())
-      ec = std::experimental::net::error::operation_aborted;
+      ec = std::experimental::net::v1::error::operation_aborted;
     else
-      ec = std::experimental::net::error::connection_reset;
+      ec = std::experimental::net::v1::error::connection_reset;
   }
   else if (ec.value() == ERROR_PORT_UNREACHABLE)
   {
-    ec = std::experimental::net::error::connection_refused;
+    ec = std::experimental::net::v1::error::connection_refused;
   }
   else if (ec.value() == WSAEMSGSIZE || ec.value() == ERROR_MORE_DATA)
   {
@@ -1018,12 +1018,12 @@ bool non_blocking_recvfrom(socket_type s,
         s, bufs, count, flags, addr, addrlen, ec);
 
     // Retry operation if interrupted by signal.
-    if (ec == std::experimental::net::error::interrupted)
+    if (ec == std::experimental::net::v1::error::interrupted)
       continue;
 
     // Check if we need to run the operation again.
-    if (ec == std::experimental::net::error::would_block
-        || ec == std::experimental::net::error::try_again)
+    if (ec == std::experimental::net::v1::error::would_block
+        || ec == std::experimental::net::v1::error::try_again)
       return false;
 
     // Operation is complete.
@@ -1070,7 +1070,7 @@ size_t sync_recvmsg(socket_type s, state_type state,
 {
   if (s == invalid_socket)
   {
-    ec = std::experimental::net::error::bad_descriptor;
+    ec = std::experimental::net::v1::error::bad_descriptor;
     return 0;
   }
 
@@ -1087,8 +1087,8 @@ size_t sync_recvmsg(socket_type s, state_type state,
 
     // Operation failed.
     if ((state & user_set_non_blocking)
-        || (ec != std::experimental::net::error::would_block
-          && ec != std::experimental::net::error::try_again))
+        || (ec != std::experimental::net::v1::error::would_block
+          && ec != std::experimental::net::v1::error::try_again))
       return 0;
 
     // Wait for socket to become ready.
@@ -1107,13 +1107,13 @@ void complete_iocp_recvmsg(
   if (ec.value() == ERROR_NETNAME_DELETED)
   {
     if (cancel_token.expired())
-      ec = std::experimental::net::error::operation_aborted;
+      ec = std::experimental::net::v1::error::operation_aborted;
     else
-      ec = std::experimental::net::error::connection_reset;
+      ec = std::experimental::net::v1::error::connection_reset;
   }
   else if (ec.value() == ERROR_PORT_UNREACHABLE)
   {
-    ec = std::experimental::net::error::connection_refused;
+    ec = std::experimental::net::v1::error::connection_refused;
   }
   else if (ec.value() == WSAEMSGSIZE || ec.value() == ERROR_MORE_DATA)
   {
@@ -1134,12 +1134,12 @@ bool non_blocking_recvmsg(socket_type s,
         s, bufs, count, in_flags, out_flags, ec);
 
     // Retry operation if interrupted by signal.
-    if (ec == std::experimental::net::error::interrupted)
+    if (ec == std::experimental::net::v1::error::interrupted)
       continue;
 
     // Check if we need to run the operation again.
-    if (ec == std::experimental::net::error::would_block
-        || ec == std::experimental::net::error::try_again)
+    if (ec == std::experimental::net::v1::error::would_block
+        || ec == std::experimental::net::v1::error::try_again)
       return false;
 
     // Operation is complete.
@@ -1169,9 +1169,9 @@ signed_size_type send(socket_type s, const buf* bufs, size_t count,
   int result = error_wrapper(::WSASend(s, const_cast<buf*>(bufs),
         send_buf_count, &bytes_transferred, send_flags, 0, 0), ec);
   if (ec.value() == ERROR_NETNAME_DELETED)
-    ec = std::experimental::net::error::connection_reset;
+    ec = std::experimental::net::v1::error::connection_reset;
   else if (ec.value() == ERROR_PORT_UNREACHABLE)
-    ec = std::experimental::net::error::connection_refused;
+    ec = std::experimental::net::v1::error::connection_refused;
   if (result != 0)
     return socket_error_retval;
   ec = std::error_code();
@@ -1195,7 +1195,7 @@ size_t sync_send(socket_type s, state_type state, const buf* bufs,
 {
   if (s == invalid_socket)
   {
-    ec = std::experimental::net::error::bad_descriptor;
+    ec = std::experimental::net::v1::error::bad_descriptor;
     return 0;
   }
 
@@ -1218,8 +1218,8 @@ size_t sync_send(socket_type s, state_type state, const buf* bufs,
 
     // Operation failed.
     if ((state & user_set_non_blocking)
-        || (ec != std::experimental::net::error::would_block
-          && ec != std::experimental::net::error::try_again))
+        || (ec != std::experimental::net::v1::error::would_block
+          && ec != std::experimental::net::v1::error::try_again))
       return 0;
 
     // Wait for socket to become ready.
@@ -1238,13 +1238,13 @@ void complete_iocp_send(
   if (ec.value() == ERROR_NETNAME_DELETED)
   {
     if (cancel_token.expired())
-      ec = std::experimental::net::error::operation_aborted;
+      ec = std::experimental::net::v1::error::operation_aborted;
     else
-      ec = std::experimental::net::error::connection_reset;
+      ec = std::experimental::net::v1::error::connection_reset;
   }
   else if (ec.value() == ERROR_PORT_UNREACHABLE)
   {
-    ec = std::experimental::net::error::connection_refused;
+    ec = std::experimental::net::v1::error::connection_refused;
   }
 }
 
@@ -1260,12 +1260,12 @@ bool non_blocking_send(socket_type s,
     signed_size_type bytes = socket_ops::send(s, bufs, count, flags, ec);
 
     // Retry operation if interrupted by signal.
-    if (ec == std::experimental::net::error::interrupted)
+    if (ec == std::experimental::net::v1::error::interrupted)
       continue;
 
     // Check if we need to run the operation again.
-    if (ec == std::experimental::net::error::would_block
-        || ec == std::experimental::net::error::try_again)
+    if (ec == std::experimental::net::v1::error::would_block
+        || ec == std::experimental::net::v1::error::try_again)
       return false;
 
     // Operation is complete.
@@ -1296,9 +1296,9 @@ signed_size_type sendto(socket_type s, const buf* bufs, size_t count,
         send_buf_count, &bytes_transferred, flags, addr,
         static_cast<int>(addrlen), 0, 0), ec);
   if (ec.value() == ERROR_NETNAME_DELETED)
-    ec = std::experimental::net::error::connection_reset;
+    ec = std::experimental::net::v1::error::connection_reset;
   else if (ec.value() == ERROR_PORT_UNREACHABLE)
-    ec = std::experimental::net::error::connection_refused;
+    ec = std::experimental::net::v1::error::connection_refused;
   if (result != 0)
     return socket_error_retval;
   ec = std::error_code();
@@ -1325,7 +1325,7 @@ size_t sync_sendto(socket_type s, state_type state, const buf* bufs,
 {
   if (s == invalid_socket)
   {
-    ec = std::experimental::net::error::bad_descriptor;
+    ec = std::experimental::net::v1::error::bad_descriptor;
     return 0;
   }
 
@@ -1342,8 +1342,8 @@ size_t sync_sendto(socket_type s, state_type state, const buf* bufs,
 
     // Operation failed.
     if ((state & user_set_non_blocking)
-        || (ec != std::experimental::net::error::would_block
-          && ec != std::experimental::net::error::try_again))
+        || (ec != std::experimental::net::v1::error::would_block
+          && ec != std::experimental::net::v1::error::try_again))
       return 0;
 
     // Wait for socket to become ready.
@@ -1366,12 +1366,12 @@ bool non_blocking_sendto(socket_type s,
         s, bufs, count, flags, addr, addrlen, ec);
 
     // Retry operation if interrupted by signal.
-    if (ec == std::experimental::net::error::interrupted)
+    if (ec == std::experimental::net::v1::error::interrupted)
       continue;
 
     // Check if we need to run the operation again.
-    if (ec == std::experimental::net::error::would_block
-        || ec == std::experimental::net::error::try_again)
+    if (ec == std::experimental::net::v1::error::would_block
+        || ec == std::experimental::net::v1::error::try_again)
       return false;
 
     // Operation is complete.
@@ -1449,13 +1449,13 @@ int setsockopt(socket_type s, state_type& state, int level, int optname,
 {
   if (s == invalid_socket)
   {
-    ec = std::experimental::net::error::bad_descriptor;
+    ec = std::experimental::net::v1::error::bad_descriptor;
     return socket_error_retval;
   }
 
   if (level == custom_socket_option_level && optname == always_fail_option)
   {
-    ec = std::experimental::net::error::invalid_argument;
+    ec = std::experimental::net::v1::error::invalid_argument;
     return socket_error_retval;
   }
 
@@ -1464,7 +1464,7 @@ int setsockopt(socket_type s, state_type& state, int level, int optname,
   {
     if (optlen != sizeof(int))
     {
-      ec = std::experimental::net::error::invalid_argument;
+      ec = std::experimental::net::v1::error::invalid_argument;
       return socket_error_retval;
     }
 
@@ -1494,7 +1494,7 @@ int setsockopt(socket_type s, state_type& state, int level, int optname,
             static_cast<int>(optlen)), ec);
     }
   }
-  ec = std::experimental::net::error::fault;
+  ec = std::experimental::net::v1::error::fault;
   return socket_error_retval;
 #else // defined(__BORLANDC__)
   clear_last_error();
@@ -1537,13 +1537,13 @@ int getsockopt(socket_type s, state_type state, int level, int optname,
 {
   if (s == invalid_socket)
   {
-    ec = std::experimental::net::error::bad_descriptor;
+    ec = std::experimental::net::v1::error::bad_descriptor;
     return socket_error_retval;
   }
 
   if (level == custom_socket_option_level && optname == always_fail_option)
   {
-    ec = std::experimental::net::error::invalid_argument;
+    ec = std::experimental::net::v1::error::invalid_argument;
     return socket_error_retval;
   }
 
@@ -1552,7 +1552,7 @@ int getsockopt(socket_type s, state_type state, int level, int optname,
   {
     if (*optlen != sizeof(int))
     {
-      ec = std::experimental::net::error::invalid_argument;
+      ec = std::experimental::net::v1::error::invalid_argument;
       return socket_error_retval;
     }
 
@@ -1589,7 +1589,7 @@ int getsockopt(socket_type s, state_type state, int level, int optname,
       return result;
     }
   }
-  ec = std::experimental::net::error::fault;
+  ec = std::experimental::net::v1::error::fault;
   return socket_error_retval;
 #elif defined(NET_TS_WINDOWS) || defined(__CYGWIN__)
   clear_last_error();
@@ -1646,7 +1646,7 @@ int getpeername(socket_type s, socket_addr_type* addr,
 {
   if (s == invalid_socket)
   {
-    ec = std::experimental::net::error::bad_descriptor;
+    ec = std::experimental::net::v1::error::bad_descriptor;
     return socket_error_retval;
   }
 
@@ -1664,7 +1664,7 @@ int getpeername(socket_type s, socket_addr_type* addr,
     }
     if (connect_time == 0xFFFFFFFF)
     {
-      ec = std::experimental::net::error::not_connected;
+      ec = std::experimental::net::v1::error::not_connected;
       return socket_error_retval;
     }
 
@@ -1701,7 +1701,7 @@ int getsockname(socket_type s, socket_addr_type* addr,
 {
   if (s == invalid_socket)
   {
-    ec = std::experimental::net::error::bad_descriptor;
+    ec = std::experimental::net::v1::error::bad_descriptor;
     return socket_error_retval;
   }
 
@@ -1718,7 +1718,7 @@ int ioctl(socket_type s, state_type& state, int cmd,
 {
   if (s == invalid_socket)
   {
-    ec = std::experimental::net::error::bad_descriptor;
+    ec = std::experimental::net::v1::error::bad_descriptor;
     return socket_error_retval;
   }
 
@@ -1806,7 +1806,7 @@ int poll_read(socket_type s, state_type state,
 {
   if (s == invalid_socket)
   {
-    ec = std::experimental::net::error::bad_descriptor;
+    ec = std::experimental::net::v1::error::bad_descriptor;
     return socket_error_retval;
   }
 
@@ -1849,7 +1849,7 @@ int poll_read(socket_type s, state_type state,
        // || defined(__SYMBIAN32__)
   if (result == 0)
     ec = (state & user_set_non_blocking)
-      ? std::experimental::net::error::would_block : std::error_code();
+      ? std::experimental::net::v1::error::would_block : std::error_code();
   else if (result > 0)
     ec = std::error_code();
   return result;
@@ -1860,7 +1860,7 @@ int poll_write(socket_type s, state_type state,
 {
   if (s == invalid_socket)
   {
-    ec = std::experimental::net::error::bad_descriptor;
+    ec = std::experimental::net::v1::error::bad_descriptor;
     return socket_error_retval;
   }
 
@@ -1903,7 +1903,7 @@ int poll_write(socket_type s, state_type state,
        // || defined(__SYMBIAN32__)
   if (result == 0)
     ec = (state & user_set_non_blocking)
-      ? std::experimental::net::error::would_block : std::error_code();
+      ? std::experimental::net::v1::error::would_block : std::error_code();
   else if (result > 0)
     ec = std::error_code();
   return result;
@@ -1914,7 +1914,7 @@ int poll_error(socket_type s, state_type state,
 {
   if (s == invalid_socket)
   {
-    ec = std::experimental::net::error::bad_descriptor;
+    ec = std::experimental::net::v1::error::bad_descriptor;
     return socket_error_retval;
   }
 
@@ -1957,7 +1957,7 @@ int poll_error(socket_type s, state_type state,
        // || defined(__SYMBIAN32__)
   if (result == 0)
     ec = (state & user_set_non_blocking)
-      ? std::experimental::net::error::would_block : std::error_code();
+      ? std::experimental::net::v1::error::would_block : std::error_code();
   else if (result > 0)
     ec = std::error_code();
   return result;
@@ -1967,7 +1967,7 @@ int poll_connect(socket_type s, int msec, std::error_code& ec)
 {
   if (s == invalid_socket)
   {
-    ec = std::experimental::net::error::bad_descriptor;
+    ec = std::experimental::net::v1::error::bad_descriptor;
     return socket_error_retval;
   }
 
@@ -2051,7 +2051,7 @@ const char* inet_ntop(int af, const void* src, char* dest, size_t length,
   }
   else
   {
-    ec = std::experimental::net::error::address_family_not_supported;
+    ec = std::experimental::net::v1::error::address_family_not_supported;
     return 0;
   }
 #elif defined(NET_TS_WINDOWS) || defined(__CYGWIN__)
@@ -2059,7 +2059,7 @@ const char* inet_ntop(int af, const void* src, char* dest, size_t length,
 
   if (af != NET_TS_OS_DEF(AF_INET) && af != NET_TS_OS_DEF(AF_INET6))
   {
-    ec = std::experimental::net::error::address_family_not_supported;
+    ec = std::experimental::net::v1::error::address_family_not_supported;
     return 0;
   }
 
@@ -2106,14 +2106,14 @@ const char* inet_ntop(int af, const void* src, char* dest, size_t length,
 
   // Windows may not set an error code on failure.
   else if (result == socket_error_retval && !ec)
-    ec = std::experimental::net::error::invalid_argument;
+    ec = std::experimental::net::v1::error::invalid_argument;
 
   return result == socket_error_retval ? 0 : dest;
 #else // defined(NET_TS_WINDOWS) || defined(__CYGWIN__)
   const char* result = error_wrapper(::inet_ntop(
         af, src, dest, static_cast<int>(length)), ec);
   if (result == 0 && !ec)
-    ec = std::experimental::net::error::invalid_argument;
+    ec = std::experimental::net::v1::error::invalid_argument;
   if (result != 0 && af == NET_TS_OS_DEF(AF_INET6) && scope_id != 0)
   {
     using namespace std; // For strcat and sprintf.
@@ -2144,12 +2144,12 @@ int inet_pton(int af, const char* src, void* dest,
     unsigned int b0, b1, b2, b3;
     if (sscanf_s(src, "%u.%u.%u.%u", &b0, &b1, &b2, &b3) != 4)
     {
-      ec = std::experimental::net::error::invalid_argument;
+      ec = std::experimental::net::v1::error::invalid_argument;
       return -1;
     }
     if (b0 > 255 || b1 > 255 || b2 > 255 || b3 > 255)
     {
-      ec = std::experimental::net::error::invalid_argument;
+      ec = std::experimental::net::v1::error::invalid_argument;
       return -1;
     }
     bytes[0] = static_cast<unsigned char>(b0);
@@ -2173,7 +2173,7 @@ int inet_pton(int af, const char* src, void* dest,
     {
       if (current_word > 0xFFFF)
       {
-        ec = std::experimental::net::error::invalid_argument;
+        ec = std::experimental::net::v1::error::invalid_argument;
         return -1;
       }
 
@@ -2190,7 +2190,7 @@ int inet_pton(int af, const char* src, void* dest,
         {
           if (num_front_bytes == 16)
           {
-            ec = std::experimental::net::error::invalid_argument;
+            ec = std::experimental::net::v1::error::invalid_argument;
             return -1;
           }
 
@@ -2206,7 +2206,7 @@ int inet_pton(int af, const char* src, void* dest,
             state = done;
           else
           {
-            ec = std::experimental::net::error::invalid_argument;
+            ec = std::experimental::net::v1::error::invalid_argument;
             return -1;
           }
         }
@@ -2230,7 +2230,7 @@ int inet_pton(int af, const char* src, void* dest,
         {
           if (num_front_bytes + num_back_bytes == 16)
           {
-            ec = std::experimental::net::error::invalid_argument;
+            ec = std::experimental::net::v1::error::invalid_argument;
             return -1;
           }
 
@@ -2246,7 +2246,7 @@ int inet_pton(int af, const char* src, void* dest,
             state = done;
           else
           {
-            ec = std::experimental::net::error::invalid_argument;
+            ec = std::experimental::net::v1::error::invalid_argument;
             return -1;
           }
         }
@@ -2259,7 +2259,7 @@ int inet_pton(int af, const char* src, void* dest,
           *scope_id = current_word, state = done;
         else
         {
-          ec = std::experimental::net::error::invalid_argument;
+          ec = std::experimental::net::v1::error::invalid_argument;
           return -1;
         }
         break;
@@ -2277,7 +2277,7 @@ int inet_pton(int af, const char* src, void* dest,
   }
   else
   {
-    ec = std::experimental::net::error::address_family_not_supported;
+    ec = std::experimental::net::v1::error::address_family_not_supported;
     return -1;
   }
 #elif defined(NET_TS_WINDOWS) || defined(__CYGWIN__)
@@ -2285,7 +2285,7 @@ int inet_pton(int af, const char* src, void* dest,
 
   if (af != NET_TS_OS_DEF(AF_INET) && af != NET_TS_OS_DEF(AF_INET6))
   {
-    ec = std::experimental::net::error::address_family_not_supported;
+    ec = std::experimental::net::v1::error::address_family_not_supported;
     return -1;
   }
 
@@ -2334,7 +2334,7 @@ int inet_pton(int af, const char* src, void* dest,
 
   // Windows may not set an error code on failure.
   if (result == socket_error_retval && !ec)
-    ec = std::experimental::net::error::invalid_argument;
+    ec = std::experimental::net::v1::error::invalid_argument;
 
   if (result != socket_error_retval)
     ec = std::error_code();
@@ -2353,7 +2353,7 @@ int inet_pton(int af, const char* src, void* dest,
   {
     if (if_name - src > max_addr_v6_str_len)
     {
-      ec = std::experimental::net::error::invalid_argument;
+      ec = std::experimental::net::v1::error::invalid_argument;
       return 0;
     }
     memcpy(src_buf, src, if_name - src);
@@ -2363,7 +2363,7 @@ int inet_pton(int af, const char* src, void* dest,
 
   int result = error_wrapper(::inet_pton(af, src_ptr, dest), ec);
   if (result <= 0 && !ec)
-    ec = std::experimental::net::error::invalid_argument;
+    ec = std::experimental::net::v1::error::invalid_argument;
   if (result > 0 && is_v6 && scope_id)
   {
     using namespace std; // For strchr and atoi.
@@ -2441,16 +2441,16 @@ inline std::error_code translate_netdb_error(int error)
   case 0:
     return std::error_code();
   case HOST_NOT_FOUND:
-    return std::experimental::net::error::host_not_found;
+    return std::experimental::net::v1::error::host_not_found;
   case TRY_AGAIN:
-    return std::experimental::net::error::host_not_found_try_again;
+    return std::experimental::net::v1::error::host_not_found_try_again;
   case NO_RECOVERY:
-    return std::experimental::net::error::no_recovery;
+    return std::experimental::net::v1::error::no_recovery;
   case NO_DATA:
-    return std::experimental::net::error::no_data;
+    return std::experimental::net::v1::error::no_data;
   default:
     NET_TS_ASSERT(false);
-    return std::experimental::net::error::invalid_argument;
+    return std::experimental::net::v1::error::invalid_argument;
   }
 }
 
@@ -2507,7 +2507,7 @@ inline hostent* gethostbyname(const char* name, int af, struct hostent* result,
   (void)(ai_flags);
   if (af != NET_TS_OS_DEF(AF_INET))
   {
-    ec = std::experimental::net::error::address_family_not_supported;
+    ec = std::experimental::net::v1::error::address_family_not_supported;
     return 0;
   }
   hostent* retval = error_wrapper(::gethostbyname(name), ec);
@@ -2520,7 +2520,7 @@ inline hostent* gethostbyname(const char* name, int af, struct hostent* result,
   (void)(ai_flags);
   if (af != NET_TS_OS_DEF(AF_INET))
   {
-    ec = std::experimental::net::error::address_family_not_supported;
+    ec = std::experimental::net::v1::error::address_family_not_supported;
     return 0;
   }
   int error = 0;
@@ -2545,7 +2545,7 @@ inline hostent* gethostbyname(const char* name, int af, struct hostent* result,
   (void)(ai_flags);
   if (af != NET_TS_OS_DEF(AF_INET))
   {
-    ec = std::experimental::net::error::address_family_not_supported;
+    ec = std::experimental::net::v1::error::address_family_not_supported;
     return 0;
   }
   hostent* retval = 0;
@@ -3046,13 +3046,13 @@ inline int getaddrinfo_emulation(const char* host, const char* service,
       }
       freeaddrinfo_emulation(aihead);
       gai_free(canon);
-      if (ec == std::experimental::net::error::host_not_found)
+      if (ec == std::experimental::net::v1::error::host_not_found)
         return EAI_NONAME;
-      if (ec == std::experimental::net::error::host_not_found_try_again)
+      if (ec == std::experimental::net::v1::error::host_not_found_try_again)
         return EAI_AGAIN;
-      if (ec == std::experimental::net::error::no_recovery)
+      if (ec == std::experimental::net::v1::error::no_recovery)
         return EAI_FAIL;
-      if (ec == std::experimental::net::error::no_data)
+      if (ec == std::experimental::net::v1::error::no_data)
         return EAI_NONAME;
       return EAI_NONAME;
     }
@@ -3158,7 +3158,7 @@ inline std::error_code getnameinfo_emulation(
   case NET_TS_OS_DEF(AF_INET):
     if (salen != sizeof(sockaddr_in4_type))
     {
-      return ec = std::experimental::net::error::invalid_argument;
+      return ec = std::experimental::net::v1::error::invalid_argument;
     }
     addr = reinterpret_cast<const char*>(
         &reinterpret_cast<const sockaddr_in4_type*>(sa)->sin_addr);
@@ -3168,7 +3168,7 @@ inline std::error_code getnameinfo_emulation(
   case NET_TS_OS_DEF(AF_INET6):
     if (salen != sizeof(sockaddr_in6_type))
     {
-      return ec = std::experimental::net::error::invalid_argument;
+      return ec = std::experimental::net::v1::error::invalid_argument;
     }
     addr = reinterpret_cast<const char*>(
         &reinterpret_cast<const sockaddr_in6_type*>(sa)->sin6_addr);
@@ -3176,7 +3176,7 @@ inline std::error_code getnameinfo_emulation(
     port = reinterpret_cast<const sockaddr_in6_type*>(sa)->sin6_port;
     break;
   default:
-    return ec = std::experimental::net::error::address_family_not_supported;
+    return ec = std::experimental::net::v1::error::address_family_not_supported;
   }
 
   if (host && hostlen > 0)
@@ -3213,7 +3213,7 @@ inline std::error_code getnameinfo_emulation(
         socket_ops::freehostent(hptr);
         if (flags & NI_NAMEREQD)
         {
-          return ec = std::experimental::net::error::host_not_found;
+          return ec = std::experimental::net::v1::error::host_not_found;
         }
         if (socket_ops::inet_ntop(sa->sa_family,
               addr, host, hostlen, 0, ec) == 0)
@@ -3230,7 +3230,7 @@ inline std::error_code getnameinfo_emulation(
     {
       if (servlen < 6)
       {
-        return ec = std::experimental::net::error::no_buffer_space;
+        return ec = std::experimental::net::v1::error::no_buffer_space;
       }
 #if defined(NET_TS_HAS_SECURE_RTL)
       sprintf_s(serv, servlen, "%u", ntohs(port));
@@ -3253,7 +3253,7 @@ inline std::error_code getnameinfo_emulation(
       {
         if (servlen < 6)
         {
-          return ec = std::experimental::net::error::no_buffer_space;
+          return ec = std::experimental::net::v1::error::no_buffer_space;
         }
 #if defined(NET_TS_HAS_SECURE_RTL)
         sprintf_s(serv, servlen, "%u", ntohs(port));
@@ -3280,15 +3280,15 @@ inline std::error_code translate_addrinfo_error(int error)
   case 0:
     return std::error_code();
   case EAI_AGAIN:
-    return std::experimental::net::error::host_not_found_try_again;
+    return std::experimental::net::v1::error::host_not_found_try_again;
   case EAI_BADFLAGS:
-    return std::experimental::net::error::invalid_argument;
+    return std::experimental::net::v1::error::invalid_argument;
   case EAI_FAIL:
-    return std::experimental::net::error::no_recovery;
+    return std::experimental::net::v1::error::no_recovery;
   case EAI_FAMILY:
-    return std::experimental::net::error::address_family_not_supported;
+    return std::experimental::net::v1::error::address_family_not_supported;
   case EAI_MEMORY:
-    return std::experimental::net::error::no_memory;
+    return std::experimental::net::v1::error::no_memory;
   case EAI_NONAME:
 #if defined(EAI_ADDRFAMILY)
   case EAI_ADDRFAMILY:
@@ -3296,18 +3296,18 @@ inline std::error_code translate_addrinfo_error(int error)
 #if defined(EAI_NODATA) && (EAI_NODATA != EAI_NONAME)
   case EAI_NODATA:
 #endif
-    return std::experimental::net::error::host_not_found;
+    return std::experimental::net::v1::error::host_not_found;
   case EAI_SERVICE:
-    return std::experimental::net::error::service_not_found;
+    return std::experimental::net::v1::error::service_not_found;
   case EAI_SOCKTYPE:
-    return std::experimental::net::error::socket_type_not_supported;
+    return std::experimental::net::v1::error::socket_type_not_supported;
   default: // Possibly the non-portable EAI_SYSTEM.
 #if defined(NET_TS_WINDOWS) || defined(__CYGWIN__)
     return std::error_code(
-        WSAGetLastError(), std::experimental::net::error::get_system_category());
+        WSAGetLastError(), std::experimental::net::v1::error::get_system_category());
 #else
     return std::error_code(
-        errno, std::experimental::net::error::get_system_category());
+        errno, std::experimental::net::v1::error::get_system_category());
 #endif
   }
 }
@@ -3385,7 +3385,7 @@ std::error_code background_getaddrinfo(
     addrinfo_type** result, std::error_code& ec)
 {
   if (cancel_token.expired())
-    ec = std::experimental::net::error::operation_aborted;
+    ec = std::experimental::net::v1::error::operation_aborted;
   else
     socket_ops::getaddrinfo(host, service, hints, result, ec);
   return ec;
@@ -3490,7 +3490,7 @@ std::error_code background_getnameinfo(
 {
   if (cancel_token.expired())
   {
-    ec = std::experimental::net::error::operation_aborted;
+    ec = std::experimental::net::v1::error::operation_aborted;
   }
   else
   {

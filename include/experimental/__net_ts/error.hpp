@@ -259,16 +259,16 @@ const std::error_category& get_misc_category();
 
 static const std::error_category&
   system_category NET_TS_UNUSED_VARIABLE
-  = std::experimental::net::error::get_system_category();
+  = std::experimental::net::v1::error::get_system_category();
 static const std::error_category&
   netdb_category NET_TS_UNUSED_VARIABLE
-  = std::experimental::net::error::get_netdb_category();
+  = std::experimental::net::v1::error::get_netdb_category();
 static const std::error_category&
   addrinfo_category NET_TS_UNUSED_VARIABLE
-  = std::experimental::net::error::get_addrinfo_category();
+  = std::experimental::net::v1::error::get_addrinfo_category();
 static const std::error_category&
   misc_category NET_TS_UNUSED_VARIABLE
-  = std::experimental::net::error::get_misc_category();
+  = std::experimental::net::v1::error::get_misc_category();
 
 } // namespace error
 } // inline namespace v1
@@ -279,22 +279,22 @@ static const std::error_category&
 #if defined(NET_TS_HAS_STD_SYSTEM_ERROR)
 namespace std {
 
-template<> struct is_error_code_enum<std::experimental::net::error::basic_errors>
+template<> struct is_error_code_enum<std::experimental::net::v1::error::basic_errors>
 {
   static const bool value = true;
 };
 
-template<> struct is_error_code_enum<std::experimental::net::error::netdb_errors>
+template<> struct is_error_code_enum<std::experimental::net::v1::error::netdb_errors>
 {
   static const bool value = true;
 };
 
-template<> struct is_error_code_enum<std::experimental::net::error::addrinfo_errors>
+template<> struct is_error_code_enum<std::experimental::net::v1::error::addrinfo_errors>
 {
   static const bool value = true;
 };
 
-template<> struct is_error_code_enum<std::experimental::net::error::misc_errors>
+template<> struct is_error_code_enum<std::experimental::net::v1::error::misc_errors>
 {
   static const bool value = true;
 };

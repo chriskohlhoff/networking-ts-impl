@@ -85,7 +85,7 @@ inline Windows::Storage::Streams::IBuffer^ buffer_dup(
     const ConstBufferSequence& buffers)
 {
   using Microsoft::WRL::ComPtr;
-  using std::experimental::net::buffer_size;
+  using std::experimental::net::v1::buffer_size;
   std::size_t size = buffer_size(buffers);
   auto b = ref new Windows::Storage::Streams::Buffer(size);
   ComPtr<IInspectable> insp = reinterpret_cast<IInspectable*>(b);
@@ -93,7 +93,7 @@ inline Windows::Storage::Streams::IBuffer^ buffer_dup(
   insp.As(&bacc);
   byte* bytes = nullptr;
   bacc->Buffer(&bytes);
-  std::experimental::net::buffer_copy(std::experimental::net::buffer(bytes, size), buffers);
+  std::experimental::net::v1::buffer_copy(std::experimental::net::v1::buffer(bytes, size), buffers);
   b->Length = size;
   return b;
 }

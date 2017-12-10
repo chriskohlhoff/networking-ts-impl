@@ -35,18 +35,18 @@ namespace unicast {
  * @par Examples
  * Setting the option:
  * @code
- * std::experimental::net::ip::udp::socket socket(io_context); 
+ * std::experimental::net::v1::ip::udp::socket socket(io_context); 
  * ...
- * std::experimental::net::ip::unicast::hops option(4);
+ * std::experimental::net::v1::ip::unicast::hops option(4);
  * socket.set_option(option);
  * @endcode
  *
  * @par
  * Getting the current option value:
  * @code
- * std::experimental::net::ip::udp::socket socket(io_context); 
+ * std::experimental::net::v1::ip::udp::socket socket(io_context); 
  * ...
- * std::experimental::net::ip::unicast::hops option;
+ * std::experimental::net::v1::ip::unicast::hops option;
  * socket.get_option(option);
  * int ttl = option.value();
  * @endcode
@@ -57,7 +57,7 @@ namespace unicast {
 #if defined(GENERATING_DOCUMENTATION)
 typedef implementation_defined hops;
 #else
-typedef std::experimental::net::ip::detail::socket_option::unicast_hops<
+typedef std::experimental::net::v1::ip::detail::socket_option::unicast_hops<
   NET_TS_OS_DEF(IPPROTO_IP),
   NET_TS_OS_DEF(IP_TTL),
   NET_TS_OS_DEF(IPPROTO_IPV6),

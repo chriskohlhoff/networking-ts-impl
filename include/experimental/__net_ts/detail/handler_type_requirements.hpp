@@ -137,18 +137,18 @@ struct handler_type_requirements
       void()) networking_ts_true_handler_type; \
   \
   NET_TS_HANDLER_TYPE_REQUIREMENTS_ASSERT( \
-      sizeof(std::experimental::net::detail::zero_arg_copyable_handler_test( \
-          std::experimental::net::detail::clvref< \
+      sizeof(std::experimental::net::v1::detail::zero_arg_copyable_handler_test( \
+          std::experimental::net::v1::detail::clvref< \
             networking_ts_true_handler_type>(), 0)) == 1, \
       "CompletionHandler type requirements not met") \
   \
-  typedef std::experimental::net::detail::handler_type_requirements< \
+  typedef std::experimental::net::v1::detail::handler_type_requirements< \
       sizeof( \
-        std::experimental::net::detail::argbyv( \
-          std::experimental::net::detail::clvref< \
+        std::experimental::net::v1::detail::argbyv( \
+          std::experimental::net::v1::detail::clvref< \
             networking_ts_true_handler_type>())) + \
       sizeof( \
-        std::experimental::net::detail::lvref< \
+        std::experimental::net::v1::detail::lvref< \
           networking_ts_true_handler_type>()(), \
         char(0))> NET_TS_UNUSED_TYPEDEF
 
@@ -160,23 +160,23 @@ struct handler_type_requirements
     networking_ts_true_handler_type; \
   \
   NET_TS_HANDLER_TYPE_REQUIREMENTS_ASSERT( \
-      sizeof(std::experimental::net::detail::two_arg_handler_test( \
-          std::experimental::net::detail::rvref< \
+      sizeof(std::experimental::net::v1::detail::two_arg_handler_test( \
+          std::experimental::net::v1::detail::rvref< \
             networking_ts_true_handler_type>(), \
           static_cast<const std::error_code*>(0), \
           static_cast<const std::size_t*>(0))) == 1, \
       "ReadHandler type requirements not met") \
   \
-  typedef std::experimental::net::detail::handler_type_requirements< \
+  typedef std::experimental::net::v1::detail::handler_type_requirements< \
       sizeof( \
-        std::experimental::net::detail::argbyv( \
-          std::experimental::net::detail::rvref< \
+        std::experimental::net::v1::detail::argbyv( \
+          std::experimental::net::v1::detail::rvref< \
             networking_ts_true_handler_type>())) + \
       sizeof( \
-        std::experimental::net::detail::lvref< \
+        std::experimental::net::v1::detail::lvref< \
           networking_ts_true_handler_type>()( \
-            std::experimental::net::detail::lvref<const std::error_code>(), \
-            std::experimental::net::detail::lvref<const std::size_t>()), \
+            std::experimental::net::v1::detail::lvref<const std::error_code>(), \
+            std::experimental::net::v1::detail::lvref<const std::size_t>()), \
         char(0))> NET_TS_UNUSED_TYPEDEF
 
 #define NET_TS_WRITE_HANDLER_CHECK( \
@@ -187,23 +187,23 @@ struct handler_type_requirements
     networking_ts_true_handler_type; \
   \
   NET_TS_HANDLER_TYPE_REQUIREMENTS_ASSERT( \
-      sizeof(std::experimental::net::detail::two_arg_handler_test( \
-          std::experimental::net::detail::rvref< \
+      sizeof(std::experimental::net::v1::detail::two_arg_handler_test( \
+          std::experimental::net::v1::detail::rvref< \
             networking_ts_true_handler_type>(), \
           static_cast<const std::error_code*>(0), \
           static_cast<const std::size_t*>(0))) == 1, \
       "WriteHandler type requirements not met") \
   \
-  typedef std::experimental::net::detail::handler_type_requirements< \
+  typedef std::experimental::net::v1::detail::handler_type_requirements< \
       sizeof( \
-        std::experimental::net::detail::argbyv( \
-          std::experimental::net::detail::rvref< \
+        std::experimental::net::v1::detail::argbyv( \
+          std::experimental::net::v1::detail::rvref< \
             networking_ts_true_handler_type>())) + \
       sizeof( \
-        std::experimental::net::detail::lvref< \
+        std::experimental::net::v1::detail::lvref< \
           networking_ts_true_handler_type>()( \
-            std::experimental::net::detail::lvref<const std::error_code>(), \
-            std::experimental::net::detail::lvref<const std::size_t>()), \
+            std::experimental::net::v1::detail::lvref<const std::error_code>(), \
+            std::experimental::net::v1::detail::lvref<const std::size_t>()), \
         char(0))> NET_TS_UNUSED_TYPEDEF
 
 #define NET_TS_ACCEPT_HANDLER_CHECK( \
@@ -214,21 +214,21 @@ struct handler_type_requirements
     networking_ts_true_handler_type; \
   \
   NET_TS_HANDLER_TYPE_REQUIREMENTS_ASSERT( \
-      sizeof(std::experimental::net::detail::one_arg_handler_test( \
-          std::experimental::net::detail::rvref< \
+      sizeof(std::experimental::net::v1::detail::one_arg_handler_test( \
+          std::experimental::net::v1::detail::rvref< \
             networking_ts_true_handler_type>(), \
           static_cast<const std::error_code*>(0))) == 1, \
       "AcceptHandler type requirements not met") \
   \
-  typedef std::experimental::net::detail::handler_type_requirements< \
+  typedef std::experimental::net::v1::detail::handler_type_requirements< \
       sizeof( \
-        std::experimental::net::detail::argbyv( \
-          std::experimental::net::detail::rvref< \
+        std::experimental::net::v1::detail::argbyv( \
+          std::experimental::net::v1::detail::rvref< \
             networking_ts_true_handler_type>())) + \
       sizeof( \
-        std::experimental::net::detail::lvref< \
+        std::experimental::net::v1::detail::lvref< \
           networking_ts_true_handler_type>()( \
-            std::experimental::net::detail::lvref<const std::error_code>()), \
+            std::experimental::net::v1::detail::lvref<const std::error_code>()), \
         char(0))> NET_TS_UNUSED_TYPEDEF
 
 #define NET_TS_MOVE_ACCEPT_HANDLER_CHECK( \
@@ -239,23 +239,23 @@ struct handler_type_requirements
     networking_ts_true_handler_type; \
   \
   NET_TS_HANDLER_TYPE_REQUIREMENTS_ASSERT( \
-      sizeof(std::experimental::net::detail::two_arg_move_handler_test( \
-          std::experimental::net::detail::rvref< \
+      sizeof(std::experimental::net::v1::detail::two_arg_move_handler_test( \
+          std::experimental::net::v1::detail::rvref< \
             networking_ts_true_handler_type>(), \
           static_cast<const std::error_code*>(0), \
           static_cast<socket_type*>(0))) == 1, \
       "MoveAcceptHandler type requirements not met") \
   \
-  typedef std::experimental::net::detail::handler_type_requirements< \
+  typedef std::experimental::net::v1::detail::handler_type_requirements< \
       sizeof( \
-        std::experimental::net::detail::argbyv( \
-          std::experimental::net::detail::rvref< \
+        std::experimental::net::v1::detail::argbyv( \
+          std::experimental::net::v1::detail::rvref< \
             networking_ts_true_handler_type>())) + \
       sizeof( \
-        std::experimental::net::detail::lvref< \
+        std::experimental::net::v1::detail::lvref< \
           networking_ts_true_handler_type>()( \
-            std::experimental::net::detail::lvref<const std::error_code>(), \
-            std::experimental::net::detail::rvref<socket_type>()), \
+            std::experimental::net::v1::detail::lvref<const std::error_code>(), \
+            std::experimental::net::v1::detail::rvref<socket_type>()), \
         char(0))> NET_TS_UNUSED_TYPEDEF
 
 #define NET_TS_CONNECT_HANDLER_CHECK( \
@@ -266,21 +266,21 @@ struct handler_type_requirements
     networking_ts_true_handler_type; \
   \
   NET_TS_HANDLER_TYPE_REQUIREMENTS_ASSERT( \
-      sizeof(std::experimental::net::detail::one_arg_handler_test( \
-          std::experimental::net::detail::rvref< \
+      sizeof(std::experimental::net::v1::detail::one_arg_handler_test( \
+          std::experimental::net::v1::detail::rvref< \
             networking_ts_true_handler_type>(), \
           static_cast<const std::error_code*>(0))) == 1, \
       "ConnectHandler type requirements not met") \
   \
-  typedef std::experimental::net::detail::handler_type_requirements< \
+  typedef std::experimental::net::v1::detail::handler_type_requirements< \
       sizeof( \
-        std::experimental::net::detail::argbyv( \
-          std::experimental::net::detail::rvref< \
+        std::experimental::net::v1::detail::argbyv( \
+          std::experimental::net::v1::detail::rvref< \
             networking_ts_true_handler_type>())) + \
       sizeof( \
-        std::experimental::net::detail::lvref< \
+        std::experimental::net::v1::detail::lvref< \
           networking_ts_true_handler_type>()( \
-            std::experimental::net::detail::lvref<const std::error_code>()), \
+            std::experimental::net::v1::detail::lvref<const std::error_code>()), \
         char(0))> NET_TS_UNUSED_TYPEDEF
 
 #define NET_TS_RANGE_CONNECT_HANDLER_CHECK( \
@@ -291,23 +291,23 @@ struct handler_type_requirements
     networking_ts_true_handler_type; \
   \
   NET_TS_HANDLER_TYPE_REQUIREMENTS_ASSERT( \
-      sizeof(std::experimental::net::detail::two_arg_handler_test( \
-          std::experimental::net::detail::rvref< \
+      sizeof(std::experimental::net::v1::detail::two_arg_handler_test( \
+          std::experimental::net::v1::detail::rvref< \
             networking_ts_true_handler_type>(), \
           static_cast<const std::error_code*>(0), \
           static_cast<const endpoint_type*>(0))) == 1, \
       "RangeConnectHandler type requirements not met") \
   \
-  typedef std::experimental::net::detail::handler_type_requirements< \
+  typedef std::experimental::net::v1::detail::handler_type_requirements< \
       sizeof( \
-        std::experimental::net::detail::argbyv( \
-          std::experimental::net::detail::rvref< \
+        std::experimental::net::v1::detail::argbyv( \
+          std::experimental::net::v1::detail::rvref< \
             networking_ts_true_handler_type>())) + \
       sizeof( \
-        std::experimental::net::detail::lvref< \
+        std::experimental::net::v1::detail::lvref< \
           networking_ts_true_handler_type>()( \
-            std::experimental::net::detail::lvref<const std::error_code>(), \
-            std::experimental::net::detail::lvref<const endpoint_type>()), \
+            std::experimental::net::v1::detail::lvref<const std::error_code>(), \
+            std::experimental::net::v1::detail::lvref<const endpoint_type>()), \
         char(0))> NET_TS_UNUSED_TYPEDEF
 
 #define NET_TS_ITERATOR_CONNECT_HANDLER_CHECK( \
@@ -318,23 +318,23 @@ struct handler_type_requirements
     networking_ts_true_handler_type; \
   \
   NET_TS_HANDLER_TYPE_REQUIREMENTS_ASSERT( \
-      sizeof(std::experimental::net::detail::two_arg_handler_test( \
-          std::experimental::net::detail::rvref< \
+      sizeof(std::experimental::net::v1::detail::two_arg_handler_test( \
+          std::experimental::net::v1::detail::rvref< \
             networking_ts_true_handler_type>(), \
           static_cast<const std::error_code*>(0), \
           static_cast<const iter_type*>(0))) == 1, \
       "IteratorConnectHandler type requirements not met") \
   \
-  typedef std::experimental::net::detail::handler_type_requirements< \
+  typedef std::experimental::net::v1::detail::handler_type_requirements< \
       sizeof( \
-        std::experimental::net::detail::argbyv( \
-          std::experimental::net::detail::rvref< \
+        std::experimental::net::v1::detail::argbyv( \
+          std::experimental::net::v1::detail::rvref< \
             networking_ts_true_handler_type>())) + \
       sizeof( \
-        std::experimental::net::detail::lvref< \
+        std::experimental::net::v1::detail::lvref< \
           networking_ts_true_handler_type>()( \
-            std::experimental::net::detail::lvref<const std::error_code>(), \
-            std::experimental::net::detail::lvref<const iter_type>()), \
+            std::experimental::net::v1::detail::lvref<const std::error_code>(), \
+            std::experimental::net::v1::detail::lvref<const iter_type>()), \
         char(0))> NET_TS_UNUSED_TYPEDEF
 
 #define NET_TS_RESOLVE_HANDLER_CHECK( \
@@ -345,23 +345,23 @@ struct handler_type_requirements
     networking_ts_true_handler_type; \
   \
   NET_TS_HANDLER_TYPE_REQUIREMENTS_ASSERT( \
-      sizeof(std::experimental::net::detail::two_arg_handler_test( \
-          std::experimental::net::detail::rvref< \
+      sizeof(std::experimental::net::v1::detail::two_arg_handler_test( \
+          std::experimental::net::v1::detail::rvref< \
             networking_ts_true_handler_type>(), \
           static_cast<const std::error_code*>(0), \
           static_cast<const range_type*>(0))) == 1, \
       "ResolveHandler type requirements not met") \
   \
-  typedef std::experimental::net::detail::handler_type_requirements< \
+  typedef std::experimental::net::v1::detail::handler_type_requirements< \
       sizeof( \
-        std::experimental::net::detail::argbyv( \
-          std::experimental::net::detail::rvref< \
+        std::experimental::net::v1::detail::argbyv( \
+          std::experimental::net::v1::detail::rvref< \
             networking_ts_true_handler_type>())) + \
       sizeof( \
-        std::experimental::net::detail::lvref< \
+        std::experimental::net::v1::detail::lvref< \
           networking_ts_true_handler_type>()( \
-            std::experimental::net::detail::lvref<const std::error_code>(), \
-            std::experimental::net::detail::lvref<const range_type>()), \
+            std::experimental::net::v1::detail::lvref<const std::error_code>(), \
+            std::experimental::net::v1::detail::lvref<const range_type>()), \
         char(0))> NET_TS_UNUSED_TYPEDEF
 
 #define NET_TS_WAIT_HANDLER_CHECK( \
@@ -372,21 +372,21 @@ struct handler_type_requirements
     networking_ts_true_handler_type; \
   \
   NET_TS_HANDLER_TYPE_REQUIREMENTS_ASSERT( \
-      sizeof(std::experimental::net::detail::one_arg_handler_test( \
-          std::experimental::net::detail::rvref< \
+      sizeof(std::experimental::net::v1::detail::one_arg_handler_test( \
+          std::experimental::net::v1::detail::rvref< \
             networking_ts_true_handler_type>(), \
           static_cast<const std::error_code*>(0))) == 1, \
       "WaitHandler type requirements not met") \
   \
-  typedef std::experimental::net::detail::handler_type_requirements< \
+  typedef std::experimental::net::v1::detail::handler_type_requirements< \
       sizeof( \
-        std::experimental::net::detail::argbyv( \
-          std::experimental::net::detail::rvref< \
+        std::experimental::net::v1::detail::argbyv( \
+          std::experimental::net::v1::detail::rvref< \
             networking_ts_true_handler_type>())) + \
       sizeof( \
-        std::experimental::net::detail::lvref< \
+        std::experimental::net::v1::detail::lvref< \
           networking_ts_true_handler_type>()( \
-            std::experimental::net::detail::lvref<const std::error_code>()), \
+            std::experimental::net::v1::detail::lvref<const std::error_code>()), \
         char(0))> NET_TS_UNUSED_TYPEDEF
 
 #define NET_TS_SIGNAL_HANDLER_CHECK( \
@@ -397,23 +397,23 @@ struct handler_type_requirements
     networking_ts_true_handler_type; \
   \
   NET_TS_HANDLER_TYPE_REQUIREMENTS_ASSERT( \
-      sizeof(std::experimental::net::detail::two_arg_handler_test( \
-          std::experimental::net::detail::rvref< \
+      sizeof(std::experimental::net::v1::detail::two_arg_handler_test( \
+          std::experimental::net::v1::detail::rvref< \
             networking_ts_true_handler_type>(), \
           static_cast<const std::error_code*>(0), \
           static_cast<const int*>(0))) == 1, \
       "SignalHandler type requirements not met") \
   \
-  typedef std::experimental::net::detail::handler_type_requirements< \
+  typedef std::experimental::net::v1::detail::handler_type_requirements< \
       sizeof( \
-        std::experimental::net::detail::argbyv( \
-          std::experimental::net::detail::rvref< \
+        std::experimental::net::v1::detail::argbyv( \
+          std::experimental::net::v1::detail::rvref< \
             networking_ts_true_handler_type>())) + \
       sizeof( \
-        std::experimental::net::detail::lvref< \
+        std::experimental::net::v1::detail::lvref< \
           networking_ts_true_handler_type>()( \
-            std::experimental::net::detail::lvref<const std::error_code>(), \
-            std::experimental::net::detail::lvref<const int>()), \
+            std::experimental::net::v1::detail::lvref<const std::error_code>(), \
+            std::experimental::net::v1::detail::lvref<const int>()), \
         char(0))> NET_TS_UNUSED_TYPEDEF
 
 #define NET_TS_HANDSHAKE_HANDLER_CHECK( \
@@ -424,21 +424,21 @@ struct handler_type_requirements
     networking_ts_true_handler_type; \
   \
   NET_TS_HANDLER_TYPE_REQUIREMENTS_ASSERT( \
-      sizeof(std::experimental::net::detail::one_arg_handler_test( \
-          std::experimental::net::detail::rvref< \
+      sizeof(std::experimental::net::v1::detail::one_arg_handler_test( \
+          std::experimental::net::v1::detail::rvref< \
             networking_ts_true_handler_type>(), \
           static_cast<const std::error_code*>(0))) == 1, \
       "HandshakeHandler type requirements not met") \
   \
-  typedef std::experimental::net::detail::handler_type_requirements< \
+  typedef std::experimental::net::v1::detail::handler_type_requirements< \
       sizeof( \
-        std::experimental::net::detail::argbyv( \
-          std::experimental::net::detail::rvref< \
+        std::experimental::net::v1::detail::argbyv( \
+          std::experimental::net::v1::detail::rvref< \
             networking_ts_true_handler_type>())) + \
       sizeof( \
-        std::experimental::net::detail::lvref< \
+        std::experimental::net::v1::detail::lvref< \
           networking_ts_true_handler_type>()( \
-            std::experimental::net::detail::lvref<const std::error_code>()), \
+            std::experimental::net::v1::detail::lvref<const std::error_code>()), \
         char(0))> NET_TS_UNUSED_TYPEDEF
 
 #define NET_TS_BUFFERED_HANDSHAKE_HANDLER_CHECK( \
@@ -449,23 +449,23 @@ struct handler_type_requirements
     networking_ts_true_handler_type; \
   \
   NET_TS_HANDLER_TYPE_REQUIREMENTS_ASSERT( \
-      sizeof(std::experimental::net::detail::two_arg_handler_test( \
-          std::experimental::net::detail::rvref< \
+      sizeof(std::experimental::net::v1::detail::two_arg_handler_test( \
+          std::experimental::net::v1::detail::rvref< \
             networking_ts_true_handler_type>(), \
           static_cast<const std::error_code*>(0), \
           static_cast<const std::size_t*>(0))) == 1, \
       "BufferedHandshakeHandler type requirements not met") \
   \
-  typedef std::experimental::net::detail::handler_type_requirements< \
+  typedef std::experimental::net::v1::detail::handler_type_requirements< \
       sizeof( \
-        std::experimental::net::detail::argbyv( \
-          std::experimental::net::detail::rvref< \
+        std::experimental::net::v1::detail::argbyv( \
+          std::experimental::net::v1::detail::rvref< \
             networking_ts_true_handler_type>())) + \
       sizeof( \
-        std::experimental::net::detail::lvref< \
+        std::experimental::net::v1::detail::lvref< \
           networking_ts_true_handler_type>()( \
-          std::experimental::net::detail::lvref<const std::error_code>(), \
-          std::experimental::net::detail::lvref<const std::size_t>()), \
+          std::experimental::net::v1::detail::lvref<const std::error_code>(), \
+          std::experimental::net::v1::detail::lvref<const std::size_t>()), \
         char(0))> NET_TS_UNUSED_TYPEDEF
 
 #define NET_TS_SHUTDOWN_HANDLER_CHECK( \
@@ -476,21 +476,21 @@ struct handler_type_requirements
     networking_ts_true_handler_type; \
   \
   NET_TS_HANDLER_TYPE_REQUIREMENTS_ASSERT( \
-      sizeof(std::experimental::net::detail::one_arg_handler_test( \
-          std::experimental::net::detail::rvref< \
+      sizeof(std::experimental::net::v1::detail::one_arg_handler_test( \
+          std::experimental::net::v1::detail::rvref< \
             networking_ts_true_handler_type>(), \
           static_cast<const std::error_code*>(0))) == 1, \
       "ShutdownHandler type requirements not met") \
   \
-  typedef std::experimental::net::detail::handler_type_requirements< \
+  typedef std::experimental::net::v1::detail::handler_type_requirements< \
       sizeof( \
-        std::experimental::net::detail::argbyv( \
-          std::experimental::net::detail::rvref< \
+        std::experimental::net::v1::detail::argbyv( \
+          std::experimental::net::v1::detail::rvref< \
             networking_ts_true_handler_type>())) + \
       sizeof( \
-        std::experimental::net::detail::lvref< \
+        std::experimental::net::v1::detail::lvref< \
           networking_ts_true_handler_type>()( \
-            std::experimental::net::detail::lvref<const std::error_code>()), \
+            std::experimental::net::v1::detail::lvref<const std::error_code>()), \
         char(0))> NET_TS_UNUSED_TYPEDEF
 
 #else // !defined(NET_TS_ENABLE_HANDLER_TYPE_REQUIREMENTS)

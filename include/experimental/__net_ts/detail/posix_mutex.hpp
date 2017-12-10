@@ -37,7 +37,7 @@ class posix_mutex
   : private noncopyable
 {
 public:
-  typedef std::experimental::net::detail::scoped_lock<posix_mutex> scoped_lock;
+  typedef std::experimental::net::v1::detail::scoped_lock<posix_mutex> scoped_lock;
 
   // Constructor.
   NET_TS_DECL posix_mutex();

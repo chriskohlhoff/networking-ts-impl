@@ -37,7 +37,7 @@ namespace net {
 inline namespace v1 {
 namespace detail {
 
-epoll_reactor::epoll_reactor(std::experimental::net::execution_context& ctx)
+epoll_reactor::epoll_reactor(std::experimental::net::v1::execution_context& ctx)
   : execution_context_service_base<epoll_reactor>(ctx),
     scheduler_(use_service<scheduler>(ctx)),
     mutex_(NET_TS_CONCURRENCY_HINT_IS_LOCKING(
@@ -94,9 +94,9 @@ void epoll_reactor::shutdown()
 }
 
 void epoll_reactor::notify_fork(
-    std::experimental::net::execution_context::fork_event fork_ev)
+    std::experimental::net::v1::execution_context::fork_event fork_ev)
 {
-  if (fork_ev == std::experimental::net::execution_context::fork_child)
+  if (fork_ev == std::experimental::net::v1::execution_context::fork_child)
   {
     if (epoll_fd_ != -1)
       ::close(epoll_fd_);
@@ -138,8 +138,8 @@ void epoll_reactor::notify_fork(
       if (result != 0)
       {
         std::error_code ec(errno,
-            std::experimental::net::error::get_system_category());
-        std::experimental::net::detail::throw_error(ec, "epoll re-registration");
+            std::experimental::net::v1::error::get_system_category());
+        std::experimental::net::v1::detail::throw_error(ec, "epoll re-registration");
       }
     }
   }
@@ -237,7 +237,7 @@ void epoll_reactor::start_op(int op_type, socket_type descriptor,
 {
   if (!descriptor_data)
   {
-    op->ec_ = std::experimental::net::error::bad_descriptor;
+    op->ec_ = std::experimental::net::v1::error::bad_descriptor;
     post_immediate_completion(op, is_continuation);
     return;
   }
@@ -271,7 +271,7 @@ void epoll_reactor::start_op(int op_type, socket_type descriptor,
 
       if (descriptor_data->registered_events_ == 0)
       {
-        op->ec_ = std::experimental::net::error::operation_not_supported;
+        op->ec_ = std::experimental::net::v1::error::operation_not_supported;
         scheduler_.post_immediate_completion(op, is_continuation);
         return;
       }
@@ -290,7 +290,7 @@ void epoll_reactor::start_op(int op_type, socket_type descriptor,
           else
           {
             op->ec_ = std::error_code(errno,
-                std::experimental::net::error::get_system_category());
+                std::experimental::net::v1::error::get_system_category());
             scheduler_.post_immediate_completion(op, is_continuation);
             return;
           }
@@ -299,7 +299,7 @@ void epoll_reactor::start_op(int op_type, socket_type descriptor,
     }
     else if (descriptor_data->registered_events_ == 0)
     {
-      op->ec_ = std::experimental::net::error::operation_not_supported;
+      op->ec_ = std::experimental::net::v1::error::operation_not_supported;
       scheduler_.post_immediate_completion(op, is_continuation);
       return;
     }
@@ -334,7 +334,7 @@ void epoll_reactor::cancel_ops(socket_type,
   {
     while (reactor_op* op = descriptor_data->op_queue_[i].front())
     {
-      op->ec_ = std::experimental::net::error::operation_aborted;
+      op->ec_ = std::experimental::net::v1::error::operation_aborted;
       descriptor_data->op_queue_[i].pop();
       ops.push(op);
     }
@@ -371,7 +371,7 @@ void epoll_reactor::deregister_descriptor(socket_type descriptor,
     {
       while (reactor_op* op = descriptor_data->op_queue_[i].front())
       {
-        op->ec_ = std::experimental::net::error::operation_aborted;
+        op->ec_ = std::experimental::net::v1::error::operation_aborted;
         descriptor_data->op_queue_[i].pop();
         ops.push(op);
       }
@@ -594,8 +594,8 @@ int epoll_reactor::do_epoll_create()
   if (fd == -1)
   {
     std::error_code ec(errno,
-        std::experimental::net::error::get_system_category());
-    std::experimental::net::detail::throw_error(ec, "epoll");
+        std::experimental::net::v1::error::get_system_category());
+    std::experimental::net::v1::detail::throw_error(ec, "epoll");
   }
 
   return fd;

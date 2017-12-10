@@ -76,7 +76,7 @@ public:
   };
 
   // Constructor.
-  reactive_socket_service(std::experimental::net::io_context& io_context)
+  reactive_socket_service(std::experimental::net::v1::io_context& io_context)
     : service_base<reactive_socket_service<Protocol> >(io_context),
       reactive_socket_service_base(io_context)
   {
@@ -221,7 +221,7 @@ public:
       const endpoint_type& destination, socket_base::message_flags flags,
       std::error_code& ec)
   {
-    buffer_sequence_adapter<std::experimental::net::const_buffer,
+    buffer_sequence_adapter<std::experimental::net::v1::const_buffer,
         ConstBufferSequence> bufs(buffers);
 
     return socket_ops::sync_sendto(impl.socket_, impl.state_,
@@ -254,7 +254,7 @@ public:
     // Allocate and construct an operation to wrap the handler.
     typedef reactive_socket_sendto_op<ConstBufferSequence,
         endpoint_type, Handler> op;
-    typename op::ptr p = { std::experimental::net::detail::addressof(handler),
+    typename op::ptr p = { std::experimental::net::v1::detail::addressof(handler),
       op::ptr::allocate(handler), 0 };
     p.p = new (p.v) op(impl.socket_, buffers, destination, flags, handler);
 
@@ -275,7 +275,7 @@ public:
 
     // Allocate and construct an operation to wrap the handler.
     typedef reactive_null_buffers_op<Handler> op;
-    typename op::ptr p = { std::experimental::net::detail::addressof(handler),
+    typename op::ptr p = { std::experimental::net::v1::detail::addressof(handler),
       op::ptr::allocate(handler), 0 };
     p.p = new (p.v) op(handler);
 
@@ -294,7 +294,7 @@ public:
       endpoint_type& sender_endpoint, socket_base::message_flags flags,
       std::error_code& ec)
   {
-    buffer_sequence_adapter<std::experimental::net::mutable_buffer,
+    buffer_sequence_adapter<std::experimental::net::v1::mutable_buffer,
         MutableBufferSequence> bufs(buffers);
 
     std::size_t addr_len = sender_endpoint.capacity();
@@ -336,7 +336,7 @@ public:
     // Allocate and construct an operation to wrap the handler.
     typedef reactive_socket_recvfrom_op<MutableBufferSequence,
         endpoint_type, Handler> op;
-    typename op::ptr p = { std::experimental::net::detail::addressof(handler),
+    typename op::ptr p = { std::experimental::net::v1::detail::addressof(handler),
       op::ptr::allocate(handler), 0 };
     int protocol = impl.protocol_.type();
     p.p = new (p.v) op(impl.socket_, protocol,
@@ -363,7 +363,7 @@ public:
 
     // Allocate and construct an operation to wrap the handler.
     typedef reactive_null_buffers_op<Handler> op;
-    typename op::ptr p = { std::experimental::net::detail::addressof(handler),
+    typename op::ptr p = { std::experimental::net::v1::detail::addressof(handler),
       op::ptr::allocate(handler), 0 };
     p.p = new (p.v) op(handler);
 
@@ -388,7 +388,7 @@ public:
     // We cannot accept a socket that is already open.
     if (peer.is_open())
     {
-      ec = std::experimental::net::error::already_open;
+      ec = std::experimental::net::v1::error::already_open;
       return ec;
     }
 
@@ -449,7 +449,7 @@ public:
 
     // Allocate and construct an operation to wrap the handler.
     typedef reactive_socket_accept_op<Socket, Protocol, Handler> op;
-    typename op::ptr p = { std::experimental::net::detail::addressof(handler),
+    typename op::ptr p = { std::experimental::net::v1::detail::addressof(handler),
       op::ptr::allocate(handler), 0 };
     p.p = new (p.v) op(impl.socket_, impl.state_, peer,
         impl.protocol_, peer_endpoint, handler);
@@ -466,7 +466,7 @@ public:
   // the accept's handler is invoked.
   template <typename Handler>
   void async_accept(implementation_type& impl,
-      std::experimental::net::io_context* peer_io_context,
+      std::experimental::net::v1::io_context* peer_io_context,
       endpoint_type* peer_endpoint, Handler& handler)
   {
     bool is_continuation =
@@ -474,7 +474,7 @@ public:
 
     // Allocate and construct an operation to wrap the handler.
     typedef reactive_socket_move_accept_op<Protocol, Handler> op;
-    typename op::ptr p = { std::experimental::net::detail::addressof(handler),
+    typename op::ptr p = { std::experimental::net::v1::detail::addressof(handler),
       op::ptr::allocate(handler), 0 };
     p.p = new (p.v) op(peer_io_context ? *peer_io_context : io_context_,
         impl.socket_, impl.state_, impl.protocol_, peer_endpoint, handler);
@@ -506,7 +506,7 @@ public:
 
     // Allocate and construct an operation to wrap the handler.
     typedef reactive_socket_connect_op<Handler> op;
-    typename op::ptr p = { std::experimental::net::detail::addressof(handler),
+    typename op::ptr p = { std::experimental::net::v1::detail::addressof(handler),
       op::ptr::allocate(handler), 0 };
     p.p = new (p.v) op(impl.socket_, handler);
 

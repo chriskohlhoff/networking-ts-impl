@@ -56,7 +56,7 @@ public:
   };
 
   // Constructor.
-  NET_TS_DECL dev_poll_reactor(std::experimental::net::execution_context& ctx);
+  NET_TS_DECL dev_poll_reactor(std::experimental::net::v1::execution_context& ctx);
 
   // Destructor.
   NET_TS_DECL ~dev_poll_reactor();
@@ -66,7 +66,7 @@ public:
 
   // Recreate internal descriptors following a fork.
   NET_TS_DECL void notify_fork(
-      std::experimental::net::execution_context::fork_event fork_ev);
+      std::experimental::net::v1::execution_context::fork_event fork_ev);
 
   // Initialise the task.
   NET_TS_DECL void init_task();
@@ -182,7 +182,7 @@ private:
   scheduler& scheduler_;
 
   // Mutex to protect access to internal data.
-  std::experimental::net::detail::mutex mutex_;
+  std::experimental::net::v1::detail::mutex mutex_;
 
   // The /dev/poll file descriptor.
   int dev_poll_fd_;

@@ -78,7 +78,7 @@ private:
     {
     }
 
-    std::experimental::net::detail::thread thread_;
+    std::experimental::net::v1::detail::thread thread_;
     item* next_;
   };
 

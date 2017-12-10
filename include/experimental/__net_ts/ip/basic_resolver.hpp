@@ -36,11 +36,11 @@
 #if defined(NET_TS_WINDOWS_RUNTIME)
 # include <experimental/__net_ts/detail/winrt_resolver_service.hpp>
 # define NET_TS_SVC_T \
-    std::experimental::net::detail::winrt_resolver_service<InternetProtocol>
+    std::experimental::net::v1::detail::winrt_resolver_service<InternetProtocol>
 #else
 # include <experimental/__net_ts/detail/resolver_service.hpp>
 # define NET_TS_SVC_T \
-    std::experimental::net::detail::resolver_service<InternetProtocol>
+    std::experimental::net::v1::detail::resolver_service<InternetProtocol>
 #endif
 
 #include <experimental/__net_ts/detail/push_options.hpp>
@@ -87,7 +87,7 @@ public:
    * dispatch handlers for any asynchronous operations performed on the
    * resolver.
    */
-  explicit basic_resolver(std::experimental::net::io_context& io_context)
+  explicit basic_resolver(std::experimental::net::v1::io_context& io_context)
     : basic_io_object<NET_TS_SVC_T>(io_context)
   {
   }
@@ -147,7 +147,7 @@ public:
   /**
    * This function forces the completion of any pending asynchronous
    * operations on the host resolver. The handler for each cancelled operation
-   * will be invoked with the std::experimental::net::error::operation_aborted error code.
+   * will be invoked with the std::experimental::net::v1::error::operation_aborted error code.
    */
   void cancel()
   {
@@ -277,7 +277,7 @@ public:
         static_cast<std::string>(service), resolve_flags);
     results_type r = this->get_service().resolve(
         this->get_implementation(), q, ec);
-    std::experimental::net::detail::throw_error(ec, "resolve");
+    std::experimental::net::v1::detail::throw_error(ec, "resolve");
     return r;
   }
 
@@ -462,7 +462,7 @@ public:
         static_cast<std::string>(service), resolve_flags);
     results_type r = this->get_service().resolve(
         this->get_implementation(), q, ec);
-    std::experimental::net::detail::throw_error(ec, "resolve");
+    std::experimental::net::v1::detail::throw_error(ec, "resolve");
     return r;
   }
 
@@ -542,7 +542,7 @@ public:
    * Regardless of whether the asynchronous operation completes immediately or
    * not, the handler will not be invoked from within this function. Invocation
    * of the handler will be performed in a manner equivalent to using
-   * std::experimental::net::io_context::post().
+   * std::experimental::net::v1::io_context::post().
    *
    * A successful resolve operation is guaranteed to pass a non-empty range to
    * the handler.
@@ -599,7 +599,7 @@ public:
    * Regardless of whether the asynchronous operation completes immediately or
    * not, the handler will not be invoked from within this function. Invocation
    * of the handler will be performed in a manner equivalent to using
-   * std::experimental::net::io_context::post().
+   * std::experimental::net::v1::io_context::post().
    *
    * A successful resolve operation is guaranteed to pass a non-empty range to
    * the handler.
@@ -631,7 +631,7 @@ public:
     basic_resolver_query<protocol_type> q(static_cast<std::string>(host),
         static_cast<std::string>(service), resolve_flags);
 
-    std::experimental::net::async_completion<ResolveHandler,
+    std::experimental::net::v1::async_completion<ResolveHandler,
       void (std::error_code, results_type)> init(handler);
 
     this->get_service().async_resolve(
@@ -669,7 +669,7 @@ public:
    * Regardless of whether the asynchronous operation completes immediately or
    * not, the handler will not be invoked from within this function. Invocation
    * of the handler will be performed in a manner equivalent to using
-   * std::experimental::net::io_context::post().
+   * std::experimental::net::v1::io_context::post().
    *
    * A successful resolve operation is guaranteed to pass a non-empty range to
    * the handler.
@@ -729,7 +729,7 @@ public:
    * Regardless of whether the asynchronous operation completes immediately or
    * not, the handler will not be invoked from within this function. Invocation
    * of the handler will be performed in a manner equivalent to using
-   * std::experimental::net::io_context::post().
+   * std::experimental::net::v1::io_context::post().
    *
    * A successful resolve operation is guaranteed to pass a non-empty range to
    * the handler.
@@ -762,7 +762,7 @@ public:
         protocol, static_cast<std::string>(host),
         static_cast<std::string>(service), resolve_flags);
 
-    std::experimental::net::async_completion<ResolveHandler,
+    std::experimental::net::v1::async_completion<ResolveHandler,
       void (std::error_code, results_type)> init(handler);
 
     this->get_service().async_resolve(
@@ -790,7 +790,7 @@ public:
     std::error_code ec;
     results_type i = this->get_service().resolve(
         this->get_implementation(), e, ec);
-    std::experimental::net::detail::throw_error(ec, "resolve");
+    std::experimental::net::v1::detail::throw_error(ec, "resolve");
     return i;
   }
 
@@ -832,7 +832,7 @@ public:
    * Regardless of whether the asynchronous operation completes immediately or
    * not, the handler will not be invoked from within this function. Invocation
    * of the handler will be performed in a manner equivalent to using
-   * std::experimental::net::io_context::post().
+   * std::experimental::net::v1::io_context::post().
    *
    * A successful resolve operation is guaranteed to pass a non-empty range to
    * the handler.
@@ -848,7 +848,7 @@ public:
     NET_TS_RESOLVE_HANDLER_CHECK(
         ResolveHandler, handler, results_type) type_check;
 
-    std::experimental::net::async_completion<ResolveHandler,
+    std::experimental::net::v1::async_completion<ResolveHandler,
       void (std::error_code, results_type)> init(handler);
 
     this->get_service().async_resolve(

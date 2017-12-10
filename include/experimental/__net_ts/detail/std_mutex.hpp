@@ -37,7 +37,7 @@ class std_mutex
   : private noncopyable
 {
 public:
-  typedef std::experimental::net::detail::scoped_lock<std_mutex> scoped_lock;
+  typedef std::experimental::net::v1::detail::scoped_lock<std_mutex> scoped_lock;
 
   // Constructor.
   std_mutex()

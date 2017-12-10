@@ -337,7 +337,7 @@ public:
    * This function sets the expiry time associated with the stream. Stream
    * operations performed after this time (where the operations cannot be
    * completed using the internal buffers) will fail with the error
-   * std::experimental::net::error::operation_aborted.
+   * std::experimental::net::v1::error::operation_aborted.
    *
    * @param expiry_time The expiry time to be used for the stream.
    */
@@ -351,7 +351,7 @@ public:
    * This function sets the expiry time associated with the stream. Stream
    * operations performed after this time (where the operations cannot be
    * completed using the internal buffers) will fail with the error
-   * std::experimental::net::error::operation_aborted.
+   * std::experimental::net::v1::error::operation_aborted.
    *
    * @param expiry_time The expiry time to be used for the timer.
    */

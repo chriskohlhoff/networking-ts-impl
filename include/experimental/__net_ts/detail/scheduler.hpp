@@ -46,7 +46,7 @@ public:
 
   // Constructor. Specifies the number of concurrent threads that are likely to
   // run the scheduler. If set to 1 certain optimisation are performed.
-  NET_TS_DECL scheduler(std::experimental::net::execution_context& ctx,
+  NET_TS_DECL scheduler(std::experimental::net::v1::execution_context& ctx,
       int concurrency_hint = 0);
 
   // Destroy all user-defined handler objects owned by the service.

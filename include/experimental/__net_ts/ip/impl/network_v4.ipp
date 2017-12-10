@@ -41,7 +41,7 @@ network_v4::network_v4(const address_v4& addr, unsigned short prefix_len)
   if (prefix_len > 32)
   {
     std::out_of_range ex("prefix length too large");
-    std::experimental::net::detail::throw_exception(ex);
+    std::experimental::net::v1::detail::throw_exception(ex);
   }
 }
 
@@ -58,7 +58,7 @@ network_v4::network_v4(const address_v4& addr, const address_v4& mask)
       if (mask_bytes[i])
       {
         std::invalid_argument ex("non-contiguous netmask");
-        std::experimental::net::detail::throw_exception(ex);
+        std::experimental::net::v1::detail::throw_exception(ex);
       }
       continue;
     }
@@ -88,7 +88,7 @@ network_v4::network_v4(const address_v4& addr, const address_v4& mask)
         break;
       default:
         std::out_of_range ex("non-contiguous netmask");
-        std::experimental::net::detail::throw_exception(ex);
+        std::experimental::net::v1::detail::throw_exception(ex);
       }
     }
   }
@@ -123,7 +123,7 @@ std::string network_v4::to_string() const
 {
   std::error_code ec;
   std::string addr = to_string(ec);
-  std::experimental::net::detail::throw_error(ec);
+  std::experimental::net::v1::detail::throw_error(ec);
   return addr;
 }
 
@@ -153,7 +153,7 @@ network_v4 make_network_v4(const std::string& str)
 {
   std::error_code ec;
   network_v4 net = make_network_v4(str, ec);
-  std::experimental::net::detail::throw_error(ec);
+  std::experimental::net::v1::detail::throw_error(ec);
   return net;
 }
 
@@ -164,20 +164,20 @@ network_v4 make_network_v4(const std::string& str,
 
   if (pos == std::string::npos)
   {
-    ec = std::experimental::net::error::invalid_argument;
+    ec = std::experimental::net::v1::error::invalid_argument;
     return network_v4();
   }
 
   if (pos == str.size() - 1)
   {
-    ec = std::experimental::net::error::invalid_argument;
+    ec = std::experimental::net::v1::error::invalid_argument;
     return network_v4();
   }
 
   std::string::size_type end = str.find_first_not_of("0123456789", pos + 1);
   if (end != std::string::npos)
   {
-    ec = std::experimental::net::error::invalid_argument;
+    ec = std::experimental::net::v1::error::invalid_argument;
     return network_v4();
   }
 
@@ -188,7 +188,7 @@ network_v4 make_network_v4(const std::string& str,
   const int prefix_len = std::atoi(str.substr(pos + 1).c_str());
   if (prefix_len < 0 || prefix_len > 32)
   {
-    ec = std::experimental::net::error::invalid_argument;
+    ec = std::experimental::net::v1::error::invalid_argument;
     return network_v4();
   }
 

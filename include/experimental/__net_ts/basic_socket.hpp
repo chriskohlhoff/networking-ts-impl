@@ -85,7 +85,7 @@ public:
    * @param io_context The io_context object that the socket will use to
    * dispatch handlers for any asynchronous operations performed on the socket.
    */
-  explicit basic_socket(std::experimental::net::io_context& io_context)
+  explicit basic_socket(std::experimental::net::v1::io_context& io_context)
     : basic_io_object<NET_TS_SVC_T>(io_context)
   {
   }
@@ -101,13 +101,13 @@ public:
    *
    * @throws std::system_error Thrown on failure.
    */
-  basic_socket(std::experimental::net::io_context& io_context,
+  basic_socket(std::experimental::net::v1::io_context& io_context,
       const protocol_type& protocol)
     : basic_io_object<NET_TS_SVC_T>(io_context)
   {
     std::error_code ec;
     this->get_service().open(this->get_implementation(), protocol, ec);
-    std::experimental::net::detail::throw_error(ec, "open");
+    std::experimental::net::v1::detail::throw_error(ec, "open");
   }
 
   /// Construct a basic_socket, opening it and binding it to the given local
@@ -125,16 +125,16 @@ public:
    *
    * @throws std::system_error Thrown on failure.
    */
-  basic_socket(std::experimental::net::io_context& io_context,
+  basic_socket(std::experimental::net::v1::io_context& io_context,
       const endpoint_type& endpoint)
     : basic_io_object<NET_TS_SVC_T>(io_context)
   {
     std::error_code ec;
     const protocol_type protocol = endpoint.protocol();
     this->get_service().open(this->get_implementation(), protocol, ec);
-    std::experimental::net::detail::throw_error(ec, "open");
+    std::experimental::net::v1::detail::throw_error(ec, "open");
     this->get_service().bind(this->get_implementation(), endpoint, ec);
-    std::experimental::net::detail::throw_error(ec, "bind");
+    std::experimental::net::v1::detail::throw_error(ec, "bind");
   }
 
   /// Construct a basic_socket on an existing native socket.
@@ -150,14 +150,14 @@ public:
    *
    * @throws std::system_error Thrown on failure.
    */
-  basic_socket(std::experimental::net::io_context& io_context,
+  basic_socket(std::experimental::net::v1::io_context& io_context,
       const protocol_type& protocol, const native_handle_type& native_socket)
     : basic_io_object<NET_TS_SVC_T>(io_context)
   {
     std::error_code ec;
     this->get_service().assign(this->get_implementation(),
         protocol, native_socket, ec);
-    std::experimental::net::detail::throw_error(ec, "assign");
+    std::experimental::net::v1::detail::throw_error(ec, "assign");
   }
 
 #if defined(NET_TS_HAS_MOVE) || defined(GENERATING_DOCUMENTATION)
@@ -251,15 +251,15 @@ public:
    *
    * @par Example
    * @code
-   * std::experimental::net::ip::tcp::socket socket(io_context);
-   * socket.open(std::experimental::net::ip::tcp::v4());
+   * std::experimental::net::v1::ip::tcp::socket socket(io_context);
+   * socket.open(std::experimental::net::v1::ip::tcp::v4());
    * @endcode
    */
   void open(const protocol_type& protocol = protocol_type())
   {
     std::error_code ec;
     this->get_service().open(this->get_implementation(), protocol, ec);
-    std::experimental::net::detail::throw_error(ec, "open");
+    std::experimental::net::v1::detail::throw_error(ec, "open");
   }
 
   /// Open the socket using the specified protocol.
@@ -272,9 +272,9 @@ public:
    *
    * @par Example
    * @code
-   * std::experimental::net::ip::tcp::socket socket(io_context);
+   * std::experimental::net::v1::ip::tcp::socket socket(io_context);
    * std::error_code ec;
-   * socket.open(std::experimental::net::ip::tcp::v4(), ec);
+   * socket.open(std::experimental::net::v1::ip::tcp::v4(), ec);
    * if (ec)
    * {
    *   // An error occurred.
@@ -304,7 +304,7 @@ public:
     std::error_code ec;
     this->get_service().assign(this->get_implementation(),
         protocol, native_socket, ec);
-    std::experimental::net::detail::throw_error(ec, "assign");
+    std::experimental::net::v1::detail::throw_error(ec, "assign");
   }
 
   /// Assign an existing native socket to the socket.
@@ -335,7 +335,7 @@ public:
   /**
    * This function is used to close the socket. Any asynchronous send, receive
    * or connect operations will be cancelled immediately, and will complete
-   * with the std::experimental::net::error::operation_aborted error.
+   * with the std::experimental::net::v1::error::operation_aborted error.
    *
    * @throws std::system_error Thrown on failure. Note that, even if
    * the function indicates an error, the underlying descriptor is closed.
@@ -347,21 +347,21 @@ public:
   {
     std::error_code ec;
     this->get_service().close(this->get_implementation(), ec);
-    std::experimental::net::detail::throw_error(ec, "close");
+    std::experimental::net::v1::detail::throw_error(ec, "close");
   }
 
   /// Close the socket.
   /**
    * This function is used to close the socket. Any asynchronous send, receive
    * or connect operations will be cancelled immediately, and will complete
-   * with the std::experimental::net::error::operation_aborted error.
+   * with the std::experimental::net::v1::error::operation_aborted error.
    *
    * @param ec Set to indicate what error occurred, if any. Note that, even if
    * the function indicates an error, the underlying descriptor is closed.
    *
    * @par Example
    * @code
-   * std::experimental::net::ip::tcp::socket socket(io_context);
+   * std::experimental::net::v1::ip::tcp::socket socket(io_context);
    * ...
    * std::error_code ec;
    * socket.close(ec);
@@ -384,13 +384,13 @@ public:
   /**
    * This function causes all outstanding asynchronous connect, send and receive
    * operations to finish immediately, and the handlers for cancelled operations
-   * will be passed the std::experimental::net::error::operation_aborted error. Ownership
+   * will be passed the std::experimental::net::v1::error::operation_aborted error. Ownership
    * of the native socket is then transferred to the caller.
    *
    * @throws std::system_error Thrown on failure.
    *
    * @note This function is unsupported on Windows versions prior to Windows
-   * 8.1, and will fail with std::experimental::net::error::operation_not_supported on
+   * 8.1, and will fail with std::experimental::net::v1::error::operation_not_supported on
    * these platforms.
    */
 #if defined(NET_TS_MSVC) && (NET_TS_MSVC >= 1400) \
@@ -404,7 +404,7 @@ public:
     std::error_code ec;
     native_handle_type s = this->get_service().release(
         this->get_implementation(), ec);
-    std::experimental::net::detail::throw_error(ec, "release");
+    std::experimental::net::v1::detail::throw_error(ec, "release");
     return s;
   }
 
@@ -412,13 +412,13 @@ public:
   /**
    * This function causes all outstanding asynchronous connect, send and receive
    * operations to finish immediately, and the handlers for cancelled operations
-   * will be passed the std::experimental::net::error::operation_aborted error. Ownership
+   * will be passed the std::experimental::net::v1::error::operation_aborted error. Ownership
    * of the native socket is then transferred to the caller.
    *
    * @param ec Set to indicate what error occurred, if any.
    *
    * @note This function is unsupported on Windows versions prior to Windows
-   * 8.1, and will fail with std::experimental::net::error::operation_not_supported on
+   * 8.1, and will fail with std::experimental::net::v1::error::operation_not_supported on
    * these platforms.
    */
 #if defined(NET_TS_MSVC) && (NET_TS_MSVC >= 1400) \
@@ -447,12 +447,12 @@ public:
   /**
    * This function causes all outstanding asynchronous connect, send and receive
    * operations to finish immediately, and the handlers for cancelled operations
-   * will be passed the std::experimental::net::error::operation_aborted error.
+   * will be passed the std::experimental::net::v1::error::operation_aborted error.
    *
    * @throws std::system_error Thrown on failure.
    *
    * @note Calls to cancel() will always fail with
-   * std::experimental::net::error::operation_not_supported when run on Windows XP, Windows
+   * std::experimental::net::v1::error::operation_not_supported when run on Windows XP, Windows
    * Server 2003, and earlier versions of Windows, unless
    * NET_TS_ENABLE_CANCELIO is defined. However, the CancelIo function has
    * two issues that should be considered before enabling its use:
@@ -488,19 +488,19 @@ public:
   {
     std::error_code ec;
     this->get_service().cancel(this->get_implementation(), ec);
-    std::experimental::net::detail::throw_error(ec, "cancel");
+    std::experimental::net::v1::detail::throw_error(ec, "cancel");
   }
 
   /// Cancel all asynchronous operations associated with the socket.
   /**
    * This function causes all outstanding asynchronous connect, send and receive
    * operations to finish immediately, and the handlers for cancelled operations
-   * will be passed the std::experimental::net::error::operation_aborted error.
+   * will be passed the std::experimental::net::v1::error::operation_aborted error.
    *
    * @param ec Set to indicate what error occurred, if any.
    *
    * @note Calls to cancel() will always fail with
-   * std::experimental::net::error::operation_not_supported when run on Windows XP, Windows
+   * std::experimental::net::v1::error::operation_not_supported when run on Windows XP, Windows
    * Server 2003, and earlier versions of Windows, unless
    * NET_TS_ENABLE_CANCELIO is defined. However, the CancelIo function has
    * two issues that should be considered before enabling its use:
@@ -552,7 +552,7 @@ public:
   {
     std::error_code ec;
     bool b = this->get_service().at_mark(this->get_implementation(), ec);
-    std::experimental::net::detail::throw_error(ec, "at_mark");
+    std::experimental::net::v1::detail::throw_error(ec, "at_mark");
     return b;
   }
 
@@ -586,7 +586,7 @@ public:
     std::error_code ec;
     std::size_t s = this->get_service().available(
         this->get_implementation(), ec);
-    std::experimental::net::detail::throw_error(ec, "available");
+    std::experimental::net::v1::detail::throw_error(ec, "available");
     return s;
   }
 
@@ -617,17 +617,17 @@ public:
    *
    * @par Example
    * @code
-   * std::experimental::net::ip::tcp::socket socket(io_context);
-   * socket.open(std::experimental::net::ip::tcp::v4());
-   * socket.bind(std::experimental::net::ip::tcp::endpoint(
-   *       std::experimental::net::ip::tcp::v4(), 12345));
+   * std::experimental::net::v1::ip::tcp::socket socket(io_context);
+   * socket.open(std::experimental::net::v1::ip::tcp::v4());
+   * socket.bind(std::experimental::net::v1::ip::tcp::endpoint(
+   *       std::experimental::net::v1::ip::tcp::v4(), 12345));
    * @endcode
    */
   void bind(const endpoint_type& endpoint)
   {
     std::error_code ec;
     this->get_service().bind(this->get_implementation(), endpoint, ec);
-    std::experimental::net::detail::throw_error(ec, "bind");
+    std::experimental::net::v1::detail::throw_error(ec, "bind");
   }
 
   /// Bind the socket to the given local endpoint.
@@ -642,11 +642,11 @@ public:
    *
    * @par Example
    * @code
-   * std::experimental::net::ip::tcp::socket socket(io_context);
-   * socket.open(std::experimental::net::ip::tcp::v4());
+   * std::experimental::net::v1::ip::tcp::socket socket(io_context);
+   * socket.open(std::experimental::net::v1::ip::tcp::v4());
    * std::error_code ec;
-   * socket.bind(std::experimental::net::ip::tcp::endpoint(
-   *       std::experimental::net::ip::tcp::v4(), 12345), ec);
+   * socket.bind(std::experimental::net::v1::ip::tcp::endpoint(
+   *       std::experimental::net::v1::ip::tcp::v4(), 12345), ec);
    * if (ec)
    * {
    *   // An error occurred.
@@ -677,9 +677,9 @@ public:
    *
    * @par Example
    * @code
-   * std::experimental::net::ip::tcp::socket socket(io_context);
-   * std::experimental::net::ip::tcp::endpoint endpoint(
-   *     std::experimental::net::ip::address::from_string("1.2.3.4"), 12345);
+   * std::experimental::net::v1::ip::tcp::socket socket(io_context);
+   * std::experimental::net::v1::ip::tcp::endpoint endpoint(
+   *     std::experimental::net::v1::ip::address::from_string("1.2.3.4"), 12345);
    * socket.connect(endpoint);
    * @endcode
    */
@@ -690,10 +690,10 @@ public:
     {
       this->get_service().open(this->get_implementation(),
           peer_endpoint.protocol(), ec);
-      std::experimental::net::detail::throw_error(ec, "connect");
+      std::experimental::net::v1::detail::throw_error(ec, "connect");
     }
     this->get_service().connect(this->get_implementation(), peer_endpoint, ec);
-    std::experimental::net::detail::throw_error(ec, "connect");
+    std::experimental::net::v1::detail::throw_error(ec, "connect");
   }
 
   /// Connect the socket to the specified endpoint.
@@ -713,9 +713,9 @@ public:
    *
    * @par Example
    * @code
-   * std::experimental::net::ip::tcp::socket socket(io_context);
-   * std::experimental::net::ip::tcp::endpoint endpoint(
-   *     std::experimental::net::ip::address::from_string("1.2.3.4"), 12345);
+   * std::experimental::net::v1::ip::tcp::socket socket(io_context);
+   * std::experimental::net::v1::ip::tcp::endpoint endpoint(
+   *     std::experimental::net::v1::ip::address::from_string("1.2.3.4"), 12345);
    * std::error_code ec;
    * socket.connect(endpoint, ec);
    * if (ec)
@@ -762,7 +762,7 @@ public:
    * Regardless of whether the asynchronous operation completes immediately or
    * not, the handler will not be invoked from within this function. Invocation
    * of the handler will be performed in a manner equivalent to using
-   * std::experimental::net::io_context::post().
+   * std::experimental::net::v1::io_context::post().
    *
    * @par Example
    * @code
@@ -776,9 +776,9 @@ public:
    *
    * ...
    *
-   * std::experimental::net::ip::tcp::socket socket(io_context);
-   * std::experimental::net::ip::tcp::endpoint endpoint(
-   *     std::experimental::net::ip::address::from_string("1.2.3.4"), 12345);
+   * std::experimental::net::v1::ip::tcp::socket socket(io_context);
+   * std::experimental::net::v1::ip::tcp::endpoint endpoint(
+   *     std::experimental::net::v1::ip::address::from_string("1.2.3.4"), 12345);
    * socket.async_connect(endpoint, connect_handler);
    * @endcode
    */
@@ -802,8 +802,8 @@ public:
         async_completion<ConnectHandler,
           void (std::error_code)> init(handler);
 
-        std::experimental::net::post(this->get_executor(),
-            std::experimental::net::detail::bind_handler(
+        std::experimental::net::v1::post(this->get_executor(),
+            std::experimental::net::v1::detail::bind_handler(
               NET_TS_MOVE_CAST(NET_TS_HANDLER_TYPE(
                 ConnectHandler, void (std::error_code)))(
                   init.completion_handler), ec));
@@ -830,28 +830,28 @@ public:
    * @throws std::system_error Thrown on failure.
    *
    * @sa SettableSocketOption @n
-   * std::experimental::net::socket_base::broadcast @n
-   * std::experimental::net::socket_base::do_not_route @n
-   * std::experimental::net::socket_base::keep_alive @n
-   * std::experimental::net::socket_base::linger @n
-   * std::experimental::net::socket_base::receive_buffer_size @n
-   * std::experimental::net::socket_base::receive_low_watermark @n
-   * std::experimental::net::socket_base::reuse_address @n
-   * std::experimental::net::socket_base::send_buffer_size @n
-   * std::experimental::net::socket_base::send_low_watermark @n
-   * std::experimental::net::ip::multicast::join_group @n
-   * std::experimental::net::ip::multicast::leave_group @n
-   * std::experimental::net::ip::multicast::enable_loopback @n
-   * std::experimental::net::ip::multicast::outbound_interface @n
-   * std::experimental::net::ip::multicast::hops @n
-   * std::experimental::net::ip::tcp::no_delay
+   * std::experimental::net::v1::socket_base::broadcast @n
+   * std::experimental::net::v1::socket_base::do_not_route @n
+   * std::experimental::net::v1::socket_base::keep_alive @n
+   * std::experimental::net::v1::socket_base::linger @n
+   * std::experimental::net::v1::socket_base::receive_buffer_size @n
+   * std::experimental::net::v1::socket_base::receive_low_watermark @n
+   * std::experimental::net::v1::socket_base::reuse_address @n
+   * std::experimental::net::v1::socket_base::send_buffer_size @n
+   * std::experimental::net::v1::socket_base::send_low_watermark @n
+   * std::experimental::net::v1::ip::multicast::join_group @n
+   * std::experimental::net::v1::ip::multicast::leave_group @n
+   * std::experimental::net::v1::ip::multicast::enable_loopback @n
+   * std::experimental::net::v1::ip::multicast::outbound_interface @n
+   * std::experimental::net::v1::ip::multicast::hops @n
+   * std::experimental::net::v1::ip::tcp::no_delay
    *
    * @par Example
    * Setting the IPPROTO_TCP/TCP_NODELAY option:
    * @code
-   * std::experimental::net::ip::tcp::socket socket(io_context);
+   * std::experimental::net::v1::ip::tcp::socket socket(io_context);
    * ...
-   * std::experimental::net::ip::tcp::no_delay option(true);
+   * std::experimental::net::v1::ip::tcp::no_delay option(true);
    * socket.set_option(option);
    * @endcode
    */
@@ -860,7 +860,7 @@ public:
   {
     std::error_code ec;
     this->get_service().set_option(this->get_implementation(), option, ec);
-    std::experimental::net::detail::throw_error(ec, "set_option");
+    std::experimental::net::v1::detail::throw_error(ec, "set_option");
   }
 
   /// Set an option on the socket.
@@ -872,28 +872,28 @@ public:
    * @param ec Set to indicate what error occurred, if any.
    *
    * @sa SettableSocketOption @n
-   * std::experimental::net::socket_base::broadcast @n
-   * std::experimental::net::socket_base::do_not_route @n
-   * std::experimental::net::socket_base::keep_alive @n
-   * std::experimental::net::socket_base::linger @n
-   * std::experimental::net::socket_base::receive_buffer_size @n
-   * std::experimental::net::socket_base::receive_low_watermark @n
-   * std::experimental::net::socket_base::reuse_address @n
-   * std::experimental::net::socket_base::send_buffer_size @n
-   * std::experimental::net::socket_base::send_low_watermark @n
-   * std::experimental::net::ip::multicast::join_group @n
-   * std::experimental::net::ip::multicast::leave_group @n
-   * std::experimental::net::ip::multicast::enable_loopback @n
-   * std::experimental::net::ip::multicast::outbound_interface @n
-   * std::experimental::net::ip::multicast::hops @n
-   * std::experimental::net::ip::tcp::no_delay
+   * std::experimental::net::v1::socket_base::broadcast @n
+   * std::experimental::net::v1::socket_base::do_not_route @n
+   * std::experimental::net::v1::socket_base::keep_alive @n
+   * std::experimental::net::v1::socket_base::linger @n
+   * std::experimental::net::v1::socket_base::receive_buffer_size @n
+   * std::experimental::net::v1::socket_base::receive_low_watermark @n
+   * std::experimental::net::v1::socket_base::reuse_address @n
+   * std::experimental::net::v1::socket_base::send_buffer_size @n
+   * std::experimental::net::v1::socket_base::send_low_watermark @n
+   * std::experimental::net::v1::ip::multicast::join_group @n
+   * std::experimental::net::v1::ip::multicast::leave_group @n
+   * std::experimental::net::v1::ip::multicast::enable_loopback @n
+   * std::experimental::net::v1::ip::multicast::outbound_interface @n
+   * std::experimental::net::v1::ip::multicast::hops @n
+   * std::experimental::net::v1::ip::tcp::no_delay
    *
    * @par Example
    * Setting the IPPROTO_TCP/TCP_NODELAY option:
    * @code
-   * std::experimental::net::ip::tcp::socket socket(io_context);
+   * std::experimental::net::v1::ip::tcp::socket socket(io_context);
    * ...
-   * std::experimental::net::ip::tcp::no_delay option(true);
+   * std::experimental::net::v1::ip::tcp::no_delay option(true);
    * std::error_code ec;
    * socket.set_option(option, ec);
    * if (ec)
@@ -919,28 +919,28 @@ public:
    * @throws std::system_error Thrown on failure.
    *
    * @sa GettableSocketOption @n
-   * std::experimental::net::socket_base::broadcast @n
-   * std::experimental::net::socket_base::do_not_route @n
-   * std::experimental::net::socket_base::keep_alive @n
-   * std::experimental::net::socket_base::linger @n
-   * std::experimental::net::socket_base::receive_buffer_size @n
-   * std::experimental::net::socket_base::receive_low_watermark @n
-   * std::experimental::net::socket_base::reuse_address @n
-   * std::experimental::net::socket_base::send_buffer_size @n
-   * std::experimental::net::socket_base::send_low_watermark @n
-   * std::experimental::net::ip::multicast::join_group @n
-   * std::experimental::net::ip::multicast::leave_group @n
-   * std::experimental::net::ip::multicast::enable_loopback @n
-   * std::experimental::net::ip::multicast::outbound_interface @n
-   * std::experimental::net::ip::multicast::hops @n
-   * std::experimental::net::ip::tcp::no_delay
+   * std::experimental::net::v1::socket_base::broadcast @n
+   * std::experimental::net::v1::socket_base::do_not_route @n
+   * std::experimental::net::v1::socket_base::keep_alive @n
+   * std::experimental::net::v1::socket_base::linger @n
+   * std::experimental::net::v1::socket_base::receive_buffer_size @n
+   * std::experimental::net::v1::socket_base::receive_low_watermark @n
+   * std::experimental::net::v1::socket_base::reuse_address @n
+   * std::experimental::net::v1::socket_base::send_buffer_size @n
+   * std::experimental::net::v1::socket_base::send_low_watermark @n
+   * std::experimental::net::v1::ip::multicast::join_group @n
+   * std::experimental::net::v1::ip::multicast::leave_group @n
+   * std::experimental::net::v1::ip::multicast::enable_loopback @n
+   * std::experimental::net::v1::ip::multicast::outbound_interface @n
+   * std::experimental::net::v1::ip::multicast::hops @n
+   * std::experimental::net::v1::ip::tcp::no_delay
    *
    * @par Example
    * Getting the value of the SOL_SOCKET/SO_KEEPALIVE option:
    * @code
-   * std::experimental::net::ip::tcp::socket socket(io_context);
+   * std::experimental::net::v1::ip::tcp::socket socket(io_context);
    * ...
-   * std::experimental::net::ip::tcp::socket::keep_alive option;
+   * std::experimental::net::v1::ip::tcp::socket::keep_alive option;
    * socket.get_option(option);
    * bool is_set = option.value();
    * @endcode
@@ -950,7 +950,7 @@ public:
   {
     std::error_code ec;
     this->get_service().get_option(this->get_implementation(), option, ec);
-    std::experimental::net::detail::throw_error(ec, "get_option");
+    std::experimental::net::v1::detail::throw_error(ec, "get_option");
   }
 
   /// Get an option from the socket.
@@ -962,28 +962,28 @@ public:
    * @param ec Set to indicate what error occurred, if any.
    *
    * @sa GettableSocketOption @n
-   * std::experimental::net::socket_base::broadcast @n
-   * std::experimental::net::socket_base::do_not_route @n
-   * std::experimental::net::socket_base::keep_alive @n
-   * std::experimental::net::socket_base::linger @n
-   * std::experimental::net::socket_base::receive_buffer_size @n
-   * std::experimental::net::socket_base::receive_low_watermark @n
-   * std::experimental::net::socket_base::reuse_address @n
-   * std::experimental::net::socket_base::send_buffer_size @n
-   * std::experimental::net::socket_base::send_low_watermark @n
-   * std::experimental::net::ip::multicast::join_group @n
-   * std::experimental::net::ip::multicast::leave_group @n
-   * std::experimental::net::ip::multicast::enable_loopback @n
-   * std::experimental::net::ip::multicast::outbound_interface @n
-   * std::experimental::net::ip::multicast::hops @n
-   * std::experimental::net::ip::tcp::no_delay
+   * std::experimental::net::v1::socket_base::broadcast @n
+   * std::experimental::net::v1::socket_base::do_not_route @n
+   * std::experimental::net::v1::socket_base::keep_alive @n
+   * std::experimental::net::v1::socket_base::linger @n
+   * std::experimental::net::v1::socket_base::receive_buffer_size @n
+   * std::experimental::net::v1::socket_base::receive_low_watermark @n
+   * std::experimental::net::v1::socket_base::reuse_address @n
+   * std::experimental::net::v1::socket_base::send_buffer_size @n
+   * std::experimental::net::v1::socket_base::send_low_watermark @n
+   * std::experimental::net::v1::ip::multicast::join_group @n
+   * std::experimental::net::v1::ip::multicast::leave_group @n
+   * std::experimental::net::v1::ip::multicast::enable_loopback @n
+   * std::experimental::net::v1::ip::multicast::outbound_interface @n
+   * std::experimental::net::v1::ip::multicast::hops @n
+   * std::experimental::net::v1::ip::tcp::no_delay
    *
    * @par Example
    * Getting the value of the SOL_SOCKET/SO_KEEPALIVE option:
    * @code
-   * std::experimental::net::ip::tcp::socket socket(io_context);
+   * std::experimental::net::v1::ip::tcp::socket socket(io_context);
    * ...
-   * std::experimental::net::ip::tcp::socket::keep_alive option;
+   * std::experimental::net::v1::ip::tcp::socket::keep_alive option;
    * std::error_code ec;
    * socket.get_option(option, ec);
    * if (ec)
@@ -1010,15 +1010,15 @@ public:
    * @throws std::system_error Thrown on failure.
    *
    * @sa IoControlCommand @n
-   * std::experimental::net::socket_base::bytes_readable @n
-   * std::experimental::net::socket_base::non_blocking_io
+   * std::experimental::net::v1::socket_base::bytes_readable @n
+   * std::experimental::net::v1::socket_base::non_blocking_io
    *
    * @par Example
    * Getting the number of bytes ready to read:
    * @code
-   * std::experimental::net::ip::tcp::socket socket(io_context);
+   * std::experimental::net::v1::ip::tcp::socket socket(io_context);
    * ...
-   * std::experimental::net::ip::tcp::socket::bytes_readable command;
+   * std::experimental::net::v1::ip::tcp::socket::bytes_readable command;
    * socket.io_control(command);
    * std::size_t bytes_readable = command.get();
    * @endcode
@@ -1028,7 +1028,7 @@ public:
   {
     std::error_code ec;
     this->get_service().io_control(this->get_implementation(), command, ec);
-    std::experimental::net::detail::throw_error(ec, "io_control");
+    std::experimental::net::v1::detail::throw_error(ec, "io_control");
   }
 
   /// Perform an IO control command on the socket.
@@ -1040,15 +1040,15 @@ public:
    * @param ec Set to indicate what error occurred, if any.
    *
    * @sa IoControlCommand @n
-   * std::experimental::net::socket_base::bytes_readable @n
-   * std::experimental::net::socket_base::non_blocking_io
+   * std::experimental::net::v1::socket_base::bytes_readable @n
+   * std::experimental::net::v1::socket_base::non_blocking_io
    *
    * @par Example
    * Getting the number of bytes ready to read:
    * @code
-   * std::experimental::net::ip::tcp::socket socket(io_context);
+   * std::experimental::net::v1::ip::tcp::socket socket(io_context);
    * ...
-   * std::experimental::net::ip::tcp::socket::bytes_readable command;
+   * std::experimental::net::v1::ip::tcp::socket::bytes_readable command;
    * std::error_code ec;
    * socket.io_control(command, ec);
    * if (ec)
@@ -1069,13 +1069,13 @@ public:
   /// Gets the non-blocking mode of the socket.
   /**
    * @returns @c true if the socket's synchronous operations will fail with
-   * std::experimental::net::error::would_block if they are unable to perform the requested
+   * std::experimental::net::v1::error::would_block if they are unable to perform the requested
    * operation immediately. If @c false, synchronous operations will block
    * until complete.
    *
    * @note The non-blocking mode has no effect on the behaviour of asynchronous
    * operations. Asynchronous operations will never fail with the error
-   * std::experimental::net::error::would_block.
+   * std::experimental::net::v1::error::would_block.
    */
   bool non_blocking() const
   {
@@ -1085,7 +1085,7 @@ public:
   /// Sets the non-blocking mode of the socket.
   /**
    * @param mode If @c true, the socket's synchronous operations will fail with
-   * std::experimental::net::error::would_block if they are unable to perform the requested
+   * std::experimental::net::v1::error::would_block if they are unable to perform the requested
    * operation immediately. If @c false, synchronous operations will block
    * until complete.
    *
@@ -1093,19 +1093,19 @@ public:
    *
    * @note The non-blocking mode has no effect on the behaviour of asynchronous
    * operations. Asynchronous operations will never fail with the error
-   * std::experimental::net::error::would_block.
+   * std::experimental::net::v1::error::would_block.
    */
   void non_blocking(bool mode)
   {
     std::error_code ec;
     this->get_service().non_blocking(this->get_implementation(), mode, ec);
-    std::experimental::net::detail::throw_error(ec, "non_blocking");
+    std::experimental::net::v1::detail::throw_error(ec, "non_blocking");
   }
 
   /// Sets the non-blocking mode of the socket.
   /**
    * @param mode If @c true, the socket's synchronous operations will fail with
-   * std::experimental::net::error::would_block if they are unable to perform the requested
+   * std::experimental::net::v1::error::would_block if they are unable to perform the requested
    * operation immediately. If @c false, synchronous operations will block
    * until complete.
    *
@@ -1113,7 +1113,7 @@ public:
    *
    * @note The non-blocking mode has no effect on the behaviour of asynchronous
    * operations. Asynchronous operations will never fail with the error
-   * std::experimental::net::error::would_block.
+   * std::experimental::net::v1::error::would_block.
    */
   NET_TS_SYNC_OP_VOID non_blocking(
       bool mode, std::error_code& ec)
@@ -1129,7 +1129,7 @@ public:
    * object's synchronous operations.
    *
    * @returns @c true if the underlying socket is in non-blocking mode and
-   * direct system calls may fail with std::experimental::net::error::would_block (or the
+   * direct system calls may fail with std::experimental::net::v1::error::would_block (or the
    * equivalent system error).
    *
    * @note The current non-blocking mode is cached by the socket object.
@@ -1167,16 +1167,16 @@ public:
    *         errno = 0;
    *         int n = ::sendfile(sock_.native_handle(), fd_, &offset_, 65536);
    *         ec = std::error_code(n < 0 ? errno : 0,
-   *             std::experimental::net::error::get_system_category());
+   *             std::experimental::net::v1::error::get_system_category());
    *         total_bytes_transferred_ += ec ? 0 : n;
    *
    *         // Retry operation immediately if interrupted by signal.
-   *         if (ec == std::experimental::net::error::interrupted)
+   *         if (ec == std::experimental::net::v1::error::interrupted)
    *           continue;
    *
    *         // Check if we need to run the operation again.
-   *         if (ec == std::experimental::net::error::would_block
-   *             || ec == std::experimental::net::error::try_again)
+   *         if (ec == std::experimental::net::v1::error::would_block
+   *             || ec == std::experimental::net::v1::error::try_again)
    *         {
    *           // We have to wait for the socket to become ready again.
    *           sock_.async_wait(tcp::socket::wait_write, *this);
@@ -1218,12 +1218,12 @@ public:
    * synchronous operations.
    *
    * @param mode If @c true, the underlying socket is put into non-blocking
-   * mode and direct system calls may fail with std::experimental::net::error::would_block
+   * mode and direct system calls may fail with std::experimental::net::v1::error::would_block
    * (or the equivalent system error).
    *
    * @throws std::system_error Thrown on failure. If the @c mode is
    * @c false, but the current value of @c non_blocking() is @c true, this
-   * function fails with std::experimental::net::error::invalid_argument, as the
+   * function fails with std::experimental::net::v1::error::invalid_argument, as the
    * combination does not make sense.
    *
    * @par Example
@@ -1257,16 +1257,16 @@ public:
    *         errno = 0;
    *         int n = ::sendfile(sock_.native_handle(), fd_, &offset_, 65536);
    *         ec = std::error_code(n < 0 ? errno : 0,
-   *             std::experimental::net::error::get_system_category());
+   *             std::experimental::net::v1::error::get_system_category());
    *         total_bytes_transferred_ += ec ? 0 : n;
    *
    *         // Retry operation immediately if interrupted by signal.
-   *         if (ec == std::experimental::net::error::interrupted)
+   *         if (ec == std::experimental::net::v1::error::interrupted)
    *           continue;
    *
    *         // Check if we need to run the operation again.
-   *         if (ec == std::experimental::net::error::would_block
-   *             || ec == std::experimental::net::error::try_again)
+   *         if (ec == std::experimental::net::v1::error::would_block
+   *             || ec == std::experimental::net::v1::error::try_again)
    *         {
    *           // We have to wait for the socket to become ready again.
    *           sock_.async_wait(tcp::socket::wait_write, *this);
@@ -1301,7 +1301,7 @@ public:
     std::error_code ec;
     this->get_service().native_non_blocking(
         this->get_implementation(), mode, ec);
-    std::experimental::net::detail::throw_error(ec, "native_non_blocking");
+    std::experimental::net::v1::detail::throw_error(ec, "native_non_blocking");
   }
 
   /// Sets the non-blocking mode of the native socket implementation.
@@ -1311,12 +1311,12 @@ public:
    * synchronous operations.
    *
    * @param mode If @c true, the underlying socket is put into non-blocking
-   * mode and direct system calls may fail with std::experimental::net::error::would_block
+   * mode and direct system calls may fail with std::experimental::net::v1::error::would_block
    * (or the equivalent system error).
    *
    * @param ec Set to indicate what error occurred, if any. If the @c mode is
    * @c false, but the current value of @c non_blocking() is @c true, this
-   * function fails with std::experimental::net::error::invalid_argument, as the
+   * function fails with std::experimental::net::v1::error::invalid_argument, as the
    * combination does not make sense.
    *
    * @par Example
@@ -1350,16 +1350,16 @@ public:
    *         errno = 0;
    *         int n = ::sendfile(sock_.native_handle(), fd_, &offset_, 65536);
    *         ec = std::error_code(n < 0 ? errno : 0,
-   *             std::experimental::net::error::get_system_category());
+   *             std::experimental::net::v1::error::get_system_category());
    *         total_bytes_transferred_ += ec ? 0 : n;
    *
    *         // Retry operation immediately if interrupted by signal.
-   *         if (ec == std::experimental::net::error::interrupted)
+   *         if (ec == std::experimental::net::v1::error::interrupted)
    *           continue;
    *
    *         // Check if we need to run the operation again.
-   *         if (ec == std::experimental::net::error::would_block
-   *             || ec == std::experimental::net::error::try_again)
+   *         if (ec == std::experimental::net::v1::error::would_block
+   *             || ec == std::experimental::net::v1::error::try_again)
    *         {
    *           // We have to wait for the socket to become ready again.
    *           sock_.async_wait(tcp::socket::wait_write, *this);
@@ -1407,9 +1407,9 @@ public:
    *
    * @par Example
    * @code
-   * std::experimental::net::ip::tcp::socket socket(io_context);
+   * std::experimental::net::v1::ip::tcp::socket socket(io_context);
    * ...
-   * std::experimental::net::ip::tcp::endpoint endpoint = socket.local_endpoint();
+   * std::experimental::net::v1::ip::tcp::endpoint endpoint = socket.local_endpoint();
    * @endcode
    */
   endpoint_type local_endpoint() const
@@ -1417,7 +1417,7 @@ public:
     std::error_code ec;
     endpoint_type ep = this->get_service().local_endpoint(
         this->get_implementation(), ec);
-    std::experimental::net::detail::throw_error(ec, "local_endpoint");
+    std::experimental::net::v1::detail::throw_error(ec, "local_endpoint");
     return ep;
   }
 
@@ -1432,10 +1432,10 @@ public:
    *
    * @par Example
    * @code
-   * std::experimental::net::ip::tcp::socket socket(io_context);
+   * std::experimental::net::v1::ip::tcp::socket socket(io_context);
    * ...
    * std::error_code ec;
-   * std::experimental::net::ip::tcp::endpoint endpoint = socket.local_endpoint(ec);
+   * std::experimental::net::v1::ip::tcp::endpoint endpoint = socket.local_endpoint(ec);
    * if (ec)
    * {
    *   // An error occurred.
@@ -1457,9 +1457,9 @@ public:
    *
    * @par Example
    * @code
-   * std::experimental::net::ip::tcp::socket socket(io_context);
+   * std::experimental::net::v1::ip::tcp::socket socket(io_context);
    * ...
-   * std::experimental::net::ip::tcp::endpoint endpoint = socket.remote_endpoint();
+   * std::experimental::net::v1::ip::tcp::endpoint endpoint = socket.remote_endpoint();
    * @endcode
    */
   endpoint_type remote_endpoint() const
@@ -1467,7 +1467,7 @@ public:
     std::error_code ec;
     endpoint_type ep = this->get_service().remote_endpoint(
         this->get_implementation(), ec);
-    std::experimental::net::detail::throw_error(ec, "remote_endpoint");
+    std::experimental::net::v1::detail::throw_error(ec, "remote_endpoint");
     return ep;
   }
 
@@ -1482,10 +1482,10 @@ public:
    *
    * @par Example
    * @code
-   * std::experimental::net::ip::tcp::socket socket(io_context);
+   * std::experimental::net::v1::ip::tcp::socket socket(io_context);
    * ...
    * std::error_code ec;
-   * std::experimental::net::ip::tcp::endpoint endpoint = socket.remote_endpoint(ec);
+   * std::experimental::net::v1::ip::tcp::endpoint endpoint = socket.remote_endpoint(ec);
    * if (ec)
    * {
    *   // An error occurred.
@@ -1509,16 +1509,16 @@ public:
    * @par Example
    * Shutting down the send side of the socket:
    * @code
-   * std::experimental::net::ip::tcp::socket socket(io_context);
+   * std::experimental::net::v1::ip::tcp::socket socket(io_context);
    * ...
-   * socket.shutdown(std::experimental::net::ip::tcp::socket::shutdown_send);
+   * socket.shutdown(std::experimental::net::v1::ip::tcp::socket::shutdown_send);
    * @endcode
    */
   void shutdown(shutdown_type what)
   {
     std::error_code ec;
     this->get_service().shutdown(this->get_implementation(), what, ec);
-    std::experimental::net::detail::throw_error(ec, "shutdown");
+    std::experimental::net::v1::detail::throw_error(ec, "shutdown");
   }
 
   /// Disable sends or receives on the socket.
@@ -1533,10 +1533,10 @@ public:
    * @par Example
    * Shutting down the send side of the socket:
    * @code
-   * std::experimental::net::ip::tcp::socket socket(io_context);
+   * std::experimental::net::v1::ip::tcp::socket socket(io_context);
    * ...
    * std::error_code ec;
-   * socket.shutdown(std::experimental::net::ip::tcp::socket::shutdown_send, ec);
+   * socket.shutdown(std::experimental::net::v1::ip::tcp::socket::shutdown_send, ec);
    * if (ec)
    * {
    *   // An error occurred.
@@ -1561,16 +1561,16 @@ public:
    * @par Example
    * Waiting for a socket to become readable.
    * @code
-   * std::experimental::net::ip::tcp::socket socket(io_context);
+   * std::experimental::net::v1::ip::tcp::socket socket(io_context);
    * ...
-   * socket.wait(std::experimental::net::ip::tcp::socket::wait_read);
+   * socket.wait(std::experimental::net::v1::ip::tcp::socket::wait_read);
    * @endcode
    */
   void wait(wait_type w)
   {
     std::error_code ec;
     this->get_service().wait(this->get_implementation(), w, ec);
-    std::experimental::net::detail::throw_error(ec, "wait");
+    std::experimental::net::v1::detail::throw_error(ec, "wait");
   }
 
   /// Wait for the socket to become ready to read, ready to write, or to have
@@ -1586,10 +1586,10 @@ public:
    * @par Example
    * Waiting for a socket to become readable.
    * @code
-   * std::experimental::net::ip::tcp::socket socket(io_context);
+   * std::experimental::net::v1::ip::tcp::socket socket(io_context);
    * ...
    * std::error_code ec;
-   * socket.wait(std::experimental::net::ip::tcp::socket::wait_read, ec);
+   * socket.wait(std::experimental::net::v1::ip::tcp::socket::wait_read, ec);
    * @endcode
    */
   NET_TS_SYNC_OP_VOID wait(wait_type w, std::error_code& ec)
@@ -1615,7 +1615,7 @@ public:
    * Regardless of whether the asynchronous operation completes immediately or
    * not, the handler will not be invoked from within this function. Invocation
    * of the handler will be performed in a manner equivalent to using
-   * std::experimental::net::io_context::post().
+   * std::experimental::net::v1::io_context::post().
    *
    * @par Example
    * @code
@@ -1629,9 +1629,9 @@ public:
    *
    * ...
    *
-   * std::experimental::net::ip::tcp::socket socket(io_context);
+   * std::experimental::net::v1::ip::tcp::socket socket(io_context);
    * ...
-   * socket.async_wait(std::experimental::net::ip::tcp::socket::wait_read, wait_handler);
+   * socket.async_wait(std::experimental::net::v1::ip::tcp::socket::wait_read, wait_handler);
    * @endcode
    */
   template <typename WaitHandler>

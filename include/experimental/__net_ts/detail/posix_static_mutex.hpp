@@ -32,7 +32,7 @@ namespace detail {
 
 struct posix_static_mutex
 {
-  typedef std::experimental::net::detail::scoped_lock<posix_static_mutex> scoped_lock;
+  typedef std::experimental::net::v1::detail::scoped_lock<posix_static_mutex> scoped_lock;
 
   // Initialise the mutex.
   void init()

@@ -124,7 +124,7 @@ public:
     default:
       {
         std::length_error ex("boolean socket option resize");
-        std::experimental::net::detail::throw_exception(ex);
+        std::experimental::net::v1::detail::throw_exception(ex);
       }
     }
   }
@@ -205,7 +205,7 @@ public:
     if (s != sizeof(value_))
     {
       std::length_error ex("integer socket option resize");
-      std::experimental::net::detail::throw_exception(ex);
+      std::experimental::net::v1::detail::throw_exception(ex);
     }
   }
 
@@ -302,7 +302,7 @@ public:
     if (s != sizeof(value_))
     {
       std::length_error ex("linger socket option resize");
-      std::experimental::net::detail::throw_exception(ex);
+      std::experimental::net::v1::detail::throw_exception(ex);
     }
   }
 

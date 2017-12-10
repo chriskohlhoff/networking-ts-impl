@@ -145,7 +145,7 @@ private:
       const execution_context::service::key& key) const;
 
   // Mutex to protect access to internal data.
-  mutable std::experimental::net::detail::mutex mutex_;
+  mutable std::experimental::net::v1::detail::mutex mutex_;
 
   // The owner of this service registry and the services it contains.
   execution_context& owner_;

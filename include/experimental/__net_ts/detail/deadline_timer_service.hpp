@@ -58,7 +58,7 @@ public:
   // The implementation type of the timer. This type is dependent on the
   // underlying implementation of the timer service.
   struct implementation_type
-    : private std::experimental::net::detail::noncopyable
+    : private std::experimental::net::v1::detail::noncopyable
   {
     time_type expiry;
     bool might_have_pending_waits;
@@ -66,9 +66,9 @@ public:
   };
 
   // Constructor.
-  deadline_timer_service(std::experimental::net::io_context& io_context)
+  deadline_timer_service(std::experimental::net::v1::io_context& io_context)
     : service_base<deadline_timer_service<Time_Traits> >(io_context),
-      scheduler_(std::experimental::net::use_service<timer_scheduler>(io_context))
+      scheduler_(std::experimental::net::v1::use_service<timer_scheduler>(io_context))
   {
     scheduler_.init_task();
     scheduler_.add_timer_queue(timer_queue_);
@@ -233,7 +233,7 @@ public:
   {
     // Allocate and construct an operation to wrap the handler.
     typedef wait_handler<Handler> op;
-    typename op::ptr p = { std::experimental::net::detail::addressof(handler),
+    typename op::ptr p = { std::experimental::net::v1::detail::addressof(handler),
       op::ptr::allocate(handler), 0 };
     p.p = new (p.v) op(handler);
 

@@ -56,15 +56,15 @@ struct is_match_condition
 #else
   enum
   {
-    value = std::experimental::net::is_function<
-        typename std::experimental::net::remove_pointer<T>::type>::value
+    value = std::experimental::net::v1::is_function<
+        typename std::experimental::net::v1::remove_pointer<T>::type>::value
       || detail::has_result_type<T>::value
   };
 #endif
 };
 
 /**
- * @defgroup read_until std::experimental::net::read_until
+ * @defgroup read_until std::experimental::net::v1::read_until
  *
  * @brief Read data into a dynamic buffer sequence, or into a streambuf, until
  * it contains a delimiter, matches a regular expression, or a function object
@@ -109,8 +109,8 @@ struct is_match_condition
  * @par Example
  * To read data into a @c std::string until a newline is encountered:
  * @code std::string data;
- * std::string n = std::experimental::net::read_until(s,
- *     std::experimental::net::dynamic_buffer(data), '\n');
+ * std::string n = std::experimental::net::v1::read_until(s,
+ *     std::experimental::net::v1::dynamic_buffer(data), '\n');
  * std::string line = data.substr(0, n);
  * data.erase(0, n); @endcode
  * After the @c read_until operation completes successfully, the string @c data
@@ -203,8 +203,8 @@ std::size_t read_until(SyncReadStream& s,
  * @par Example
  * To read data into a @c std::string until a CR-LF sequence is encountered:
  * @code std::string data;
- * std::string n = std::experimental::net::read_until(s,
- *     std::experimental::net::dynamic_buffer(data), "\r\n");
+ * std::string n = std::experimental::net::v1::read_until(s,
+ *     std::experimental::net::v1::dynamic_buffer(data), "\r\n");
  * std::string line = data.substr(0, n);
  * data.erase(0, n); @endcode
  * After the @c read_until operation completes successfully, the string @c data
@@ -266,7 +266,7 @@ std::size_t read_until(SyncReadStream& s,
 
 /*@}*/
 /**
- * @defgroup async_read_until std::experimental::net::async_read_until
+ * @defgroup async_read_until std::experimental::net::v1::async_read_until
  *
  * @brief Start an asynchronous operation to read data into a dynamic buffer
  * sequence, or into a streambuf, until it contains a delimiter, matches a
@@ -321,7 +321,7 @@ std::size_t read_until(SyncReadStream& s,
  * Regardless of whether the asynchronous operation completes immediately or
  * not, the handler will not be invoked from within this function. Invocation of
  * the handler will be performed in a manner equivalent to using
- * std::experimental::net::io_context::post().
+ * std::experimental::net::v1::io_context::post().
  *
  * @note After a successful async_read_until operation, the dynamic buffer
  * sequence may contain additional data beyond the delimiter. An application
@@ -343,7 +343,7 @@ std::size_t read_until(SyncReadStream& s,
  *   }
  * }
  * ...
- * std::experimental::net::async_read_until(s, data, '\n', handler); @endcode
+ * std::experimental::net::v1::async_read_until(s, data, '\n', handler); @endcode
  * After the @c async_read_until operation completes successfully, the buffer
  * @c data contains the delimiter:
  * @code { 'a', 'b', ..., 'c', '\n', 'd', 'e', ... } @endcode
@@ -411,7 +411,7 @@ async_read_until(AsyncReadStream& s,
  * Regardless of whether the asynchronous operation completes immediately or
  * not, the handler will not be invoked from within this function. Invocation of
  * the handler will be performed in a manner equivalent to using
- * std::experimental::net::io_context::post().
+ * std::experimental::net::v1::io_context::post().
  *
  * @note After a successful async_read_until operation, the dynamic buffer
  * sequence may contain additional data beyond the delimiter. An application
@@ -433,7 +433,7 @@ async_read_until(AsyncReadStream& s,
  *   }
  * }
  * ...
- * std::experimental::net::async_read_until(s, data, "\r\n", handler); @endcode
+ * std::experimental::net::v1::async_read_until(s, data, "\r\n", handler); @endcode
  * After the @c async_read_until operation completes successfully, the string
  * @c data contains the delimiter:
  * @code { 'a', 'b', ..., 'c', '\r', '\n', 'd', 'e', ... } @endcode

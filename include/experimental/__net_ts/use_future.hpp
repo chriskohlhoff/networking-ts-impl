@@ -44,10 +44,10 @@ class packaged_handler;
  * The use_future_t class is used to indicate that an asynchronous operation
  * should return a std::future object. A use_future_t object may be passed as a
  * handler to an asynchronous operation, typically using the special value @c
- * std::experimental::net::use_future. For example:
+ * std::experimental::net::v1::use_future. For example:
  *
  * @code std::future<std::size_t> my_future
- *   = my_socket.async_read_some(my_buffer, std::experimental::net::use_future); @endcode
+ *   = my_socket.async_read_some(my_buffer, std::experimental::net::v1::use_future); @endcode
  *
  * The initiating function (async_read_some in the above example) returns a
  * future that will receive the result of the operation. If the operation
@@ -133,7 +133,7 @@ private:
 
 /// A special value, similar to std::nothrow.
 /**
- * See the documentation for std::experimental::net::use_future_t for a usage example.
+ * See the documentation for std::experimental::net::v1::use_future_t for a usage example.
  */
 #if defined(NET_TS_HAS_CONSTEXPR) || defined(GENERATING_DOCUMENTATION)
 constexpr use_future_t<> use_future;

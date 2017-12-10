@@ -65,7 +65,7 @@ struct time_traits;
 #define NET_TS_BASIC_WAITABLE_TIMER_FWD_DECL
 
 template <typename Clock,
-    typename WaitTraits = std::experimental::net::wait_traits<Clock>
+    typename WaitTraits = std::experimental::net::v1::wait_traits<Clock>
     NET_TS_SVC_TPARAM_DEF2(= waitable_timer_service<Clock, WaitTraits>)>
 class basic_waitable_timer;
 

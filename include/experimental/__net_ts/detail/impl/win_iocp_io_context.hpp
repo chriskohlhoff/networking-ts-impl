@@ -88,7 +88,7 @@ void win_iocp_io_context::move_timer(timer_queue<Time_Traits>& queue,
     typename timer_queue<Time_Traits>::per_timer_data& to,
     typename timer_queue<Time_Traits>::per_timer_data& from)
 {
-  std::experimental::net::detail::mutex::scoped_lock lock(dispatch_mutex_);
+  std::experimental::net::v1::detail::mutex::scoped_lock lock(dispatch_mutex_);
   op_queue<operation> ops;
   queue.cancel_timer(to, ops);
   queue.move_timer(to, from);

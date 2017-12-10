@@ -36,7 +36,7 @@ namespace ip {
 
 /// A range of entries produced by a resolver.
 /**
- * The std::experimental::net::ip::basic_resolver_results class template is used to define
+ * The std::experimental::net::v1::ip::basic_resolver_results class template is used to define
  * a range over the results returned by a resolver.
  *
  * The iterator's value_type, obtained when a results iterator is dereferenced,
@@ -121,7 +121,7 @@ public:
 #if !defined(GENERATING_DOCUMENTATION)
   // Create results from an addrinfo list returned by getaddrinfo.
   static basic_resolver_results create(
-      std::experimental::net::detail::addrinfo_type* address_info,
+      std::experimental::net::v1::detail::addrinfo_type* address_info,
       const std::string& host_name, const std::string& service_name)
   {
     basic_resolver_results results;
@@ -191,7 +191,7 @@ public:
   static basic_resolver_results create(
       Windows::Foundation::Collections::IVectorView<
         Windows::Networking::EndpointPair^>^ endpoints,
-      const std::experimental::net::detail::addrinfo_type& hints,
+      const std::experimental::net::v1::detail::addrinfo_type& hints,
       const std::string& host_name, const std::string& service_name)
   {
     basic_resolver_results results;
@@ -216,9 +216,9 @@ public:
             basic_resolver_entry<InternetProtocol>(
               typename InternetProtocol::endpoint(
                 ip::make_address(
-                  std::experimental::net::detail::winrt_utils::string(
+                  std::experimental::net::v1::detail::winrt_utils::string(
                     pair->RemoteHostName->CanonicalName)),
-                std::experimental::net::detail::winrt_utils::integer(
+                std::experimental::net::v1::detail::winrt_utils::integer(
                   pair->RemoteServiceName)),
               host_name, service_name));
       }

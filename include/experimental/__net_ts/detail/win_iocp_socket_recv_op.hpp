@@ -63,7 +63,7 @@ public:
 
     // Take ownership of the operation object.
     win_iocp_socket_recv_op* o(static_cast<win_iocp_socket_recv_op*>(base));
-    ptr p = { std::experimental::net::detail::addressof(o->handler_), o, o };
+    ptr p = { std::experimental::net::v1::detail::addressof(o->handler_), o, o };
     handler_work<Handler> w(o->handler_);
 
     NET_TS_HANDLER_COMPLETION((*o));
@@ -72,13 +72,13 @@ public:
     // Check whether buffers are still valid.
     if (owner)
     {
-      buffer_sequence_adapter<std::experimental::net::mutable_buffer,
+      buffer_sequence_adapter<std::experimental::net::v1::mutable_buffer,
           MutableBufferSequence>::validate(o->buffers_);
     }
 #endif // defined(NET_TS_ENABLE_BUFFER_DEBUGGING)
 
     socket_ops::complete_iocp_recv(o->state_, o->cancel_token_,
-        buffer_sequence_adapter<std::experimental::net::mutable_buffer,
+        buffer_sequence_adapter<std::experimental::net::v1::mutable_buffer,
           MutableBufferSequence>::all_empty(o->buffers_),
         ec, bytes_transferred);
 
@@ -90,7 +90,7 @@ public:
     // deallocated the memory here.
     detail::binder2<Handler, std::error_code, std::size_t>
       handler(o->handler_, ec, bytes_transferred);
-    p.h = std::experimental::net::detail::addressof(handler.handler_);
+    p.h = std::experimental::net::v1::detail::addressof(handler.handler_);
     p.reset();
 
     // Make the upcall if required.

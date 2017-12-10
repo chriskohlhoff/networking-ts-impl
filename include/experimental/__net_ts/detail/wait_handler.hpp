@@ -50,7 +50,7 @@ public:
   {
     // Take ownership of the handler object.
     wait_handler* h(static_cast<wait_handler*>(base));
-    ptr p = { std::experimental::net::detail::addressof(h->handler_), h, h };
+    ptr p = { std::experimental::net::v1::detail::addressof(h->handler_), h, h };
     handler_work<Handler> w(h->handler_);
 
     NET_TS_HANDLER_COMPLETION((*h));
@@ -63,7 +63,7 @@ public:
     // deallocated the memory here.
     detail::binder1<Handler, std::error_code>
       handler(h->handler_, h->ec_);
-    p.h = std::experimental::net::detail::addressof(handler.handler_);
+    p.h = std::experimental::net::v1::detail::addressof(handler.handler_);
     p.reset();
 
     // Make the upcall if required.

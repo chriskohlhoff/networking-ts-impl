@@ -37,7 +37,7 @@ std::basic_ostream<Elem, Traits>& operator<<(
   if (ec)
   {
     if (os.exceptions() & std::basic_ostream<Elem, Traits>::failbit)
-      std::experimental::net::detail::throw_error(ec);
+      std::experimental::net::v1::detail::throw_error(ec);
     else
       os.setstate(std::basic_ostream<Elem, Traits>::failbit);
   }

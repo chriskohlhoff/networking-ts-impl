@@ -65,7 +65,7 @@ public:
 
   // Constructor.
   NET_TS_DECL winrt_ssocket_service_base(
-      std::experimental::net::io_context& io_context);
+      std::experimental::net::v1::io_context& io_context);
 
   // Destroy all user-defined handler objects owned by the service.
   NET_TS_DECL void base_shutdown();
@@ -109,7 +109,7 @@ public:
   std::error_code cancel(base_implementation_type&,
       std::error_code& ec)
   {
-    ec = std::experimental::net::error::operation_not_supported;
+    ec = std::experimental::net::v1::error::operation_not_supported;
     return ec;
   }
 
@@ -117,7 +117,7 @@ public:
   bool at_mark(const base_implementation_type&,
       std::error_code& ec) const
   {
-    ec = std::experimental::net::error::operation_not_supported;
+    ec = std::experimental::net::v1::error::operation_not_supported;
     return false;
   }
 
@@ -125,7 +125,7 @@ public:
   std::size_t available(const base_implementation_type&,
       std::error_code& ec) const
   {
-    ec = std::experimental::net::error::operation_not_supported;
+    ec = std::experimental::net::v1::error::operation_not_supported;
     return 0;
   }
 
@@ -134,7 +134,7 @@ public:
   std::error_code io_control(base_implementation_type&,
       IO_Control_Command&, std::error_code& ec)
   {
-    ec = std::experimental::net::error::operation_not_supported;
+    ec = std::experimental::net::v1::error::operation_not_supported;
     return ec;
   }
 
@@ -148,7 +148,7 @@ public:
   std::error_code non_blocking(base_implementation_type&,
       bool, std::error_code& ec)
   {
-    ec = std::experimental::net::error::operation_not_supported;
+    ec = std::experimental::net::v1::error::operation_not_supported;
     return ec;
   }
 
@@ -162,7 +162,7 @@ public:
   std::error_code native_non_blocking(base_implementation_type&,
       bool, std::error_code& ec)
   {
-    ec = std::experimental::net::error::operation_not_supported;
+    ec = std::experimental::net::v1::error::operation_not_supported;
     return ec;
   }
 
@@ -170,7 +170,7 @@ public:
   std::error_code shutdown(base_implementation_type&,
       socket_base::shutdown_type, std::error_code& ec)
   {
-    ec = std::experimental::net::error::operation_not_supported;
+    ec = std::experimental::net::v1::error::operation_not_supported;
     return ec;
   }
 
@@ -181,7 +181,7 @@ public:
       socket_base::message_flags flags, std::error_code& ec)
   {
     return do_send(impl,
-        buffer_sequence_adapter<std::experimental::net::const_buffer,
+        buffer_sequence_adapter<std::experimental::net::v1::const_buffer,
           ConstBufferSequence>::first(buffers), flags, ec);
   }
 
@@ -189,7 +189,7 @@ public:
   std::size_t send(base_implementation_type&, const null_buffers&,
       socket_base::message_flags, std::error_code& ec)
   {
-    ec = std::experimental::net::error::operation_not_supported;
+    ec = std::experimental::net::v1::error::operation_not_supported;
     return 0;
   }
 
@@ -205,7 +205,7 @@ public:
 
     // Allocate and construct an operation to wrap the handler.
     typedef winrt_socket_send_op<ConstBufferSequence, Handler> op;
-    typename op::ptr p = { std::experimental::net::detail::addressof(handler),
+    typename op::ptr p = { std::experimental::net::v1::detail::addressof(handler),
       op::ptr::allocate(handler), 0 };
     p.p = new (p.v) op(buffers, handler);
 
@@ -213,7 +213,7 @@ public:
           *p.p, "socket", &impl, 0, "async_send"));
 
     start_send_op(impl,
-        buffer_sequence_adapter<std::experimental::net::const_buffer,
+        buffer_sequence_adapter<std::experimental::net::v1::const_buffer,
           ConstBufferSequence>::first(buffers),
         flags, p.p, is_continuation);
     p.v = p.p = 0;
@@ -224,7 +224,7 @@ public:
   void async_send(base_implementation_type&, const null_buffers&,
       socket_base::message_flags, Handler& handler)
   {
-    std::error_code ec = std::experimental::net::error::operation_not_supported;
+    std::error_code ec = std::experimental::net::v1::error::operation_not_supported;
     const std::size_t bytes_transferred = 0;
     io_context_.get_io_context().post(
         detail::bind_handler(handler, ec, bytes_transferred));
@@ -237,7 +237,7 @@ public:
       socket_base::message_flags flags, std::error_code& ec)
   {
     return do_receive(impl,
-        buffer_sequence_adapter<std::experimental::net::mutable_buffer,
+        buffer_sequence_adapter<std::experimental::net::v1::mutable_buffer,
           MutableBufferSequence>::first(buffers), flags, ec);
   }
 
@@ -245,7 +245,7 @@ public:
   std::size_t receive(base_implementation_type&, const null_buffers&,
       socket_base::message_flags, std::error_code& ec)
   {
-    ec = std::experimental::net::error::operation_not_supported;
+    ec = std::experimental::net::v1::error::operation_not_supported;
     return 0;
   }
 
@@ -261,7 +261,7 @@ public:
 
     // Allocate and construct an operation to wrap the handler.
     typedef winrt_socket_recv_op<MutableBufferSequence, Handler> op;
-    typename op::ptr p = { std::experimental::net::detail::addressof(handler),
+    typename op::ptr p = { std::experimental::net::v1::detail::addressof(handler),
       op::ptr::allocate(handler), 0 };
     p.p = new (p.v) op(buffers, handler);
 
@@ -269,7 +269,7 @@ public:
           *p.p, "socket", &impl, 0, "async_receive"));
 
     start_receive_op(impl,
-        buffer_sequence_adapter<std::experimental::net::mutable_buffer,
+        buffer_sequence_adapter<std::experimental::net::v1::mutable_buffer,
           MutableBufferSequence>::first(buffers),
         flags, p.p, is_continuation);
     p.v = p.p = 0;
@@ -280,7 +280,7 @@ public:
   void async_receive(base_implementation_type&, const null_buffers&,
       socket_base::message_flags, Handler& handler)
   {
-    std::error_code ec = std::experimental::net::error::operation_not_supported;
+    std::error_code ec = std::experimental::net::v1::error::operation_not_supported;
     const std::size_t bytes_transferred = 0;
     io_context_.get_io_context().post(
         detail::bind_handler(handler, ec, bytes_transferred));
@@ -316,22 +316,22 @@ protected:
 
   // Helper function to perform a synchronous send.
   NET_TS_DECL std::size_t do_send(
-      base_implementation_type& impl, const std::experimental::net::const_buffer& data,
+      base_implementation_type& impl, const std::experimental::net::v1::const_buffer& data,
       socket_base::message_flags flags, std::error_code& ec);
 
   // Helper function to start an asynchronous send.
   NET_TS_DECL void start_send_op(base_implementation_type& impl,
-      const std::experimental::net::const_buffer& data, socket_base::message_flags flags,
+      const std::experimental::net::v1::const_buffer& data, socket_base::message_flags flags,
       winrt_async_op<unsigned int>* op, bool is_continuation);
 
   // Helper function to perform a synchronous receive.
   NET_TS_DECL std::size_t do_receive(
-      base_implementation_type& impl, const std::experimental::net::mutable_buffer& data,
+      base_implementation_type& impl, const std::experimental::net::v1::mutable_buffer& data,
       socket_base::message_flags flags, std::error_code& ec);
 
   // Helper function to start an asynchronous receive.
   NET_TS_DECL void start_receive_op(base_implementation_type& impl,
-      const std::experimental::net::mutable_buffer& data, socket_base::message_flags flags,
+      const std::experimental::net::v1::mutable_buffer& data, socket_base::message_flags flags,
       winrt_async_op<Windows::Storage::Streams::IBuffer^>* op,
       bool is_continuation);
 
@@ -342,7 +342,7 @@ protected:
   winrt_async_manager& async_manager_;
 
   // Mutex to protect access to the linked list of implementations. 
-  std::experimental::net::detail::mutex mutex_;
+  std::experimental::net::v1::detail::mutex mutex_;
 
   // The head of a linked list of all implementations.
   base_implementation_type* impl_list_;

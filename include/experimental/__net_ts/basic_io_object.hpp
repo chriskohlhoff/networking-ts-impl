@@ -71,7 +71,7 @@ public:
   typedef typename service_type::implementation_type implementation_type;
 
   /// The type of the executor associated with the object.
-  typedef std::experimental::net::io_context::executor_type executor_type;
+  typedef std::experimental::net::v1::io_context::executor_type executor_type;
 
   /// Get the executor associated with the object.
   executor_type get_executor() NET_TS_NOEXCEPT
@@ -85,8 +85,8 @@ protected:
    * Performs:
    * @code get_service().construct(get_implementation()); @endcode
    */
-  explicit basic_io_object(std::experimental::net::io_context& io_context)
-    : service_(std::experimental::net::use_service<IoObjectService>(io_context))
+  explicit basic_io_object(std::experimental::net::v1::io_context& io_context)
+    : service_(std::experimental::net::v1::use_service<IoObjectService>(io_context))
   {
     service_.construct(implementation_);
   }
@@ -172,7 +172,7 @@ public:
   typedef IoObjectService service_type;
   typedef typename service_type::implementation_type implementation_type;
 
-  typedef std::experimental::net::io_context::executor_type executor_type;
+  typedef std::experimental::net::v1::io_context::executor_type executor_type;
 
   executor_type get_executor() NET_TS_NOEXCEPT
   {
@@ -180,8 +180,8 @@ public:
   }
 
 protected:
-  explicit basic_io_object(std::experimental::net::io_context& io_context)
-    : service_(&std::experimental::net::use_service<IoObjectService>(io_context))
+  explicit basic_io_object(std::experimental::net::v1::io_context& io_context)
+    : service_(&std::experimental::net::v1::use_service<IoObjectService>(io_context))
   {
     service_->construct(implementation_);
   }
@@ -195,7 +195,7 @@ protected:
   template <typename IoObjectService1>
   basic_io_object(IoObjectService1& other_service,
       typename IoObjectService1::implementation_type& other_implementation)
-    : service_(&std::experimental::net::use_service<IoObjectService>(
+    : service_(&std::experimental::net::v1::use_service<IoObjectService>(
           other_service.get_io_context()))
   {
     service_->converting_move_construct(implementation_,

@@ -35,11 +35,11 @@ namespace multicast {
  * @par Examples
  * Setting the option to join a multicast group:
  * @code
- * std::experimental::net::ip::udp::socket socket(io_context); 
+ * std::experimental::net::v1::ip::udp::socket socket(io_context); 
  * ...
- * std::experimental::net::ip::address multicast_address =
- *   std::experimental::net::ip::address::from_string("225.0.0.1");
- * std::experimental::net::ip::multicast::join_group option(multicast_address);
+ * std::experimental::net::v1::ip::address multicast_address =
+ *   std::experimental::net::v1::ip::address::from_string("225.0.0.1");
+ * std::experimental::net::v1::ip::multicast::join_group option(multicast_address);
  * socket.set_option(option);
  * @endcode
  *
@@ -49,7 +49,7 @@ namespace multicast {
 #if defined(GENERATING_DOCUMENTATION)
 typedef implementation_defined join_group;
 #else
-typedef std::experimental::net::ip::detail::socket_option::multicast_request<
+typedef std::experimental::net::v1::ip::detail::socket_option::multicast_request<
   NET_TS_OS_DEF(IPPROTO_IP),
   NET_TS_OS_DEF(IP_ADD_MEMBERSHIP),
   NET_TS_OS_DEF(IPPROTO_IPV6),
@@ -63,11 +63,11 @@ typedef std::experimental::net::ip::detail::socket_option::multicast_request<
  * @par Examples
  * Setting the option to leave a multicast group:
  * @code
- * std::experimental::net::ip::udp::socket socket(io_context); 
+ * std::experimental::net::v1::ip::udp::socket socket(io_context); 
  * ...
- * std::experimental::net::ip::address multicast_address =
- *   std::experimental::net::ip::address::from_string("225.0.0.1");
- * std::experimental::net::ip::multicast::leave_group option(multicast_address);
+ * std::experimental::net::v1::ip::address multicast_address =
+ *   std::experimental::net::v1::ip::address::from_string("225.0.0.1");
+ * std::experimental::net::v1::ip::multicast::leave_group option(multicast_address);
  * socket.set_option(option);
  * @endcode
  *
@@ -77,7 +77,7 @@ typedef std::experimental::net::ip::detail::socket_option::multicast_request<
 #if defined(GENERATING_DOCUMENTATION)
 typedef implementation_defined leave_group;
 #else
-typedef std::experimental::net::ip::detail::socket_option::multicast_request<
+typedef std::experimental::net::v1::ip::detail::socket_option::multicast_request<
   NET_TS_OS_DEF(IPPROTO_IP),
   NET_TS_OS_DEF(IP_DROP_MEMBERSHIP),
   NET_TS_OS_DEF(IPPROTO_IPV6),
@@ -91,11 +91,11 @@ typedef std::experimental::net::ip::detail::socket_option::multicast_request<
  * @par Examples
  * Setting the option:
  * @code
- * std::experimental::net::ip::udp::socket socket(io_context); 
+ * std::experimental::net::v1::ip::udp::socket socket(io_context); 
  * ...
- * std::experimental::net::ip::address_v4 local_interface =
- *   std::experimental::net::ip::address_v4::from_string("1.2.3.4");
- * std::experimental::net::ip::multicast::outbound_interface option(local_interface);
+ * std::experimental::net::v1::ip::address_v4 local_interface =
+ *   std::experimental::net::v1::ip::address_v4::from_string("1.2.3.4");
+ * std::experimental::net::v1::ip::multicast::outbound_interface option(local_interface);
  * socket.set_option(option);
  * @endcode
  *
@@ -105,7 +105,7 @@ typedef std::experimental::net::ip::detail::socket_option::multicast_request<
 #if defined(GENERATING_DOCUMENTATION)
 typedef implementation_defined outbound_interface;
 #else
-typedef std::experimental::net::ip::detail::socket_option::network_interface<
+typedef std::experimental::net::v1::ip::detail::socket_option::network_interface<
   NET_TS_OS_DEF(IPPROTO_IP),
   NET_TS_OS_DEF(IP_MULTICAST_IF),
   NET_TS_OS_DEF(IPPROTO_IPV6),
@@ -119,18 +119,18 @@ typedef std::experimental::net::ip::detail::socket_option::network_interface<
  * @par Examples
  * Setting the option:
  * @code
- * std::experimental::net::ip::udp::socket socket(io_context); 
+ * std::experimental::net::v1::ip::udp::socket socket(io_context); 
  * ...
- * std::experimental::net::ip::multicast::hops option(4);
+ * std::experimental::net::v1::ip::multicast::hops option(4);
  * socket.set_option(option);
  * @endcode
  *
  * @par
  * Getting the current option value:
  * @code
- * std::experimental::net::ip::udp::socket socket(io_context); 
+ * std::experimental::net::v1::ip::udp::socket socket(io_context); 
  * ...
- * std::experimental::net::ip::multicast::hops option;
+ * std::experimental::net::v1::ip::multicast::hops option;
  * socket.get_option(option);
  * int ttl = option.value();
  * @endcode
@@ -141,7 +141,7 @@ typedef std::experimental::net::ip::detail::socket_option::network_interface<
 #if defined(GENERATING_DOCUMENTATION)
 typedef implementation_defined hops;
 #else
-typedef std::experimental::net::ip::detail::socket_option::multicast_hops<
+typedef std::experimental::net::v1::ip::detail::socket_option::multicast_hops<
   NET_TS_OS_DEF(IPPROTO_IP),
   NET_TS_OS_DEF(IP_MULTICAST_TTL),
   NET_TS_OS_DEF(IPPROTO_IPV6),
@@ -156,18 +156,18 @@ typedef std::experimental::net::ip::detail::socket_option::multicast_hops<
  * @par Examples
  * Setting the option:
  * @code
- * std::experimental::net::ip::udp::socket socket(io_context); 
+ * std::experimental::net::v1::ip::udp::socket socket(io_context); 
  * ...
- * std::experimental::net::ip::multicast::enable_loopback option(true);
+ * std::experimental::net::v1::ip::multicast::enable_loopback option(true);
  * socket.set_option(option);
  * @endcode
  *
  * @par
  * Getting the current option value:
  * @code
- * std::experimental::net::ip::udp::socket socket(io_context); 
+ * std::experimental::net::v1::ip::udp::socket socket(io_context); 
  * ...
- * std::experimental::net::ip::multicast::enable_loopback option;
+ * std::experimental::net::v1::ip::multicast::enable_loopback option;
  * socket.get_option(option);
  * bool is_set = option.value();
  * @endcode
@@ -178,7 +178,7 @@ typedef std::experimental::net::ip::detail::socket_option::multicast_hops<
 #if defined(GENERATING_DOCUMENTATION)
 typedef implementation_defined enable_loopback;
 #else
-typedef std::experimental::net::ip::detail::socket_option::multicast_enable_loopback<
+typedef std::experimental::net::v1::ip::detail::socket_option::multicast_enable_loopback<
   NET_TS_OS_DEF(IPPROTO_IP),
   NET_TS_OS_DEF(IP_MULTICAST_LOOP),
   NET_TS_OS_DEF(IPPROTO_IPV6),

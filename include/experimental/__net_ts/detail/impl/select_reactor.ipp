@@ -55,7 +55,7 @@ private:
 };
 #endif // defined(NET_TS_HAS_IOCP)
 
-select_reactor::select_reactor(std::experimental::net::execution_context& ctx)
+select_reactor::select_reactor(std::experimental::net::v1::execution_context& ctx)
   : execution_context_service_base<select_reactor>(ctx),
     scheduler_(use_service<scheduler_type>(ctx)),
     mutex_(),
@@ -67,8 +67,8 @@ select_reactor::select_reactor(std::experimental::net::execution_context& ctx)
     shutdown_(false)
 {
 #if defined(NET_TS_HAS_IOCP)
-  std::experimental::net::detail::signal_blocker sb;
-  thread_ = new std::experimental::net::detail::thread(thread_function(this));
+  std::experimental::net::v1::detail::signal_blocker sb;
+  thread_ = new std::experimental::net::v1::detail::thread(thread_function(this));
 #endif // defined(NET_TS_HAS_IOCP)
 }
 
@@ -79,7 +79,7 @@ select_reactor::~select_reactor()
 
 void select_reactor::shutdown()
 {
-  std::experimental::net::detail::mutex::scoped_lock lock(mutex_);
+  std::experimental::net::v1::detail::mutex::scoped_lock lock(mutex_);
   shutdown_ = true;
 #if defined(NET_TS_HAS_IOCP)
   stop_thread_ = true;
@@ -107,9 +107,9 @@ void select_reactor::shutdown()
 }
 
 void select_reactor::notify_fork(
-    std::experimental::net::execution_context::fork_event fork_ev)
+    std::experimental::net::v1::execution_context::fork_event fork_ev)
 {
-  if (fork_ev == std::experimental::net::execution_context::fork_child)
+  if (fork_ev == std::experimental::net::v1::execution_context::fork_child)
     interrupter_.recreate();
 }
 
@@ -128,7 +128,7 @@ int select_reactor::register_internal_descriptor(
     int op_type, socket_type descriptor,
     select_reactor::per_descriptor_data&, reactor_op* op)
 {
-  std::experimental::net::detail::mutex::scoped_lock lock(mutex_);
+  std::experimental::net::v1::detail::mutex::scoped_lock lock(mutex_);
 
   op_queue_[op_type].enqueue_operation(descriptor, op);
   interrupter_.interrupt();
@@ -146,7 +146,7 @@ void select_reactor::start_op(int op_type, socket_type descriptor,
     select_reactor::per_descriptor_data&, reactor_op* op,
     bool is_continuation, bool)
 {
-  std::experimental::net::detail::mutex::scoped_lock lock(mutex_);
+  std::experimental::net::v1::detail::mutex::scoped_lock lock(mutex_);
 
   if (shutdown_)
   {
@@ -163,21 +163,21 @@ void select_reactor::start_op(int op_type, socket_type descriptor,
 void select_reactor::cancel_ops(socket_type descriptor,
     select_reactor::per_descriptor_data&)
 {
-  std::experimental::net::detail::mutex::scoped_lock lock(mutex_);
-  cancel_ops_unlocked(descriptor, std::experimental::net::error::operation_aborted);
+  std::experimental::net::v1::detail::mutex::scoped_lock lock(mutex_);
+  cancel_ops_unlocked(descriptor, std::experimental::net::v1::error::operation_aborted);
 }
 
 void select_reactor::deregister_descriptor(socket_type descriptor,
     select_reactor::per_descriptor_data&, bool)
 {
-  std::experimental::net::detail::mutex::scoped_lock lock(mutex_);
-  cancel_ops_unlocked(descriptor, std::experimental::net::error::operation_aborted);
+  std::experimental::net::v1::detail::mutex::scoped_lock lock(mutex_);
+  cancel_ops_unlocked(descriptor, std::experimental::net::v1::error::operation_aborted);
 }
 
 void select_reactor::deregister_internal_descriptor(
     socket_type descriptor, select_reactor::per_descriptor_data&)
 {
-  std::experimental::net::detail::mutex::scoped_lock lock(mutex_);
+  std::experimental::net::v1::detail::mutex::scoped_lock lock(mutex_);
   op_queue<operation> ops;
   for (int i = 0; i < max_ops; ++i)
     op_queue_[i].cancel_operations(descriptor, ops);
@@ -190,7 +190,7 @@ void select_reactor::cleanup_descriptor_data(
 
 void select_reactor::run(long usec, op_queue<operation>& ops)
 {
-  std::experimental::net::detail::mutex::scoped_lock lock(mutex_);
+  std::experimental::net::v1::detail::mutex::scoped_lock lock(mutex_);
 
 #if defined(NET_TS_HAS_IOCP)
   // Check if the thread is supposed to stop.
@@ -273,7 +273,7 @@ void select_reactor::interrupt()
 #if defined(NET_TS_HAS_IOCP)
 void select_reactor::run_thread()
 {
-  std::experimental::net::detail::mutex::scoped_lock lock(mutex_);
+  std::experimental::net::v1::detail::mutex::scoped_lock lock(mutex_);
   while (!stop_thread_)
   {
     lock.unlock();

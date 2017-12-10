@@ -50,7 +50,7 @@ class win_iocp_io_context
 public:
   // Constructor. Specifies a concurrency hint that is passed through to the
   // underlying I/O completion port.
-  NET_TS_DECL win_iocp_io_context(std::experimental::net::execution_context& ctx,
+  NET_TS_DECL win_iocp_io_context(std::experimental::net::v1::execution_context& ctx,
       int concurrency_hint = -1);
 
   // Destroy all user-defined handler objects owned by the service.

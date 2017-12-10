@@ -328,7 +328,7 @@ public:
    * This function sets the expiry time associated with the stream. Stream
    * operations performed after this time (where the operations cannot be
    * completed using the internal buffers) will fail with the error
-   * std::experimental::net::error::operation_aborted.
+   * std::experimental::net::v1::error::operation_aborted.
    *
    * @param expiry_time The expiry time to be used for the stream.
    */
@@ -342,7 +342,7 @@ public:
    * This function sets the expiry time associated with the stream. Stream
    * operations performed after this time (where the operations cannot be
    * completed using the internal buffers) will fail with the error
-   * std::experimental::net::error::operation_aborted.
+   * std::experimental::net::v1::error::operation_aborted.
    *
    * @param expiry_time The expiry time to be used for the timer.
    */
@@ -355,7 +355,7 @@ protected:
   int_type underflow()
   {
 #if defined(NET_TS_WINDOWS_RUNTIME)
-    ec_ = std::experimental::net::error::operation_not_supported;
+    ec_ = std::experimental::net::v1::error::operation_not_supported;
     return traits_type::eof();
 #else // defined(NET_TS_WINDOWS_RUNTIME)
     if (gptr() != egptr())
@@ -366,7 +366,7 @@ protected:
       // Check if we are past the expiry time.
       if (traits_helper::less_than(expiry_time_, traits_helper::now()))
       {
-        ec_ = std::experimental::net::error::timed_out;
+        ec_ = std::experimental::net::v1::error::timed_out;
         return traits_type::eof();
       }
 
@@ -374,7 +374,7 @@ protected:
       if (!socket().native_non_blocking())
         socket().native_non_blocking(true, ec_);
       detail::buffer_sequence_adapter<mutable_buffer, mutable_buffer>
-        bufs(std::experimental::net::buffer(get_buffer_) + putback_max);
+        bufs(std::experimental::net::v1::buffer(get_buffer_) + putback_max);
       detail::signed_size_type bytes = detail::socket_ops::recv(
           socket().native_handle(), bufs.buffers(), bufs.count(), 0, ec_);
 
@@ -389,13 +389,13 @@ protected:
       // Check for EOF.
       if (bytes == 0)
       {
-        ec_ = std::experimental::net::error::eof;
+        ec_ = std::experimental::net::v1::error::eof;
         return traits_type::eof();
       }
 
       // Operation failed.
-      if (ec_ != std::experimental::net::error::would_block
-          && ec_ != std::experimental::net::error::try_again)
+      if (ec_ != std::experimental::net::v1::error::would_block
+          && ec_ != std::experimental::net::v1::error::try_again)
         return traits_type::eof();
 
       // Wait for socket to become ready.
@@ -409,7 +409,7 @@ protected:
   int_type overflow(int_type c)
   {
 #if defined(NET_TS_WINDOWS_RUNTIME)
-    ec_ = std::experimental::net::error::operation_not_supported;
+    ec_ = std::experimental::net::v1::error::operation_not_supported;
     return traits_type::eof();
 #else // defined(NET_TS_WINDOWS_RUNTIME)
     char_type ch = traits_type::to_char_type(c);
@@ -420,11 +420,11 @@ protected:
     {
       if (traits_type::eq_int_type(c, traits_type::eof()))
         return traits_type::not_eof(c); // Nothing to do.
-      output_buffer = std::experimental::net::buffer(&ch, sizeof(char_type));
+      output_buffer = std::experimental::net::v1::buffer(&ch, sizeof(char_type));
     }
     else
     {
-      output_buffer = std::experimental::net::buffer(pbase(),
+      output_buffer = std::experimental::net::v1::buffer(pbase(),
           (pptr() - pbase()) * sizeof(char_type));
     }
 
@@ -433,7 +433,7 @@ protected:
       // Check if we are past the expiry time.
       if (traits_helper::less_than(expiry_time_, traits_helper::now()))
       {
-        ec_ = std::experimental::net::error::timed_out;
+        ec_ = std::experimental::net::v1::error::timed_out;
         return traits_type::eof();
       }
 
@@ -453,8 +453,8 @@ protected:
       }
 
       // Operation failed.
-      if (ec_ != std::experimental::net::error::would_block
-          && ec_ != std::experimental::net::error::try_again)
+      if (ec_ != std::experimental::net::v1::error::would_block
+          && ec_ != std::experimental::net::v1::error::try_again)
         return traits_type::eof();
 
       // Wait for socket to become ready.
@@ -538,18 +538,18 @@ private:
   void connect_to_endpoints(EndpointIterator begin, EndpointIterator end)
   {
 #if defined(NET_TS_WINDOWS_RUNTIME)
-    ec_ = std::experimental::net::error::operation_not_supported;
+    ec_ = std::experimental::net::v1::error::operation_not_supported;
 #else // defined(NET_TS_WINDOWS_RUNTIME)
     if (ec_)
       return;
 
-    ec_ = std::experimental::net::error::not_found;
+    ec_ = std::experimental::net::v1::error::not_found;
     for (EndpointIterator i = begin; i != end; ++i)
     {
       // Check if we are past the expiry time.
       if (traits_helper::less_than(expiry_time_, traits_helper::now()))
       {
-        ec_ = std::experimental::net::error::timed_out;
+        ec_ = std::experimental::net::v1::error::timed_out;
         return;
       }
 
@@ -571,8 +571,8 @@ private:
         return;
 
       // Operation failed.
-      if (ec_ != std::experimental::net::error::in_progress
-          && ec_ != std::experimental::net::error::would_block)
+      if (ec_ != std::experimental::net::v1::error::in_progress
+          && ec_ != std::experimental::net::v1::error::would_block)
         continue;
 
       // Wait for socket to become ready.
@@ -590,7 +590,7 @@ private:
 
       // Check the result of the connect operation.
       ec_ = std::error_code(connect_error,
-          std::experimental::net::error::get_system_category());
+          std::experimental::net::v1::error::get_system_category());
       if (!ec_)
         return;
     }

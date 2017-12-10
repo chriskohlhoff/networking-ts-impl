@@ -42,7 +42,7 @@ public:
   NET_TS_DEFINE_HANDLER_PTR(resolve_endpoint_op);
 
   typedef typename Protocol::endpoint endpoint_type;
-  typedef std::experimental::net::ip::basic_resolver_results<Protocol> results_type;
+  typedef std::experimental::net::v1::ip::basic_resolver_results<Protocol> results_type;
 
   resolve_endpoint_op(socket_ops::weak_cancel_token_type cancel_token,
       const endpoint_type& endpoint, io_context_impl& ioc, Handler& handler)
@@ -61,7 +61,7 @@ public:
   {
     // Take ownership of the operation object.
     resolve_endpoint_op* o(static_cast<resolve_endpoint_op*>(base));
-    ptr p = { std::experimental::net::detail::addressof(o->handler_), o, o };
+    ptr p = { std::experimental::net::v1::detail::addressof(o->handler_), o, o };
     handler_work<Handler> w(o->handler_);
 
     if (owner && owner != &o->io_context_impl_)
@@ -96,7 +96,7 @@ public:
       // after we have deallocated the memory here.
       detail::binder2<Handler, std::error_code, results_type>
         handler(o->handler_, o->ec_, o->results_);
-      p.h = std::experimental::net::detail::addressof(handler.handler_);
+      p.h = std::experimental::net::v1::detail::addressof(handler.handler_);
       p.reset();
 
       if (owner)

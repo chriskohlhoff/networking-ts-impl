@@ -66,7 +66,7 @@ public:
 
     // Take ownership of the operation object.
     win_iocp_null_buffers_op* o(static_cast<win_iocp_null_buffers_op*>(base));
-    ptr p = { std::experimental::net::detail::addressof(o->handler_), o, o };
+    ptr p = { std::experimental::net::v1::detail::addressof(o->handler_), o, o };
     handler_work<Handler> w(o->handler_);
 
     NET_TS_HANDLER_COMPLETION((*o));
@@ -79,13 +79,13 @@ public:
     if (ec.value() == ERROR_NETNAME_DELETED)
     {
       if (o->cancel_token_.expired())
-        ec = std::experimental::net::error::operation_aborted;
+        ec = std::experimental::net::v1::error::operation_aborted;
       else
-        ec = std::experimental::net::error::connection_reset;
+        ec = std::experimental::net::v1::error::connection_reset;
     }
     else if (ec.value() == ERROR_PORT_UNREACHABLE)
     {
-      ec = std::experimental::net::error::connection_refused;
+      ec = std::experimental::net::v1::error::connection_refused;
     }
 
     // Make a copy of the handler so that the memory can be deallocated before
@@ -96,7 +96,7 @@ public:
     // deallocated the memory here.
     detail::binder2<Handler, std::error_code, std::size_t>
       handler(o->handler_, ec, bytes_transferred);
-    p.h = std::experimental::net::detail::addressof(handler.handler_);
+    p.h = std::experimental::net::v1::detail::addressof(handler.handler_);
     p.reset();
 
     // Make the upcall if required.

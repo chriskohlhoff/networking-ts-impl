@@ -50,7 +50,7 @@ address_v6::address_v6(const address_v6::bytes_type& bytes,
     if (bytes[i] > 0xFF)
     {
       std::out_of_range ex("address_v6 from bytes_type");
-      std::experimental::net::detail::throw_exception(ex);
+      std::experimental::net::v1::detail::throw_exception(ex);
     }
   }
 #endif // UCHAR_MAX > 0xFF
@@ -104,13 +104,13 @@ address_v6::bytes_type address_v6::to_bytes() const
 std::string address_v6::to_string() const
 {
   std::error_code ec;
-  char addr_str[std::experimental::net::detail::max_addr_v6_str_len];
+  char addr_str[std::experimental::net::v1::detail::max_addr_v6_str_len];
   const char* addr =
-    std::experimental::net::detail::socket_ops::inet_ntop(
+    std::experimental::net::v1::detail::socket_ops::inet_ntop(
         NET_TS_OS_DEF(AF_INET6), &addr_, addr_str,
-        std::experimental::net::detail::max_addr_v6_str_len, scope_id_, ec);
+        std::experimental::net::v1::detail::max_addr_v6_str_len, scope_id_, ec);
   if (addr == 0)
-    std::experimental::net::detail::throw_error(ec);
+    std::experimental::net::v1::detail::throw_error(ec);
   return addr;
 }
 
@@ -192,7 +192,7 @@ bool operator==(const address_v6& a1, const address_v6& a2)
 {
   using namespace std; // For memcmp.
   return memcmp(&a1.addr_, &a2.addr_,
-      sizeof(std::experimental::net::detail::in6_addr_type)) == 0
+      sizeof(std::experimental::net::v1::detail::in6_addr_type)) == 0
     && a1.scope_id_ == a2.scope_id_;
 }
 
@@ -200,7 +200,7 @@ bool operator<(const address_v6& a1, const address_v6& a2)
 {
   using namespace std; // For memcmp.
   int memcmp_result = memcmp(&a1.addr_, &a2.addr_,
-      sizeof(std::experimental::net::detail::in6_addr_type));
+      sizeof(std::experimental::net::v1::detail::in6_addr_type));
   if (memcmp_result < 0)
     return true;
   if (memcmp_result > 0)
@@ -219,7 +219,7 @@ address_v6 make_address_v6(const char* str)
 {
   std::error_code ec;
   address_v6 addr = make_address_v6(str, ec);
-  std::experimental::net::detail::throw_error(ec);
+  std::experimental::net::v1::detail::throw_error(ec);
   return addr;
 }
 
@@ -228,7 +228,7 @@ address_v6 make_address_v6(
 {
   address_v6::bytes_type bytes;
   unsigned long scope_id = 0;
-  if (std::experimental::net::detail::socket_ops::inet_pton(
+  if (std::experimental::net::v1::detail::socket_ops::inet_pton(
         NET_TS_OS_DEF(AF_INET6), str, &bytes[0], &scope_id, ec) <= 0)
     return address_v6();
   return address_v6(bytes, scope_id);
@@ -266,7 +266,7 @@ address_v4 make_address_v4(
   if (!v6_addr.is_v4_mapped())
   {
     bad_address_cast ex;
-    std::experimental::net::detail::throw_exception(ex);
+    std::experimental::net::v1::detail::throw_exception(ex);
   }
 
   address_v6::bytes_type v6_bytes = v6_addr.to_bytes();

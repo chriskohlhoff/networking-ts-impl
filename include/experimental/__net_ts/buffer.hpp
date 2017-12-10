@@ -82,7 +82,7 @@ class const_buffer;
  * The contents of a buffer may be accessed using the @c data() and @c size()
  * member functions:
  *
- * @code std::experimental::net::mutable_buffer b1 = ...;
+ * @code std::experimental::net::v1::mutable_buffer b1 = ...;
  * std::size_t s1 = b1.size();
  * unsigned char* p1 = static_cast<unsigned char*>(b1.data());
  * @endcode
@@ -109,14 +109,14 @@ public:
 
 #if defined(NET_TS_ENABLE_BUFFER_DEBUGGING)
   mutable_buffer(void* data, std::size_t size,
-      std::experimental::net::detail::function<void()> debug_check)
+      std::experimental::net::v1::detail::function<void()> debug_check)
     : data_(data),
       size_(size),
       debug_check_(debug_check)
   {
   }
 
-  const std::experimental::net::detail::function<void()>& get_debug_check() const
+  const std::experimental::net::v1::detail::function<void()>& get_debug_check() const
   {
     return debug_check_;
   }
@@ -152,7 +152,7 @@ private:
   std::size_t size_;
 
 #if defined(NET_TS_ENABLE_BUFFER_DEBUGGING)
-  std::experimental::net::detail::function<void()> debug_check_;
+  std::experimental::net::v1::detail::function<void()> debug_check_;
 #endif // NET_TS_ENABLE_BUFFER_DEBUGGING
 };
 
@@ -167,7 +167,7 @@ private:
  * The contents of a buffer may be accessed using the @c data() and @c size()
  * member functions:
  *
- * @code std::experimental::net::const_buffer b1 = ...;
+ * @code std::experimental::net::v1::const_buffer b1 = ...;
  * std::size_t s1 = b1.size();
  * const unsigned char* p1 = static_cast<const unsigned char*>(b1.data());
  * @endcode
@@ -204,14 +204,14 @@ public:
 
 #if defined(NET_TS_ENABLE_BUFFER_DEBUGGING)
   const_buffer(const void* data, std::size_t size,
-      std::experimental::net::detail::function<void()> debug_check)
+      std::experimental::net::v1::detail::function<void()> debug_check)
     : data_(data),
       size_(size),
       debug_check_(debug_check)
   {
   }
 
-  const std::experimental::net::detail::function<void()>& get_debug_check() const
+  const std::experimental::net::v1::detail::function<void()>& get_debug_check() const
   {
     return debug_check_;
   }
@@ -247,7 +247,7 @@ private:
   std::size_t size_;
 
 #if defined(NET_TS_ENABLE_BUFFER_DEBUGGING)
-  std::experimental::net::detail::function<void()> debug_check_;
+  std::experimental::net::v1::detail::function<void()> debug_check_;
 #endif // NET_TS_ENABLE_BUFFER_DEBUGGING
 };
 
@@ -258,7 +258,7 @@ struct is_mutable_buffer_sequence
 #if defined(GENERATING_DOCUMENTATION)
   : integral_constant<bool, automatically_determined>
 #else // defined(GENERATING_DOCUMENTATION)
-  : std::experimental::net::detail::is_buffer_sequence<T, mutable_buffer>
+  : std::experimental::net::v1::detail::is_buffer_sequence<T, mutable_buffer>
 #endif // defined(GENERATING_DOCUMENTATION)
 {
 };
@@ -270,7 +270,7 @@ struct is_const_buffer_sequence
 #if defined(GENERATING_DOCUMENTATION)
   : integral_constant<bool, automatically_determined>
 #else // defined(GENERATING_DOCUMENTATION)
-  : std::experimental::net::detail::is_buffer_sequence<T, const_buffer>
+  : std::experimental::net::v1::detail::is_buffer_sequence<T, const_buffer>
 #endif // defined(GENERATING_DOCUMENTATION)
 {
 };
@@ -281,7 +281,7 @@ struct is_dynamic_buffer
 #if defined(GENERATING_DOCUMENTATION)
   : integral_constant<bool, automatically_determined>
 #else // defined(GENERATING_DOCUMENTATION)
-  : std::experimental::net::detail::is_dynamic_buffer<T>
+  : std::experimental::net::v1::detail::is_dynamic_buffer<T>
 #endif // defined(GENERATING_DOCUMENTATION)
 {
 };
@@ -314,9 +314,9 @@ private:
   mutable_buffer buf_;
 };
 
-/** @defgroup buffer_sequence_begin std::experimental::net::buffer_sequence_begin
+/** @defgroup buffer_sequence_begin std::experimental::net::v1::buffer_sequence_begin
  *
- * @brief The std::experimental::net::buffer_sequence_begin function returns an iterator
+ * @brief The std::experimental::net::v1::buffer_sequence_begin function returns an iterator
  * pointing to the first element in a buffer sequence.
  */
 /*@{*/
@@ -367,9 +367,9 @@ inline typename C::const_iterator buffer_sequence_begin(const C& c)
 
 /*@}*/
 
-/** @defgroup buffer_sequence_end std::experimental::net::buffer_sequence_end
+/** @defgroup buffer_sequence_end std::experimental::net::v1::buffer_sequence_end
  *
- * @brief The std::experimental::net::buffer_sequence_end function returns an iterator
+ * @brief The std::experimental::net::v1::buffer_sequence_end function returns an iterator
  * pointing to one past the end element in a buffer sequence.
  */
 /*@{*/
@@ -465,8 +465,8 @@ inline std::size_t buffer_size(multiple_buffers,
  * buffer sequence, as if computed as follows:
  *
  * @code size_t total_size = 0;
- * auto i = std::experimental::net::buffer_sequence_begin(buffers);
- * auto end = std::experimental::net::buffer_sequence_end(buffers);
+ * auto i = std::experimental::net::v1::buffer_sequence_begin(buffers);
+ * auto end = std::experimental::net::v1::buffer_sequence_end(buffers);
  * for (; i != end; ++i)
  * {
  *   const_buffer b(*i);
@@ -482,8 +482,8 @@ inline std::size_t buffer_size(const BufferSequence& b) NET_TS_NOEXCEPT
 {
   return detail::buffer_size(
       detail::buffer_sequence_cardinality<BufferSequence>(),
-      std::experimental::net::buffer_sequence_begin(b),
-      std::experimental::net::buffer_sequence_end(b));
+      std::experimental::net::v1::buffer_sequence_begin(b),
+      std::experimental::net::v1::buffer_sequence_end(b));
 }
 
 /// Create a new modifiable buffer that is offset from the start of another.
@@ -574,9 +574,9 @@ private:
 } // namespace detail
 #endif // NET_TS_ENABLE_BUFFER_DEBUGGING
 
-/** @defgroup buffer std::experimental::net::buffer
+/** @defgroup buffer std::experimental::net::v1::buffer
  *
- * @brief The std::experimental::net::buffer function is used to create a buffer object to
+ * @brief The std::experimental::net::v1::buffer function is used to create a buffer object to
  * represent raw memory, an array of POD elements, a vector of POD elements,
  * or a std::string.
  *
@@ -592,9 +592,9 @@ private:
  * The simplest use case involves reading or writing a single buffer of a
  * specified size:
  *
- * @code sock.send(std::experimental::net::buffer(data, size)); @endcode
+ * @code sock.send(std::experimental::net::v1::buffer(data, size)); @endcode
  *
- * In the above example, the return value of std::experimental::net::buffer meets the
+ * In the above example, the return value of std::experimental::net::v1::buffer meets the
  * requirements of the ConstBufferSequence concept so that it may be directly
  * passed to the socket's write function. A buffer created for modifiable
  * memory also meets the requirements of the MutableBufferSequence concept.
@@ -604,16 +604,16 @@ private:
  * overruns by automatically determining the size of the buffer:
  *
  * @code char d1[128];
- * size_t bytes_transferred = sock.receive(std::experimental::net::buffer(d1));
+ * size_t bytes_transferred = sock.receive(std::experimental::net::v1::buffer(d1));
  *
  * std::vector<char> d2(128);
- * bytes_transferred = sock.receive(std::experimental::net::buffer(d2));
+ * bytes_transferred = sock.receive(std::experimental::net::v1::buffer(d2));
  *
  * std::array<char, 128> d3;
- * bytes_transferred = sock.receive(std::experimental::net::buffer(d3));
+ * bytes_transferred = sock.receive(std::experimental::net::v1::buffer(d3));
  *
  * boost::array<char, 128> d4;
- * bytes_transferred = sock.receive(std::experimental::net::buffer(d4)); @endcode
+ * bytes_transferred = sock.receive(std::experimental::net::v1::buffer(d4)); @endcode
  *
  * In all three cases above, the buffers created are exactly 128 bytes long.
  * Note that a vector is @e never automatically resized when creating or using
@@ -625,11 +625,11 @@ private:
  * The contents of a buffer may be accessed using the @c data() and @c size()
  * member functions:
  *
- * @code std::experimental::net::mutable_buffer b1 = ...;
+ * @code std::experimental::net::v1::mutable_buffer b1 = ...;
  * std::size_t s1 = b1.size();
  * unsigned char* p1 = static_cast<unsigned char*>(b1.data());
  *
- * std::experimental::net::const_buffer b2 = ...;
+ * std::experimental::net::v1::const_buffer b2 = ...;
  * std::size_t s2 = b2.size();
  * const void* p2 = b2.data(); @endcode
  *
@@ -652,8 +652,8 @@ private:
  *
  * @code vector<const_buffer> buffers = ...;
  *
- * vector<unsigned char> data(std::experimental::net::buffer_size(buffers));
- * std::experimental::net::buffer_copy(std::experimental::net::buffer(data), buffers); @endcode
+ * vector<unsigned char> data(std::experimental::net::v1::buffer_size(buffers));
+ * std::experimental::net::v1::buffer_copy(std::experimental::net::v1::buffer(data), buffers); @endcode
  *
  * Note that @ref buffer_copy is implemented in terms of @c memcpy, and
  * consequently it cannot be used to copy between overlapping memory regions.
@@ -665,12 +665,12 @@ private:
  * valid until it is no longer required for an I/O operation. When the memory
  * is no longer available, the buffer is said to have been invalidated.
  *
- * For the std::experimental::net::buffer overloads that accept an argument of type
+ * For the std::experimental::net::v1::buffer overloads that accept an argument of type
  * std::vector, the buffer objects returned are invalidated by any vector
  * operation that also invalidates all references, pointers and iterators
  * referring to the elements in the sequence (C++ Std, 23.2.4)
  *
- * For the std::experimental::net::buffer overloads that accept an argument of type
+ * For the std::experimental::net::v1::buffer overloads that accept an argument of type
  * std::basic_string, the buffer objects returned are invalidated according to
  * the rules defined for invalidation of references, pointers and iterators
  * referring to elements of the sequence (C++ Std, 21.3).
@@ -685,13 +685,13 @@ private:
  *
  * A buffer object @c b1 created using:
  *
- * @code b1 = std::experimental::net::buffer(a); @endcode
+ * @code b1 = std::experimental::net::v1::buffer(a); @endcode
  *
  * represents the entire array, <tt>{ 'a', 'b', 'c', 'd', 'e' }</tt>. An
- * optional second argument to the std::experimental::net::buffer function may be used to
+ * optional second argument to the std::experimental::net::v1::buffer function may be used to
  * limit the size, in bytes, of the buffer:
  *
- * @code b2 = std::experimental::net::buffer(a, 3); @endcode
+ * @code b2 = std::experimental::net::v1::buffer(a, 3); @endcode
  *
  * such that @c b2 represents the data <tt>{ 'a', 'b', 'c' }</tt>. Even if the
  * size argument exceeds the actual size of the array, the size of the buffer
@@ -708,7 +708,7 @@ private:
  * Both an offset and size may be specified to create a buffer that corresponds
  * to a specific range of bytes within an existing buffer:
  *
- * @code b4 = std::experimental::net::buffer(b1 + 1, 3); @endcode
+ * @code b4 = std::experimental::net::v1::buffer(b1 + 1, 3); @endcode
  *
  * so that @c b4 will refer to the bytes <tt>{ 'b', 'c', 'd' }</tt>.
  *
@@ -724,15 +724,15 @@ private:
  * boost::array<char, 128> d3;
  *
  * boost::array<mutable_buffer, 3> bufs1 = {
- *   std::experimental::net::buffer(d1),
- *   std::experimental::net::buffer(d2),
- *   std::experimental::net::buffer(d3) };
+ *   std::experimental::net::v1::buffer(d1),
+ *   std::experimental::net::v1::buffer(d2),
+ *   std::experimental::net::v1::buffer(d3) };
  * bytes_transferred = sock.receive(bufs1);
  *
  * std::vector<const_buffer> bufs2;
- * bufs2.push_back(std::experimental::net::buffer(d1));
- * bufs2.push_back(std::experimental::net::buffer(d2));
- * bufs2.push_back(std::experimental::net::buffer(d3));
+ * bufs2.push_back(std::experimental::net::v1::buffer(d1));
+ * bufs2.push_back(std::experimental::net::v1::buffer(d2));
+ * bufs2.push_back(std::experimental::net::v1::buffer(d3));
  * bytes_transferred = sock.send(bufs2); @endcode
  */
 /*@{*/
@@ -922,9 +922,9 @@ template <typename PodType, std::size_t N>
 inline typename detail::buffer_types<PodType>::container_type
 buffer(boost::array<PodType, N>& data) NET_TS_NOEXCEPT
 {
-  typedef typename std::experimental::net::detail::buffer_types<PodType>::buffer_type
+  typedef typename std::experimental::net::v1::detail::buffer_types<PodType>::buffer_type
     buffer_type;
-  typedef typename std::experimental::net::detail::buffer_types<PodType>::container_type
+  typedef typename std::experimental::net::v1::detail::buffer_types<PodType>::container_type
     container_type;
   return container_type(
       buffer_type(data.c_array(), data.size() * sizeof(PodType)));
@@ -935,9 +935,9 @@ inline typename detail::buffer_types<PodType>::container_type
 buffer(boost::array<PodType, N>& data,
     std::size_t max_size_in_bytes) NET_TS_NOEXCEPT
 {
-  typedef typename std::experimental::net::detail::buffer_types<PodType>::buffer_type
+  typedef typename std::experimental::net::v1::detail::buffer_types<PodType>::buffer_type
     buffer_type;
-  typedef typename std::experimental::net::detail::buffer_types<PodType>::container_type
+  typedef typename std::experimental::net::v1::detail::buffer_types<PodType>::container_type
     container_type;
   return container_type(
       buffer_type(data.c_array(),
@@ -1458,7 +1458,7 @@ public:
    */
   const_buffers_type data() const NET_TS_NOEXCEPT
   {
-    return const_buffers_type(std::experimental::net::buffer(string_, size_));
+    return const_buffers_type(std::experimental::net::v1::buffer(string_, size_));
   }
 
   /// Get a list of buffers that represents the output sequence, with the given
@@ -1482,12 +1482,12 @@ public:
     if (size () > max_size() || max_size() - size() < n)
     {
       std::length_error ex("dynamic_string_buffer too long");
-      std::experimental::net::detail::throw_exception(ex);
+      std::experimental::net::v1::detail::throw_exception(ex);
     }
 
     string_.resize(size_ + n);
 
-    return std::experimental::net::buffer(std::experimental::net::buffer(string_) + size_, n);
+    return std::experimental::net::v1::buffer(std::experimental::net::v1::buffer(string_) + size_, n);
   }
 
   /// Move bytes from the output sequence to the input sequence.
@@ -1609,7 +1609,7 @@ public:
    */
   const_buffers_type data() const NET_TS_NOEXCEPT
   {
-    return const_buffers_type(std::experimental::net::buffer(vector_, size_));
+    return const_buffers_type(std::experimental::net::v1::buffer(vector_, size_));
   }
 
   /// Get a list of buffers that represents the output sequence, with the given
@@ -1633,12 +1633,12 @@ public:
     if (size () > max_size() || max_size() - size() < n)
     {
       std::length_error ex("dynamic_vector_buffer too long");
-      std::experimental::net::detail::throw_exception(ex);
+      std::experimental::net::v1::detail::throw_exception(ex);
     }
 
     vector_.resize(size_ + n);
 
-    return std::experimental::net::buffer(std::experimental::net::buffer(vector_) + size_, n);
+    return std::experimental::net::v1::buffer(std::experimental::net::v1::buffer(vector_) + size_, n);
   }
 
   /// Move bytes from the output sequence to the input sequence.
@@ -1679,9 +1679,9 @@ private:
   const std::size_t max_size_;
 };
 
-/** @defgroup dynamic_buffer std::experimental::net::dynamic_buffer
+/** @defgroup dynamic_buffer std::experimental::net::v1::dynamic_buffer
  *
- * @brief The std::experimental::net::dynamic_buffer function is used to create a
+ * @brief The std::experimental::net::v1::dynamic_buffer function is used to create a
  * dynamically resized buffer from a @c std::basic_string or @c std::vector.
  */
 /*@{*/
@@ -1735,9 +1735,9 @@ inline dynamic_vector_buffer<Elem, Allocator> dynamic_buffer(
 
 /*@}*/
 
-/** @defgroup buffer_copy std::experimental::net::buffer_copy
+/** @defgroup buffer_copy std::experimental::net::v1::buffer_copy
  *
- * @brief The std::experimental::net::buffer_copy function is used to copy bytes from a
+ * @brief The std::experimental::net::v1::buffer_copy function is used to copy bytes from a
  * source buffer (or buffer sequence) to a target buffer (or buffer sequence).
  *
  * The @c buffer_copy function is available in two forms:
@@ -1792,7 +1792,7 @@ inline std::size_t buffer_copy(one_buffer, one_buffer,
     std::size_t max_bytes_to_copy) NET_TS_NOEXCEPT
 {
   return (buffer_copy_1)(*target_begin,
-      std::experimental::net::buffer(*source_begin, max_bytes_to_copy));
+      std::experimental::net::v1::buffer(*source_begin, max_bytes_to_copy));
 }
 
 template <typename TargetIterator, typename SourceIterator>
@@ -1806,7 +1806,7 @@ std::size_t buffer_copy(one_buffer, multiple_buffers,
   SourceIterator source_iter = source_begin;
 
   for (mutable_buffer target_buffer(
-        std::experimental::net::buffer(*target_begin, max_bytes_to_copy));
+        std::experimental::net::v1::buffer(*target_begin, max_bytes_to_copy));
       target_buffer.size() && source_iter != source_end; ++source_iter)
   {
     const_buffer source_buffer(*source_iter);
@@ -1829,7 +1829,7 @@ std::size_t buffer_copy(multiple_buffers, one_buffer,
   TargetIterator target_iter = target_begin;
 
   for (const_buffer source_buffer(
-        std::experimental::net::buffer(*source_begin, max_bytes_to_copy));
+        std::experimental::net::v1::buffer(*source_begin, max_bytes_to_copy));
       source_buffer.size() && target_iter != target_end; ++target_iter)
   {
     mutable_buffer target_buffer(*target_iter);
@@ -1909,7 +1909,7 @@ std::size_t buffer_copy(multiple_buffers, multiple_buffers,
       const_buffer(*source_iter) + source_buffer_offset;
 
     std::size_t bytes_copied = (buffer_copy_1)(
-        target_buffer, std::experimental::net::buffer(source_buffer,
+        target_buffer, std::experimental::net::v1::buffer(source_buffer,
           max_bytes_to_copy - total_bytes_copied));
     total_bytes_copied += bytes_copied;
 
@@ -1961,10 +1961,10 @@ inline std::size_t buffer_copy(const MutableBufferSequence& target,
   return detail::buffer_copy(
       detail::buffer_sequence_cardinality<MutableBufferSequence>(),
       detail::buffer_sequence_cardinality<ConstBufferSequence>(),
-      std::experimental::net::buffer_sequence_begin(target),
-      std::experimental::net::buffer_sequence_end(target),
-      std::experimental::net::buffer_sequence_begin(source),
-      std::experimental::net::buffer_sequence_end(source));
+      std::experimental::net::v1::buffer_sequence_begin(target),
+      std::experimental::net::v1::buffer_sequence_end(target),
+      std::experimental::net::v1::buffer_sequence_begin(source),
+      std::experimental::net::v1::buffer_sequence_end(source));
 }
 
 /// Copies a limited number of bytes from a source buffer sequence to a target
@@ -1999,10 +1999,10 @@ inline std::size_t buffer_copy(const MutableBufferSequence& target,
   return detail::buffer_copy(
       detail::buffer_sequence_cardinality<MutableBufferSequence>(),
       detail::buffer_sequence_cardinality<ConstBufferSequence>(),
-      std::experimental::net::buffer_sequence_begin(target),
-      std::experimental::net::buffer_sequence_end(target),
-      std::experimental::net::buffer_sequence_begin(source),
-      std::experimental::net::buffer_sequence_end(source), max_bytes_to_copy);
+      std::experimental::net::v1::buffer_sequence_begin(target),
+      std::experimental::net::v1::buffer_sequence_end(target),
+      std::experimental::net::v1::buffer_sequence_begin(source),
+      std::experimental::net::v1::buffer_sequence_end(source), max_bytes_to_copy);
 }
 
 /*@}*/

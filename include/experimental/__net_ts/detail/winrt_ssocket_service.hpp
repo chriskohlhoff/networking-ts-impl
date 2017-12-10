@@ -64,7 +64,7 @@ public:
   };
 
   // Constructor.
-  winrt_ssocket_service(std::experimental::net::io_context& io_context)
+  winrt_ssocket_service(std::experimental::net::v1::io_context& io_context)
     : service_base<winrt_ssocket_service<Protocol> >(io_context),
       winrt_ssocket_service_base(io_context)
   {
@@ -116,7 +116,7 @@ public:
   {
     if (is_open(impl))
     {
-      ec = std::experimental::net::error::already_open;
+      ec = std::experimental::net::v1::error::already_open;
       return ec;
     }
 
@@ -142,7 +142,7 @@ public:
   {
     if (is_open(impl))
     {
-      ec = std::experimental::net::error::already_open;
+      ec = std::experimental::net::v1::error::already_open;
       return ec;
     }
 
@@ -157,7 +157,7 @@ public:
   std::error_code bind(implementation_type&,
       const endpoint_type&, std::error_code& ec)
   {
-    ec = std::experimental::net::error::operation_not_supported;
+    ec = std::experimental::net::v1::error::operation_not_supported;
     return ec;
   }
 
@@ -222,7 +222,7 @@ public:
 
     // Allocate and construct an operation to wrap the handler.
     typedef winrt_socket_connect_op<Handler> op;
-    typename op::ptr p = { std::experimental::net::detail::addressof(handler),
+    typename op::ptr p = { std::experimental::net::v1::detail::addressof(handler),
       op::ptr::allocate(handler), 0 };
     p.p = new (p.v) op(handler);
 

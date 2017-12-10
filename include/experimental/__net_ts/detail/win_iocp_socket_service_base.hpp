@@ -89,7 +89,7 @@ public:
 
   // Constructor.
   NET_TS_DECL win_iocp_socket_service_base(
-      std::experimental::net::io_context& io_context);
+      std::experimental::net::v1::io_context& io_context);
 
   // Destroy all user-defined handler objects owned by the service.
   NET_TS_DECL void base_shutdown();
@@ -204,7 +204,7 @@ public:
       socket_ops::poll_error(impl.socket_, impl.state_, -1, ec);
       break;
     default:
-      ec = std::experimental::net::error::invalid_argument;
+      ec = std::experimental::net::v1::error::invalid_argument;
       break;
     }
 
@@ -222,7 +222,7 @@ public:
 
     // Allocate and construct an operation to wrap the handler.
     typedef win_iocp_wait_op<Handler> op;
-    typename op::ptr p = { std::experimental::net::detail::addressof(handler),
+    typename op::ptr p = { std::experimental::net::v1::detail::addressof(handler),
       op::ptr::allocate(handler), 0 };
     p.p = new (p.v) op(impl.cancel_token_, handler);
 
@@ -241,7 +241,7 @@ public:
         start_reactor_op(impl, select_reactor::except_op, p.p);
         break;
       default:
-        p.p->ec_ = std::experimental::net::error::invalid_argument;
+        p.p->ec_ = std::experimental::net::v1::error::invalid_argument;
         iocp_service_.post_immediate_completion(p.p, is_continuation);
         break;
     }
@@ -255,7 +255,7 @@ public:
       const ConstBufferSequence& buffers,
       socket_base::message_flags flags, std::error_code& ec)
   {
-    buffer_sequence_adapter<std::experimental::net::const_buffer,
+    buffer_sequence_adapter<std::experimental::net::v1::const_buffer,
         ConstBufferSequence> bufs(buffers);
 
     return socket_ops::sync_send(impl.socket_, impl.state_,
@@ -281,14 +281,14 @@ public:
   {
     // Allocate and construct an operation to wrap the handler.
     typedef win_iocp_socket_send_op<ConstBufferSequence, Handler> op;
-    typename op::ptr p = { std::experimental::net::detail::addressof(handler),
+    typename op::ptr p = { std::experimental::net::v1::detail::addressof(handler),
       op::ptr::allocate(handler), 0 };
     p.p = new (p.v) op(impl.cancel_token_, buffers, handler);
 
     NET_TS_HANDLER_CREATION((io_context_, *p.p, "socket",
           &impl, impl.socket_, "async_send"));
 
-    buffer_sequence_adapter<std::experimental::net::const_buffer,
+    buffer_sequence_adapter<std::experimental::net::v1::const_buffer,
         ConstBufferSequence> bufs(buffers);
 
     start_send_op(impl, bufs.buffers(), bufs.count(), flags,
@@ -304,7 +304,7 @@ public:
   {
     // Allocate and construct an operation to wrap the handler.
     typedef win_iocp_null_buffers_op<Handler> op;
-    typename op::ptr p = { std::experimental::net::detail::addressof(handler),
+    typename op::ptr p = { std::experimental::net::v1::detail::addressof(handler),
       op::ptr::allocate(handler), 0 };
     p.p = new (p.v) op(impl.cancel_token_, handler);
 
@@ -321,7 +321,7 @@ public:
       const MutableBufferSequence& buffers,
       socket_base::message_flags flags, std::error_code& ec)
   {
-    buffer_sequence_adapter<std::experimental::net::mutable_buffer,
+    buffer_sequence_adapter<std::experimental::net::v1::mutable_buffer,
         MutableBufferSequence> bufs(buffers);
 
     return socket_ops::sync_recv(impl.socket_, impl.state_,
@@ -347,14 +347,14 @@ public:
   {
     // Allocate and construct an operation to wrap the handler.
     typedef win_iocp_socket_recv_op<MutableBufferSequence, Handler> op;
-    typename op::ptr p = { std::experimental::net::detail::addressof(handler),
+    typename op::ptr p = { std::experimental::net::v1::detail::addressof(handler),
       op::ptr::allocate(handler), 0 };
     p.p = new (p.v) op(impl.state_, impl.cancel_token_, buffers, handler);
 
     NET_TS_HANDLER_CREATION((io_context_, *p.p, "socket",
           &impl, impl.socket_, "async_receive"));
 
-    buffer_sequence_adapter<std::experimental::net::mutable_buffer,
+    buffer_sequence_adapter<std::experimental::net::v1::mutable_buffer,
         MutableBufferSequence> bufs(buffers);
 
     start_receive_op(impl, bufs.buffers(), bufs.count(), flags,
@@ -370,7 +370,7 @@ public:
   {
     // Allocate and construct an operation to wrap the handler.
     typedef win_iocp_null_buffers_op<Handler> op;
-    typename op::ptr p = { std::experimental::net::detail::addressof(handler),
+    typename op::ptr p = { std::experimental::net::v1::detail::addressof(handler),
       op::ptr::allocate(handler), 0 };
     p.p = new (p.v) op(impl.cancel_token_, handler);
 
@@ -389,7 +389,7 @@ public:
       socket_base::message_flags in_flags,
       socket_base::message_flags& out_flags, std::error_code& ec)
   {
-    buffer_sequence_adapter<std::experimental::net::mutable_buffer,
+    buffer_sequence_adapter<std::experimental::net::v1::mutable_buffer,
         MutableBufferSequence> bufs(buffers);
 
     return socket_ops::sync_recvmsg(impl.socket_, impl.state_,
@@ -420,14 +420,14 @@ public:
   {
     // Allocate and construct an operation to wrap the handler.
     typedef win_iocp_socket_recvmsg_op<MutableBufferSequence, Handler> op;
-    typename op::ptr p = { std::experimental::net::detail::addressof(handler),
+    typename op::ptr p = { std::experimental::net::v1::detail::addressof(handler),
       op::ptr::allocate(handler), 0 };
     p.p = new (p.v) op(impl.cancel_token_, buffers, out_flags, handler);
 
     NET_TS_HANDLER_CREATION((io_context_, *p.p, "socket",
           &impl, impl.socket_, "async_receive_with_flags"));
 
-    buffer_sequence_adapter<std::experimental::net::mutable_buffer,
+    buffer_sequence_adapter<std::experimental::net::v1::mutable_buffer,
         MutableBufferSequence> bufs(buffers);
 
     start_receive_op(impl, bufs.buffers(), bufs.count(), in_flags, false, p.p);
@@ -442,7 +442,7 @@ public:
   {
     // Allocate and construct an operation to wrap the handler.
     typedef win_iocp_null_buffers_op<Handler> op;
-    typename op::ptr p = { std::experimental::net::detail::addressof(handler),
+    typename op::ptr p = { std::experimental::net::v1::detail::addressof(handler),
       op::ptr::allocate(handler), 0 };
     p.p = new (p.v) op(impl.cancel_token_, handler);
 
@@ -557,7 +557,7 @@ protected:
   NET_TS_DECL void* interlocked_exchange_pointer(void** dest, void* val);
 
   // The io_context used to obtain the reactor, if required.
-  std::experimental::net::io_context& io_context_;
+  std::experimental::net::v1::io_context& io_context_;
 
   // The IOCP service used for running asynchronous operations and dispatching
   // handlers.
@@ -574,7 +574,7 @@ protected:
   void* nt_set_info_;
 
   // Mutex to protect access to the linked list of implementations. 
-  std::experimental::net::detail::mutex mutex_;
+  std::experimental::net::v1::detail::mutex mutex_;
 
   // The head of a linked list of all implementations.
   base_implementation_type* impl_list_;

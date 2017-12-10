@@ -33,8 +33,8 @@ inline void invoke(Function& function, Context& context)
   Function tmp(function);
   tmp();
 #else
-  using std::experimental::net::networking_ts_handler_invoke;
-  networking_ts_handler_invoke(function, std::experimental::net::detail::addressof(context));
+  using std::experimental::net::v1::networking_ts_handler_invoke;
+  networking_ts_handler_invoke(function, std::experimental::net::v1::detail::addressof(context));
 #endif
 }
 
@@ -45,8 +45,8 @@ inline void invoke(const Function& function, Context& context)
   Function tmp(function);
   tmp();
 #else
-  using std::experimental::net::networking_ts_handler_invoke;
-  networking_ts_handler_invoke(function, std::experimental::net::detail::addressof(context));
+  using std::experimental::net::v1::networking_ts_handler_invoke;
+  networking_ts_handler_invoke(function, std::experimental::net::v1::detail::addressof(context));
 #endif
 }
 

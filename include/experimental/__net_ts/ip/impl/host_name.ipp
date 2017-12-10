@@ -33,9 +33,9 @@ std::string host_name()
 {
   char name[1024];
   std::error_code ec;
-  if (std::experimental::net::detail::socket_ops::gethostname(name, sizeof(name), ec) != 0)
+  if (std::experimental::net::v1::detail::socket_ops::gethostname(name, sizeof(name), ec) != 0)
   {
-    std::experimental::net::detail::throw_error(ec);
+    std::experimental::net::v1::detail::throw_error(ec);
     return std::string();
   }
   return std::string(name);
@@ -44,7 +44,7 @@ std::string host_name()
 std::string host_name(std::error_code& ec)
 {
   char name[1024];
-  if (std::experimental::net::detail::socket_ops::gethostname(name, sizeof(name), ec) != 0)
+  if (std::experimental::net::v1::detail::socket_ops::gethostname(name, sizeof(name), ec) != 0)
     return std::string();
   return std::string(name);
 }

@@ -35,8 +35,8 @@ void posix_tss_ptr_create(pthread_key_t& key)
 {
   int error = ::pthread_key_create(&key, 0);
   std::error_code ec(error,
-      std::experimental::net::error::get_system_category());
-  std::experimental::net::detail::throw_error(ec, "tss");
+      std::experimental::net::v1::error::get_system_category());
+  std::experimental::net::v1::detail::throw_error(ec, "tss");
 }
 
 } // namespace detail

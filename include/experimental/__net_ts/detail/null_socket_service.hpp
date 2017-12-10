@@ -53,7 +53,7 @@ public:
   };
 
   // Constructor.
-  null_socket_service(std::experimental::net::io_context& io_context)
+  null_socket_service(std::experimental::net::v1::io_context& io_context)
     : service_base<null_socket_service<Protocol> >(io_context),
       io_context_(io_context)
   {
@@ -97,7 +97,7 @@ public:
   std::error_code open(implementation_type&,
       const protocol_type&, std::error_code& ec)
   {
-    ec = std::experimental::net::error::operation_not_supported;
+    ec = std::experimental::net::v1::error::operation_not_supported;
     return ec;
   }
 
@@ -105,7 +105,7 @@ public:
   std::error_code assign(implementation_type&, const protocol_type&,
       const native_handle_type&, std::error_code& ec)
   {
-    ec = std::experimental::net::error::operation_not_supported;
+    ec = std::experimental::net::v1::error::operation_not_supported;
     return ec;
   }
 
@@ -119,7 +119,7 @@ public:
   std::error_code close(implementation_type&,
       std::error_code& ec)
   {
-    ec = std::experimental::net::error::operation_not_supported;
+    ec = std::experimental::net::v1::error::operation_not_supported;
     return ec;
   }
 
@@ -127,7 +127,7 @@ public:
   native_handle_type release(implementation_type&,
       std::error_code& ec)
   {
-    ec = std::experimental::net::error::operation_not_supported;
+    ec = std::experimental::net::v1::error::operation_not_supported;
     return 0;
   }
 
@@ -141,7 +141,7 @@ public:
   std::error_code cancel(implementation_type&,
       std::error_code& ec)
   {
-    ec = std::experimental::net::error::operation_not_supported;
+    ec = std::experimental::net::v1::error::operation_not_supported;
     return ec;
   }
 
@@ -149,7 +149,7 @@ public:
   bool at_mark(const implementation_type&,
       std::error_code& ec) const
   {
-    ec = std::experimental::net::error::operation_not_supported;
+    ec = std::experimental::net::v1::error::operation_not_supported;
     return false;
   }
 
@@ -157,7 +157,7 @@ public:
   std::size_t available(const implementation_type&,
       std::error_code& ec) const
   {
-    ec = std::experimental::net::error::operation_not_supported;
+    ec = std::experimental::net::v1::error::operation_not_supported;
     return 0;
   }
 
@@ -165,7 +165,7 @@ public:
   std::error_code listen(implementation_type&,
       int, std::error_code& ec)
   {
-    ec = std::experimental::net::error::operation_not_supported;
+    ec = std::experimental::net::v1::error::operation_not_supported;
     return ec;
   }
 
@@ -174,7 +174,7 @@ public:
   std::error_code io_control(implementation_type&,
       IO_Control_Command&, std::error_code& ec)
   {
-    ec = std::experimental::net::error::operation_not_supported;
+    ec = std::experimental::net::v1::error::operation_not_supported;
     return ec;
   }
 
@@ -188,7 +188,7 @@ public:
   std::error_code non_blocking(implementation_type&,
       bool, std::error_code& ec)
   {
-    ec = std::experimental::net::error::operation_not_supported;
+    ec = std::experimental::net::v1::error::operation_not_supported;
     return ec;
   }
 
@@ -202,7 +202,7 @@ public:
   std::error_code native_non_blocking(implementation_type&,
       bool, std::error_code& ec)
   {
-    ec = std::experimental::net::error::operation_not_supported;
+    ec = std::experimental::net::v1::error::operation_not_supported;
     return ec;
   }
 
@@ -210,7 +210,7 @@ public:
   std::error_code shutdown(implementation_type&,
       socket_base::shutdown_type, std::error_code& ec)
   {
-    ec = std::experimental::net::error::operation_not_supported;
+    ec = std::experimental::net::v1::error::operation_not_supported;
     return ec;
   }
 
@@ -218,7 +218,7 @@ public:
   std::error_code bind(implementation_type&,
       const endpoint_type&, std::error_code& ec)
   {
-    ec = std::experimental::net::error::operation_not_supported;
+    ec = std::experimental::net::v1::error::operation_not_supported;
     return ec;
   }
 
@@ -227,7 +227,7 @@ public:
   std::error_code set_option(implementation_type&,
       const Option&, std::error_code& ec)
   {
-    ec = std::experimental::net::error::operation_not_supported;
+    ec = std::experimental::net::v1::error::operation_not_supported;
     return ec;
   }
 
@@ -236,7 +236,7 @@ public:
   std::error_code get_option(const implementation_type&,
       Option&, std::error_code& ec) const
   {
-    ec = std::experimental::net::error::operation_not_supported;
+    ec = std::experimental::net::v1::error::operation_not_supported;
     return ec;
   }
 
@@ -244,7 +244,7 @@ public:
   endpoint_type local_endpoint(const implementation_type&,
       std::error_code& ec) const
   {
-    ec = std::experimental::net::error::operation_not_supported;
+    ec = std::experimental::net::v1::error::operation_not_supported;
     return endpoint_type();
   }
 
@@ -252,7 +252,7 @@ public:
   endpoint_type remote_endpoint(const implementation_type&,
       std::error_code& ec) const
   {
-    ec = std::experimental::net::error::operation_not_supported;
+    ec = std::experimental::net::v1::error::operation_not_supported;
     return endpoint_type();
   }
 
@@ -261,7 +261,7 @@ public:
   std::size_t send(implementation_type&, const ConstBufferSequence&,
       socket_base::message_flags, std::error_code& ec)
   {
-    ec = std::experimental::net::error::operation_not_supported;
+    ec = std::experimental::net::v1::error::operation_not_supported;
     return 0;
   }
 
@@ -269,7 +269,7 @@ public:
   std::size_t send(implementation_type&, const null_buffers&,
       socket_base::message_flags, std::error_code& ec)
   {
-    ec = std::experimental::net::error::operation_not_supported;
+    ec = std::experimental::net::v1::error::operation_not_supported;
     return 0;
   }
 
@@ -279,7 +279,7 @@ public:
   void async_send(implementation_type&, const ConstBufferSequence&,
       socket_base::message_flags, Handler& handler)
   {
-    std::error_code ec = std::experimental::net::error::operation_not_supported;
+    std::error_code ec = std::experimental::net::v1::error::operation_not_supported;
     const std::size_t bytes_transferred = 0;
     io_context_.post(detail::bind_handler(handler, ec, bytes_transferred));
   }
@@ -289,7 +289,7 @@ public:
   void async_send(implementation_type&, const null_buffers&,
       socket_base::message_flags, Handler& handler)
   {
-    std::error_code ec = std::experimental::net::error::operation_not_supported;
+    std::error_code ec = std::experimental::net::v1::error::operation_not_supported;
     const std::size_t bytes_transferred = 0;
     io_context_.post(detail::bind_handler(handler, ec, bytes_transferred));
   }
@@ -299,7 +299,7 @@ public:
   std::size_t receive(implementation_type&, const MutableBufferSequence&,
       socket_base::message_flags, std::error_code& ec)
   {
-    ec = std::experimental::net::error::operation_not_supported;
+    ec = std::experimental::net::v1::error::operation_not_supported;
     return 0;
   }
 
@@ -307,7 +307,7 @@ public:
   std::size_t receive(implementation_type&, const null_buffers&,
       socket_base::message_flags, std::error_code& ec)
   {
-    ec = std::experimental::net::error::operation_not_supported;
+    ec = std::experimental::net::v1::error::operation_not_supported;
     return 0;
   }
 
@@ -317,7 +317,7 @@ public:
   void async_receive(implementation_type&, const MutableBufferSequence&,
       socket_base::message_flags, Handler& handler)
   {
-    std::error_code ec = std::experimental::net::error::operation_not_supported;
+    std::error_code ec = std::experimental::net::v1::error::operation_not_supported;
     const std::size_t bytes_transferred = 0;
     io_context_.post(detail::bind_handler(handler, ec, bytes_transferred));
   }
@@ -327,7 +327,7 @@ public:
   void async_receive(implementation_type&, const null_buffers&,
       socket_base::message_flags, Handler& handler)
   {
-    std::error_code ec = std::experimental::net::error::operation_not_supported;
+    std::error_code ec = std::experimental::net::v1::error::operation_not_supported;
     const std::size_t bytes_transferred = 0;
     io_context_.post(detail::bind_handler(handler, ec, bytes_transferred));
   }
@@ -339,7 +339,7 @@ public:
       const MutableBufferSequence&, socket_base::message_flags,
       socket_base::message_flags&, std::error_code& ec)
   {
-    ec = std::experimental::net::error::operation_not_supported;
+    ec = std::experimental::net::v1::error::operation_not_supported;
     return 0;
   }
 
@@ -348,7 +348,7 @@ public:
       const null_buffers&, socket_base::message_flags,
       socket_base::message_flags&, std::error_code& ec)
   {
-    ec = std::experimental::net::error::operation_not_supported;
+    ec = std::experimental::net::v1::error::operation_not_supported;
     return 0;
   }
 
@@ -359,7 +359,7 @@ public:
       const MutableBufferSequence&, socket_base::message_flags,
       socket_base::message_flags&, Handler& handler)
   {
-    std::error_code ec = std::experimental::net::error::operation_not_supported;
+    std::error_code ec = std::experimental::net::v1::error::operation_not_supported;
     const std::size_t bytes_transferred = 0;
     io_context_.post(detail::bind_handler(handler, ec, bytes_transferred));
   }
@@ -370,7 +370,7 @@ public:
       const null_buffers&, socket_base::message_flags,
       socket_base::message_flags&, Handler& handler)
   {
-    std::error_code ec = std::experimental::net::error::operation_not_supported;
+    std::error_code ec = std::experimental::net::v1::error::operation_not_supported;
     const std::size_t bytes_transferred = 0;
     io_context_.post(detail::bind_handler(handler, ec, bytes_transferred));
   }
@@ -382,7 +382,7 @@ public:
       const endpoint_type&, socket_base::message_flags,
       std::error_code& ec)
   {
-    ec = std::experimental::net::error::operation_not_supported;
+    ec = std::experimental::net::v1::error::operation_not_supported;
     return 0;
   }
 
@@ -391,7 +391,7 @@ public:
       const endpoint_type&, socket_base::message_flags,
       std::error_code& ec)
   {
-    ec = std::experimental::net::error::operation_not_supported;
+    ec = std::experimental::net::v1::error::operation_not_supported;
     return 0;
   }
 
@@ -402,7 +402,7 @@ public:
       const endpoint_type&, socket_base::message_flags,
       Handler& handler)
   {
-    std::error_code ec = std::experimental::net::error::operation_not_supported;
+    std::error_code ec = std::experimental::net::v1::error::operation_not_supported;
     const std::size_t bytes_transferred = 0;
     io_context_.post(detail::bind_handler(handler, ec, bytes_transferred));
   }
@@ -412,7 +412,7 @@ public:
   void async_send_to(implementation_type&, const null_buffers&,
       const endpoint_type&, socket_base::message_flags, Handler& handler)
   {
-    std::error_code ec = std::experimental::net::error::operation_not_supported;
+    std::error_code ec = std::experimental::net::v1::error::operation_not_supported;
     const std::size_t bytes_transferred = 0;
     io_context_.post(detail::bind_handler(handler, ec, bytes_transferred));
   }
@@ -424,7 +424,7 @@ public:
       endpoint_type&, socket_base::message_flags,
       std::error_code& ec)
   {
-    ec = std::experimental::net::error::operation_not_supported;
+    ec = std::experimental::net::v1::error::operation_not_supported;
     return 0;
   }
 
@@ -433,7 +433,7 @@ public:
       endpoint_type&, socket_base::message_flags,
       std::error_code& ec)
   {
-    ec = std::experimental::net::error::operation_not_supported;
+    ec = std::experimental::net::v1::error::operation_not_supported;
     return 0;
   }
 
@@ -445,7 +445,7 @@ public:
       const MutableBufferSequence&, endpoint_type&,
       socket_base::message_flags, Handler& handler)
   {
-    std::error_code ec = std::experimental::net::error::operation_not_supported;
+    std::error_code ec = std::experimental::net::v1::error::operation_not_supported;
     const std::size_t bytes_transferred = 0;
     io_context_.post(detail::bind_handler(handler, ec, bytes_transferred));
   }
@@ -456,7 +456,7 @@ public:
       const null_buffers&, endpoint_type&,
       socket_base::message_flags, Handler& handler)
   {
-    std::error_code ec = std::experimental::net::error::operation_not_supported;
+    std::error_code ec = std::experimental::net::v1::error::operation_not_supported;
     const std::size_t bytes_transferred = 0;
     io_context_.post(detail::bind_handler(handler, ec, bytes_transferred));
   }
@@ -466,7 +466,7 @@ public:
   std::error_code accept(implementation_type&,
       Socket&, endpoint_type*, std::error_code& ec)
   {
-    ec = std::experimental::net::error::operation_not_supported;
+    ec = std::experimental::net::v1::error::operation_not_supported;
     return ec;
   }
 
@@ -476,7 +476,7 @@ public:
   void async_accept(implementation_type&, Socket&,
       endpoint_type*, Handler& handler)
   {
-    std::error_code ec = std::experimental::net::error::operation_not_supported;
+    std::error_code ec = std::experimental::net::v1::error::operation_not_supported;
     io_context_.post(detail::bind_handler(handler, ec));
   }
 
@@ -484,7 +484,7 @@ public:
   std::error_code connect(implementation_type&,
       const endpoint_type&, std::error_code& ec)
   {
-    ec = std::experimental::net::error::operation_not_supported;
+    ec = std::experimental::net::v1::error::operation_not_supported;
     return ec;
   }
 
@@ -493,12 +493,12 @@ public:
   void async_connect(implementation_type&,
       const endpoint_type&, Handler& handler)
   {
-    std::error_code ec = std::experimental::net::error::operation_not_supported;
+    std::error_code ec = std::experimental::net::v1::error::operation_not_supported;
     io_context_.post(detail::bind_handler(handler, ec));
   }
 
 private:
-  std::experimental::net::io_context& io_context_;
+  std::experimental::net::v1::io_context& io_context_;
 };
 
 } // namespace detail

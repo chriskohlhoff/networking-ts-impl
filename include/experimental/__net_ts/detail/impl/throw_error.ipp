@@ -31,7 +31,7 @@ namespace detail {
 void do_throw_error(const std::error_code& err)
 {
   std::system_error e(err);
-  std::experimental::net::detail::throw_exception(e);
+  std::experimental::net::v1::detail::throw_exception(e);
 }
 
 void do_throw_error(const std::error_code& err, const char* location)
@@ -45,11 +45,11 @@ void do_throw_error(const std::error_code& err, const char* location)
   what_msg += ": ";
   what_msg += err.message();
   std::system_error e(err, what_msg);
-  std::experimental::net::detail::throw_exception(e);
+  std::experimental::net::v1::detail::throw_exception(e);
 #else // defined(NET_TS_MSVC) && defined(NET_TS_HAS_STD_SYSTEM_ERROR)
   // boostify: non-boost code ends here
   std::system_error e(err, location);
-  std::experimental::net::detail::throw_exception(e);
+  std::experimental::net::v1::detail::throw_exception(e);
   // boostify: non-boost code starts here
 #endif // defined(NET_TS_MSVC) && defined(NET_TS_HAS_STD_SYSTEM_ERROR)
   // boostify: non-boost code ends here

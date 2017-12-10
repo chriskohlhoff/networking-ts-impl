@@ -38,7 +38,7 @@ struct scheduler::task_cleanup
   {
     if (this_thread_->private_outstanding_work > 0)
     {
-      std::experimental::net::detail::increment(
+      std::experimental::net::v1::detail::increment(
           scheduler_->outstanding_work_,
           this_thread_->private_outstanding_work);
     }
@@ -63,7 +63,7 @@ struct scheduler::work_cleanup
   {
     if (this_thread_->private_outstanding_work > 1)
     {
-      std::experimental::net::detail::increment(
+      std::experimental::net::v1::detail::increment(
           scheduler_->outstanding_work_,
           this_thread_->private_outstanding_work - 1);
     }
@@ -88,8 +88,8 @@ struct scheduler::work_cleanup
 };
 
 scheduler::scheduler(
-    std::experimental::net::execution_context& ctx, int concurrency_hint)
-  : std::experimental::net::detail::execution_context_service_base<scheduler>(ctx),
+    std::experimental::net::v1::execution_context& ctx, int concurrency_hint)
+  : std::experimental::net::v1::detail::execution_context_service_base<scheduler>(ctx),
     one_thread_(concurrency_hint == 1
         || !NET_TS_CONCURRENCY_HINT_IS_LOCKING(
           SCHEDULER, concurrency_hint)

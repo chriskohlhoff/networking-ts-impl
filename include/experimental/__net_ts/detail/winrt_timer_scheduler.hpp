@@ -43,11 +43,11 @@ inline namespace v1 {
 namespace detail {
 
 class winrt_timer_scheduler
-  : public std::experimental::net::detail::service_base<winrt_timer_scheduler>
+  : public std::experimental::net::v1::detail::service_base<winrt_timer_scheduler>
 {
 public:
   // Constructor.
-  NET_TS_DECL winrt_timer_scheduler(std::experimental::net::io_context& io_context);
+  NET_TS_DECL winrt_timer_scheduler(std::experimental::net::v1::io_context& io_context);
 
   // Destructor.
   NET_TS_DECL ~winrt_timer_scheduler();
@@ -57,7 +57,7 @@ public:
 
   // Recreate internal descriptors following a fork.
   NET_TS_DECL void notify_fork(
-      std::experimental::net::io_context::fork_event fork_ev);
+      std::experimental::net::v1::io_context::fork_event fork_ev);
 
   // Initialise the task. No effect as this class uses its own thread.
   NET_TS_DECL void init_task();
@@ -107,16 +107,16 @@ private:
   io_context_impl& io_context_;
 
   // Mutex used to protect internal variables.
-  std::experimental::net::detail::mutex mutex_;
+  std::experimental::net::v1::detail::mutex mutex_;
 
   // Event used to wake up background thread.
-  std::experimental::net::detail::event event_;
+  std::experimental::net::v1::detail::event event_;
 
   // The timer queues.
   timer_queue_set timer_queues_;
 
   // The background thread that is waiting for timers to expire.
-  std::experimental::net::detail::thread* thread_;
+  std::experimental::net::v1::detail::thread* thread_;
 
   // Does the background thread need to stop.
   bool stop_thread_;

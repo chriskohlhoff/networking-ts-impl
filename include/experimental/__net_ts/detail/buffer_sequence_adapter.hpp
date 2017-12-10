@@ -40,11 +40,11 @@ protected:
 
   NET_TS_DECL static void init_native_buffer(
       native_buffer_type& buf,
-      const std::experimental::net::mutable_buffer& buffer);
+      const std::experimental::net::v1::mutable_buffer& buffer);
 
   NET_TS_DECL static void init_native_buffer(
       native_buffer_type& buf,
-      const std::experimental::net::const_buffer& buffer);
+      const std::experimental::net::v1::const_buffer& buffer);
 #elif defined(NET_TS_WINDOWS) || defined(__CYGWIN__)
 public:
   // The maximum number of buffers to support in a single operation.
@@ -54,14 +54,14 @@ protected:
   typedef WSABUF native_buffer_type;
 
   static void init_native_buffer(WSABUF& buf,
-      const std::experimental::net::mutable_buffer& buffer)
+      const std::experimental::net::v1::mutable_buffer& buffer)
   {
     buf.buf = static_cast<char*>(buffer.data());
     buf.len = static_cast<ULONG>(buffer.size());
   }
 
   static void init_native_buffer(WSABUF& buf,
-      const std::experimental::net::const_buffer& buffer)
+      const std::experimental::net::v1::const_buffer& buffer)
   {
     buf.buf = const_cast<char*>(static_cast<const char*>(buffer.data()));
     buf.len = static_cast<ULONG>(buffer.size());
@@ -86,14 +86,14 @@ protected:
   }
 
   static void init_native_buffer(iovec& iov,
-      const std::experimental::net::mutable_buffer& buffer)
+      const std::experimental::net::v1::mutable_buffer& buffer)
   {
     init_iov_base(iov.iov_base, buffer.data());
     iov.iov_len = buffer.size();
   }
 
   static void init_native_buffer(iovec& iov,
-      const std::experimental::net::const_buffer& buffer)
+      const std::experimental::net::v1::const_buffer& buffer)
   {
     init_iov_base(iov.iov_base, const_cast<void*>(buffer.data()));
     iov.iov_len = buffer.size();
@@ -111,8 +111,8 @@ public:
     : count_(0), total_buffer_size_(0)
   {
     buffer_sequence_adapter::init(
-        std::experimental::net::buffer_sequence_begin(buffer_sequence),
-        std::experimental::net::buffer_sequence_end(buffer_sequence));
+        std::experimental::net::v1::buffer_sequence_begin(buffer_sequence),
+        std::experimental::net::v1::buffer_sequence_end(buffer_sequence));
   }
 
   native_buffer_type* buffers()
@@ -138,22 +138,22 @@ public:
   static bool all_empty(const Buffers& buffer_sequence)
   {
     return buffer_sequence_adapter::all_empty(
-        std::experimental::net::buffer_sequence_begin(buffer_sequence),
-        std::experimental::net::buffer_sequence_end(buffer_sequence));
+        std::experimental::net::v1::buffer_sequence_begin(buffer_sequence),
+        std::experimental::net::v1::buffer_sequence_end(buffer_sequence));
   }
 
   static void validate(const Buffers& buffer_sequence)
   {
     buffer_sequence_adapter::validate(
-        std::experimental::net::buffer_sequence_begin(buffer_sequence),
-        std::experimental::net::buffer_sequence_end(buffer_sequence));
+        std::experimental::net::v1::buffer_sequence_begin(buffer_sequence),
+        std::experimental::net::v1::buffer_sequence_end(buffer_sequence));
   }
 
   static Buffer first(const Buffers& buffer_sequence)
   {
     return buffer_sequence_adapter::first(
-        std::experimental::net::buffer_sequence_begin(buffer_sequence),
-        std::experimental::net::buffer_sequence_end(buffer_sequence));
+        std::experimental::net::v1::buffer_sequence_begin(buffer_sequence),
+        std::experimental::net::v1::buffer_sequence_end(buffer_sequence));
   }
 
 private:
@@ -210,12 +210,12 @@ private:
 };
 
 template <typename Buffer>
-class buffer_sequence_adapter<Buffer, std::experimental::net::mutable_buffer>
+class buffer_sequence_adapter<Buffer, std::experimental::net::v1::mutable_buffer>
   : buffer_sequence_adapter_base
 {
 public:
   explicit buffer_sequence_adapter(
-      const std::experimental::net::mutable_buffer& buffer_sequence)
+      const std::experimental::net::v1::mutable_buffer& buffer_sequence)
   {
     init_native_buffer(buffer_, Buffer(buffer_sequence));
     total_buffer_size_ = buffer_sequence.size();
@@ -241,17 +241,17 @@ public:
     return total_buffer_size_ == 0;
   }
 
-  static bool all_empty(const std::experimental::net::mutable_buffer& buffer_sequence)
+  static bool all_empty(const std::experimental::net::v1::mutable_buffer& buffer_sequence)
   {
     return buffer_sequence.size() == 0;
   }
 
-  static void validate(const std::experimental::net::mutable_buffer& buffer_sequence)
+  static void validate(const std::experimental::net::v1::mutable_buffer& buffer_sequence)
   {
     buffer_sequence.data();
   }
 
-  static Buffer first(const std::experimental::net::mutable_buffer& buffer_sequence)
+  static Buffer first(const std::experimental::net::v1::mutable_buffer& buffer_sequence)
   {
     return Buffer(buffer_sequence);
   }
@@ -262,12 +262,12 @@ private:
 };
 
 template <typename Buffer>
-class buffer_sequence_adapter<Buffer, std::experimental::net::const_buffer>
+class buffer_sequence_adapter<Buffer, std::experimental::net::v1::const_buffer>
   : buffer_sequence_adapter_base
 {
 public:
   explicit buffer_sequence_adapter(
-      const std::experimental::net::const_buffer& buffer_sequence)
+      const std::experimental::net::v1::const_buffer& buffer_sequence)
   {
     init_native_buffer(buffer_, Buffer(buffer_sequence));
     total_buffer_size_ = buffer_sequence.size();
@@ -293,17 +293,17 @@ public:
     return total_buffer_size_ == 0;
   }
 
-  static bool all_empty(const std::experimental::net::const_buffer& buffer_sequence)
+  static bool all_empty(const std::experimental::net::v1::const_buffer& buffer_sequence)
   {
     return buffer_sequence.size() == 0;
   }
 
-  static void validate(const std::experimental::net::const_buffer& buffer_sequence)
+  static void validate(const std::experimental::net::v1::const_buffer& buffer_sequence)
   {
     buffer_sequence.data();
   }
 
-  static Buffer first(const std::experimental::net::const_buffer& buffer_sequence)
+  static Buffer first(const std::experimental::net::v1::const_buffer& buffer_sequence)
   {
     return Buffer(buffer_sequence);
   }

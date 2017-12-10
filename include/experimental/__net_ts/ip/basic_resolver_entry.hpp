@@ -29,7 +29,7 @@ namespace ip {
 
 /// An entry produced by a resolver.
 /**
- * The std::experimental::net::ip::basic_resolver_entry class template describes an entry
+ * The std::experimental::net::v1::ip::basic_resolver_entry class template describes an entry
  * as returned by a resolver.
  *
  * @par Thread Safety

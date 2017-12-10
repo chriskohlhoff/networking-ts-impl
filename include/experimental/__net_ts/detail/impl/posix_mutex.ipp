@@ -35,8 +35,8 @@ posix_mutex::posix_mutex()
 {
   int error = ::pthread_mutex_init(&mutex_, 0);
   std::error_code ec(error,
-      std::experimental::net::error::get_system_category());
-  std::experimental::net::detail::throw_error(ec, "mutex");
+      std::experimental::net::v1::error::get_system_category());
+  std::experimental::net::v1::detail::throw_error(ec, "mutex");
 }
 
 } // namespace detail

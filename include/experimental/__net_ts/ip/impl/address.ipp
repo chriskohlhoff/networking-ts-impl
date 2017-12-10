@@ -39,14 +39,14 @@ address::address()
 {
 }
 
-address::address(const std::experimental::net::ip::address_v4& ipv4_address)
+address::address(const std::experimental::net::v1::ip::address_v4& ipv4_address)
   : type_(ipv4),
     ipv4_address_(ipv4_address),
     ipv6_address_()
 {
 }
 
-address::address(const std::experimental::net::ip::address_v6& ipv6_address)
+address::address(const std::experimental::net::v1::ip::address_v6& ipv6_address)
   : type_(ipv6),
     ipv4_address_(),
     ipv6_address_(ipv6_address)
@@ -87,18 +87,18 @@ address& address::operator=(address&& other)
 }
 #endif // defined(NET_TS_HAS_MOVE)
 
-address& address::operator=(const std::experimental::net::ip::address_v4& ipv4_address)
+address& address::operator=(const std::experimental::net::v1::ip::address_v4& ipv4_address)
 {
   type_ = ipv4;
   ipv4_address_ = ipv4_address;
-  ipv6_address_ = std::experimental::net::ip::address_v6();
+  ipv6_address_ = std::experimental::net::v1::ip::address_v6();
   return *this;
 }
 
-address& address::operator=(const std::experimental::net::ip::address_v6& ipv6_address)
+address& address::operator=(const std::experimental::net::v1::ip::address_v6& ipv6_address)
 {
   type_ = ipv6;
-  ipv4_address_ = std::experimental::net::ip::address_v4();
+  ipv4_address_ = std::experimental::net::v1::ip::address_v4();
   ipv6_address_ = ipv6_address;
   return *this;
 }
@@ -107,19 +107,19 @@ address make_address(const char* str)
 {
   std::error_code ec;
   address addr = make_address(str, ec);
-  std::experimental::net::detail::throw_error(ec);
+  std::experimental::net::v1::detail::throw_error(ec);
   return addr;
 }
 
 address make_address(const char* str, std::error_code& ec)
 {
-  std::experimental::net::ip::address_v6 ipv6_address =
-    std::experimental::net::ip::make_address_v6(str, ec);
+  std::experimental::net::v1::ip::address_v6 ipv6_address =
+    std::experimental::net::v1::ip::make_address_v6(str, ec);
   if (!ec)
     return address(ipv6_address);
 
-  std::experimental::net::ip::address_v4 ipv4_address =
-    std::experimental::net::ip::make_address_v4(str, ec);
+  std::experimental::net::v1::ip::address_v4 ipv4_address =
+    std::experimental::net::v1::ip::make_address_v4(str, ec);
   if (!ec)
     return address(ipv4_address);
 
@@ -152,22 +152,22 @@ address make_address(string_view str,
 
 #endif // defined(NET_TS_HAS_STD_STRING_VIEW)
 
-std::experimental::net::ip::address_v4 address::to_v4() const
+std::experimental::net::v1::ip::address_v4 address::to_v4() const
 {
   if (type_ != ipv4)
   {
     bad_address_cast ex;
-    std::experimental::net::detail::throw_exception(ex);
+    std::experimental::net::v1::detail::throw_exception(ex);
   }
   return ipv4_address_;
 }
 
-std::experimental::net::ip::address_v6 address::to_v6() const
+std::experimental::net::v1::ip::address_v6 address::to_v6() const
 {
   if (type_ != ipv6)
   {
     bad_address_cast ex;
-    std::experimental::net::detail::throw_exception(ex);
+    std::experimental::net::v1::detail::throw_exception(ex);
   }
   return ipv6_address_;
 }

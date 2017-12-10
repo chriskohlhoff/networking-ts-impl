@@ -51,7 +51,7 @@ public:
     reactive_socket_sendto_op_base* o(
         static_cast<reactive_socket_sendto_op_base*>(base));
 
-    buffer_sequence_adapter<std::experimental::net::const_buffer,
+    buffer_sequence_adapter<std::experimental::net::v1::const_buffer,
         ConstBufferSequence> bufs(o->buffers_);
 
     status result = socket_ops::non_blocking_sendto(o->socket_,
@@ -95,7 +95,7 @@ public:
   {
     // Take ownership of the handler object.
     reactive_socket_sendto_op* o(static_cast<reactive_socket_sendto_op*>(base));
-    ptr p = { std::experimental::net::detail::addressof(o->handler_), o, o };
+    ptr p = { std::experimental::net::v1::detail::addressof(o->handler_), o, o };
     handler_work<Handler> w(o->handler_);
 
     NET_TS_HANDLER_COMPLETION((*o));
@@ -108,7 +108,7 @@ public:
     // deallocated the memory here.
     detail::binder2<Handler, std::error_code, std::size_t>
       handler(o->handler_, o->ec_, o->bytes_transferred_);
-    p.h = std::experimental::net::detail::addressof(handler.handler_);
+    p.h = std::experimental::net::v1::detail::addressof(handler.handler_);
     p.reset();
 
     // Make the upcall if required.

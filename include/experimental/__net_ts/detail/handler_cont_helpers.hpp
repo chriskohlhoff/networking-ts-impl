@@ -32,9 +32,9 @@ inline bool is_continuation(Context& context)
 #if !defined(NET_TS_HAS_HANDLER_HOOKS)
   return false;
 #else
-  using std::experimental::net::networking_ts_handler_is_continuation;
+  using std::experimental::net::v1::networking_ts_handler_is_continuation;
   return networking_ts_handler_is_continuation(
-      std::experimental::net::detail::addressof(context));
+      std::experimental::net::v1::detail::addressof(context));
 #endif
 }
 

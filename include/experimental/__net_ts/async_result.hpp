@@ -85,7 +85,7 @@ template <typename CompletionToken, typename Signature>
 struct async_completion
 {
   /// The real handler type to be used for the asynchronous operation.
-  typedef typename std::experimental::net::async_result<
+  typedef typename std::experimental::net::v1::async_result<
     typename decay<CompletionToken>::type,
       Signature>::completion_handler_type completion_handler_type;
 
@@ -150,18 +150,18 @@ struct async_result_helper
   void_or_deduced
 #elif defined(_MSC_VER) && (_MSC_VER < 1500)
 # define NET_TS_INITFN_RESULT_TYPE(ct, sig) \
-  typename ::std::experimental::net::detail::async_result_helper< \
+  typename ::std::experimental::net::v1::detail::async_result_helper< \
     ct, sig>::return_type
 #define NET_TS_HANDLER_TYPE(ct, sig) \
-  typename ::std::experimental::net::detail::async_result_helper< \
+  typename ::std::experimental::net::v1::detail::async_result_helper< \
     ct, sig>::completion_handler_type
 #else
 # define NET_TS_INITFN_RESULT_TYPE(ct, sig) \
-  typename ::std::experimental::net::async_result< \
-    typename ::std::experimental::net::decay<ct>::type, sig>::return_type
+  typename ::std::experimental::net::v1::async_result< \
+    typename ::std::experimental::net::v1::decay<ct>::type, sig>::return_type
 #define NET_TS_HANDLER_TYPE(ct, sig) \
-  typename ::std::experimental::net::async_result< \
-    typename ::std::experimental::net::decay<ct>::type, sig>::completion_handler_type
+  typename ::std::experimental::net::v1::async_result< \
+    typename ::std::experimental::net::v1::decay<ct>::type, sig>::completion_handler_type
 #endif
 
 #endif // NET_TS_ASYNC_RESULT_HPP

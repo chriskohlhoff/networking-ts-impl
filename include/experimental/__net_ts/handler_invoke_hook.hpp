@@ -24,7 +24,7 @@ namespace experimental {
 namespace net {
 inline namespace v1 {
 
-/** @defgroup networking_ts_handler_invoke std::experimental::net::networking_ts_handler_invoke
+/** @defgroup networking_ts_handler_invoke std::experimental::net::v1::networking_ts_handler_invoke
  *
  * @brief Default invoke function for handlers.
  *

@@ -37,7 +37,7 @@ struct is_executor
 #if defined(GENERATING_DOCUMENTATION)
   : integral_constant<bool, automatically_determined>
 #else // defined(GENERATING_DOCUMENTATION)
-  : std::experimental::net::detail::is_executor<T>
+  : std::experimental::net::v1::detail::is_executor<T>
 #endif // defined(GENERATING_DOCUMENTATION)
 {
 };

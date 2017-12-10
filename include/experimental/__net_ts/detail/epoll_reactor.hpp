@@ -81,7 +81,7 @@ public:
   typedef descriptor_state* per_descriptor_data;
 
   // Constructor.
-  NET_TS_DECL epoll_reactor(std::experimental::net::execution_context& ctx);
+  NET_TS_DECL epoll_reactor(std::experimental::net::v1::execution_context& ctx);
 
   // Destructor.
   NET_TS_DECL ~epoll_reactor();
@@ -91,7 +91,7 @@ public:
 
   // Recreate internal descriptors following a fork.
   NET_TS_DECL void notify_fork(
-      std::experimental::net::execution_context::fork_event fork_ev);
+      std::experimental::net::v1::execution_context::fork_event fork_ev);
 
   // Initialise the task.
   NET_TS_DECL void init_task();

@@ -67,7 +67,7 @@ public:
   };
 
   // Constructor.
-  NET_TS_DECL select_reactor(std::experimental::net::execution_context& ctx);
+  NET_TS_DECL select_reactor(std::experimental::net::v1::execution_context& ctx);
 
   // Destructor.
   NET_TS_DECL ~select_reactor();
@@ -77,7 +77,7 @@ public:
 
   // Recreate internal descriptors following a fork.
   NET_TS_DECL void notify_fork(
-      std::experimental::net::execution_context::fork_event fork_ev);
+      std::experimental::net::v1::execution_context::fork_event fork_ev);
 
   // Initialise the task, but only if the reactor is not in its own thread.
   NET_TS_DECL void init_task();
@@ -192,7 +192,7 @@ private:
   scheduler_type& scheduler_;
 
   // Mutex to protect access to internal data.
-  std::experimental::net::detail::mutex mutex_;
+  std::experimental::net::v1::detail::mutex mutex_;
 
   // The interrupter is used to break a blocking select call.
   select_interrupter interrupter_;
@@ -215,7 +215,7 @@ private:
   bool stop_thread_;
 
   // The thread that is running the reactor loop.
-  std::experimental::net::detail::thread* thread_;
+  std::experimental::net::v1::detail::thread* thread_;
 #endif // defined(NET_TS_HAS_IOCP)
 
   // Whether the service has been shut down.

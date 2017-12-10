@@ -308,7 +308,7 @@ private:
     if (!impl_)
     {
       bad_executor ex;
-      std::experimental::net::detail::throw_exception(ex);
+      std::experimental::net::v1::detail::throw_exception(ex);
     }
     return impl_;
   }
@@ -335,7 +335,7 @@ private:
 } // namespace experimental
 } // namespace std
 
-NET_TS_USES_ALLOCATOR(std::experimental::net::executor)
+NET_TS_USES_ALLOCATOR(std::experimental::net::v1::executor)
 
 #include <experimental/__net_ts/detail/pop_options.hpp>
 

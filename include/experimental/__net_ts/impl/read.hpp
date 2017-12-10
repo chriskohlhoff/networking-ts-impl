@@ -48,7 +48,7 @@ namespace detail
       CompletionCondition completion_condition, std::error_code& ec)
   {
     ec = std::error_code();
-    std::experimental::net::detail::consuming_buffers<mutable_buffer,
+    std::experimental::net::v1::detail::consuming_buffers<mutable_buffer,
         MutableBufferSequence, MutableBufferIterator> tmp(buffers);
     while (!tmp.empty())
     {
@@ -71,7 +71,7 @@ std::size_t read(SyncReadStream& s, const MutableBufferSequence& buffers,
     >::type*)
 {
   return detail::read_buffer_sequence(s, buffers,
-      std::experimental::net::buffer_sequence_begin(buffers), completion_condition, ec);
+      std::experimental::net::v1::buffer_sequence_begin(buffers), completion_condition, ec);
 }
 
 template <typename SyncReadStream, typename MutableBufferSequence>
@@ -82,7 +82,7 @@ inline std::size_t read(SyncReadStream& s, const MutableBufferSequence& buffers,
 {
   std::error_code ec;
   std::size_t bytes_transferred = read(s, buffers, transfer_all(), ec);
-  std::experimental::net::detail::throw_error(ec, "read");
+  std::experimental::net::v1::detail::throw_error(ec, "read");
   return bytes_transferred;
 }
 
@@ -106,7 +106,7 @@ inline std::size_t read(SyncReadStream& s, const MutableBufferSequence& buffers,
 {
   std::error_code ec;
   std::size_t bytes_transferred = read(s, buffers, completion_condition, ec);
-  std::experimental::net::detail::throw_error(ec, "read");
+  std::experimental::net::v1::detail::throw_error(ec, "read");
   return bytes_transferred;
 }
 
@@ -153,7 +153,7 @@ inline std::size_t read(SyncReadStream& s,
   std::error_code ec;
   std::size_t bytes_transferred = read(s,
       NET_TS_MOVE_CAST(DynamicBuffer)(buffers), transfer_all(), ec);
-  std::experimental::net::detail::throw_error(ec, "read");
+  std::experimental::net::v1::detail::throw_error(ec, "read");
   return bytes_transferred;
 }
 
@@ -182,7 +182,7 @@ inline std::size_t read(SyncReadStream& s,
   std::size_t bytes_transferred = read(s,
       NET_TS_MOVE_CAST(DynamicBuffer)(buffers),
       completion_condition, ec);
-  std::experimental::net::detail::throw_error(ec, "read");
+  std::experimental::net::v1::detail::throw_error(ec, "read");
   return bytes_transferred;
 }
 
@@ -251,7 +251,7 @@ namespace detail
 
   //private:
     AsyncReadStream& stream_;
-    std::experimental::net::detail::consuming_buffers<mutable_buffer,
+    std::experimental::net::v1::detail::consuming_buffers<mutable_buffer,
         MutableBufferSequence, MutableBufferIterator> buffers_;
     int start_;
     ReadHandler handler_;
@@ -388,7 +388,7 @@ async_read(AsyncReadStream& s, const MutableBufferSequence& buffers,
     void (std::error_code, std::size_t)> init(handler);
 
   detail::start_read_buffer_sequence_op(s, buffers,
-      std::experimental::net::buffer_sequence_begin(buffers), completion_condition,
+      std::experimental::net::v1::buffer_sequence_begin(buffers), completion_condition,
       init.completion_handler);
 
   return init.result.get();
@@ -412,7 +412,7 @@ async_read(AsyncReadStream& s, const MutableBufferSequence& buffers,
     void (std::error_code, std::size_t)> init(handler);
 
   detail::start_read_buffer_sequence_op(s, buffers,
-      std::experimental::net::buffer_sequence_begin(buffers), transfer_all(),
+      std::experimental::net::v1::buffer_sequence_begin(buffers), transfer_all(),
       init.completion_handler);
 
   return init.result.get();

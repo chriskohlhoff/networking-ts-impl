@@ -34,12 +34,12 @@ inline namespace v1 {
 namespace detail {
 
 class winrt_async_manager
-  : public std::experimental::net::detail::service_base<winrt_async_manager>
+  : public std::experimental::net::v1::detail::service_base<winrt_async_manager>
 {
 public:
   // Constructor.
-  winrt_async_manager(std::experimental::net::io_context& io_context)
-    : std::experimental::net::detail::service_base<winrt_async_manager>(io_context),
+  winrt_async_manager(std::experimental::net::v1::io_context& io_context)
+    : std::experimental::net::v1::detail::service_base<winrt_async_manager>(io_context),
       io_context_(use_service<io_context_impl>(io_context)),
       outstanding_ops_(1)
   {
@@ -76,7 +76,7 @@ public:
         switch (status)
         {
         case AsyncStatus::Canceled:
-          promise->set_value(std::experimental::net::error::operation_aborted);
+          promise->set_value(std::experimental::net::v1::error::operation_aborted);
           break;
         case AsyncStatus::Error:
         case AsyncStatus::Completed:
@@ -108,7 +108,7 @@ public:
         switch (status)
         {
         case AsyncStatus::Canceled:
-          promise->set_value(std::experimental::net::error::operation_aborted);
+          promise->set_value(std::experimental::net::v1::error::operation_aborted);
           break;
         case AsyncStatus::Error:
         case AsyncStatus::Completed:
@@ -145,7 +145,7 @@ public:
           switch (status)
           {
           case AsyncStatus::Canceled:
-            promise->set_value(std::experimental::net::error::operation_aborted);
+            promise->set_value(std::experimental::net::v1::error::operation_aborted);
             break;
           case AsyncStatus::Started:
             break;
@@ -176,7 +176,7 @@ public:
         switch (status)
         {
         case AsyncStatus::Canceled:
-          handler->ec_ = std::experimental::net::error::operation_aborted;
+          handler->ec_ = std::experimental::net::v1::error::operation_aborted;
           break;
         case AsyncStatus::Started:
           return;
@@ -211,7 +211,7 @@ public:
         switch (status)
         {
         case AsyncStatus::Canceled:
-          handler->ec_ = std::experimental::net::error::operation_aborted;
+          handler->ec_ = std::experimental::net::v1::error::operation_aborted;
           break;
         case AsyncStatus::Started:
           return;
@@ -252,7 +252,7 @@ public:
           switch (status)
           {
           case AsyncStatus::Canceled:
-            handler->ec_ = std::experimental::net::error::operation_aborted;
+            handler->ec_ = std::experimental::net::v1::error::operation_aborted;
             break;
           case AsyncStatus::Started:
             return;

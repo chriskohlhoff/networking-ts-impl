@@ -89,8 +89,8 @@ void eventfd_select_interrupter::open_descriptors()
     else
     {
       std::error_code ec(errno,
-          std::experimental::net::error::get_system_category());
-      std::experimental::net::detail::throw_error(ec, "eventfd_select_interrupter");
+          std::experimental::net::v1::error::get_system_category());
+      std::experimental::net::v1::detail::throw_error(ec, "eventfd_select_interrupter");
     }
   }
 }

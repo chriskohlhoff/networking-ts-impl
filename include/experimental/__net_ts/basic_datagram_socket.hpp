@@ -68,7 +68,7 @@ public:
    * to dispatch handlers for any asynchronous operations performed on the
    * socket.
    */
-  explicit basic_datagram_socket(std::experimental::net::io_context& io_context)
+  explicit basic_datagram_socket(std::experimental::net::v1::io_context& io_context)
     : basic_socket<Protocol NET_TS_SVC_TARG>(io_context)
   {
   }
@@ -85,7 +85,7 @@ public:
    *
    * @throws std::system_error Thrown on failure.
    */
-  basic_datagram_socket(std::experimental::net::io_context& io_context,
+  basic_datagram_socket(std::experimental::net::v1::io_context& io_context,
       const protocol_type& protocol)
     : basic_socket<Protocol NET_TS_SVC_TARG>(io_context, protocol)
   {
@@ -107,7 +107,7 @@ public:
    *
    * @throws std::system_error Thrown on failure.
    */
-  basic_datagram_socket(std::experimental::net::io_context& io_context,
+  basic_datagram_socket(std::experimental::net::v1::io_context& io_context,
       const endpoint_type& endpoint)
     : basic_socket<Protocol NET_TS_SVC_TARG>(io_context, endpoint)
   {
@@ -128,7 +128,7 @@ public:
    *
    * @throws std::system_error Thrown on failure.
    */
-  basic_datagram_socket(std::experimental::net::io_context& io_context,
+  basic_datagram_socket(std::experimental::net::v1::io_context& io_context,
       const protocol_type& protocol, const native_handle_type& native_socket)
     : basic_socket<Protocol NET_TS_SVC_TARG>(
         io_context, protocol, native_socket)
@@ -235,7 +235,7 @@ public:
    *
    * @par Example
    * To send a single data buffer use the @ref buffer function as follows:
-   * @code socket.send(std::experimental::net::buffer(data, size)); @endcode
+   * @code socket.send(std::experimental::net::v1::buffer(data, size)); @endcode
    * See the @ref buffer documentation for information on sending multiple
    * buffers in one go, and how to use it with arrays, boost::array or
    * std::vector.
@@ -246,7 +246,7 @@ public:
     std::error_code ec;
     std::size_t s = this->get_service().send(
         this->get_implementation(), buffers, 0, ec);
-    std::experimental::net::detail::throw_error(ec, "send");
+    std::experimental::net::v1::detail::throw_error(ec, "send");
     return s;
   }
 
@@ -274,7 +274,7 @@ public:
     std::error_code ec;
     std::size_t s = this->get_service().send(
         this->get_implementation(), buffers, flags, ec);
-    std::experimental::net::detail::throw_error(ec, "send");
+    std::experimental::net::v1::detail::throw_error(ec, "send");
     return s;
   }
 
@@ -323,7 +323,7 @@ public:
    * Regardless of whether the asynchronous operation completes immediately or
    * not, the handler will not be invoked from within this function. Invocation
    * of the handler will be performed in a manner equivalent to using
-   * std::experimental::net::io_context::post().
+   * std::experimental::net::v1::io_context::post().
    *
    * @note The async_send operation can only be used with a connected socket.
    * Use the async_send_to function to send data on an unconnected datagram
@@ -332,7 +332,7 @@ public:
    * @par Example
    * To send a single data buffer use the @ref buffer function as follows:
    * @code
-   * socket.async_send(std::experimental::net::buffer(data, size), handler);
+   * socket.async_send(std::experimental::net::v1::buffer(data, size), handler);
    * @endcode
    * See the @ref buffer documentation for information on sending multiple
    * buffers in one go, and how to use it with arrays, boost::array or
@@ -379,7 +379,7 @@ public:
    * Regardless of whether the asynchronous operation completes immediately or
    * not, the handler will not be invoked from within this function. Invocation
    * of the handler will be performed in a manner equivalent to using
-   * std::experimental::net::io_context::post().
+   * std::experimental::net::v1::io_context::post().
    *
    * @note The async_send operation can only be used with a connected socket.
    * Use the async_send_to function to send data on an unconnected datagram
@@ -422,9 +422,9 @@ public:
    * @par Example
    * To send a single data buffer use the @ref buffer function as follows:
    * @code
-   * std::experimental::net::ip::udp::endpoint destination(
-   *     std::experimental::net::ip::address::from_string("1.2.3.4"), 12345);
-   * socket.send_to(std::experimental::net::buffer(data, size), destination);
+   * std::experimental::net::v1::ip::udp::endpoint destination(
+   *     std::experimental::net::v1::ip::address::from_string("1.2.3.4"), 12345);
+   * socket.send_to(std::experimental::net::v1::buffer(data, size), destination);
    * @endcode
    * See the @ref buffer documentation for information on sending multiple
    * buffers in one go, and how to use it with arrays, boost::array or
@@ -437,7 +437,7 @@ public:
     std::error_code ec;
     std::size_t s = this->get_service().send_to(
         this->get_implementation(), buffers, destination, 0, ec);
-    std::experimental::net::detail::throw_error(ec, "send_to");
+    std::experimental::net::v1::detail::throw_error(ec, "send_to");
     return s;
   }
 
@@ -464,7 +464,7 @@ public:
     std::error_code ec;
     std::size_t s = this->get_service().send_to(
         this->get_implementation(), buffers, destination, flags, ec);
-    std::experimental::net::detail::throw_error(ec, "send_to");
+    std::experimental::net::v1::detail::throw_error(ec, "send_to");
     return s;
   }
 
@@ -516,15 +516,15 @@ public:
    * Regardless of whether the asynchronous operation completes immediately or
    * not, the handler will not be invoked from within this function. Invocation
    * of the handler will be performed in a manner equivalent to using
-   * std::experimental::net::io_context::post().
+   * std::experimental::net::v1::io_context::post().
    *
    * @par Example
    * To send a single data buffer use the @ref buffer function as follows:
    * @code
-   * std::experimental::net::ip::udp::endpoint destination(
-   *     std::experimental::net::ip::address::from_string("1.2.3.4"), 12345);
+   * std::experimental::net::v1::ip::udp::endpoint destination(
+   *     std::experimental::net::v1::ip::address::from_string("1.2.3.4"), 12345);
    * socket.async_send_to(
-   *     std::experimental::net::buffer(data, size), destination, handler);
+   *     std::experimental::net::v1::buffer(data, size), destination, handler);
    * @endcode
    * See the @ref buffer documentation for information on sending multiple
    * buffers in one go, and how to use it with arrays, boost::array or
@@ -576,7 +576,7 @@ public:
    * Regardless of whether the asynchronous operation completes immediately or
    * not, the handler will not be invoked from within this function. Invocation
    * of the handler will be performed in a manner equivalent to using
-   * std::experimental::net::io_context::post().
+   * std::experimental::net::v1::io_context::post().
    */
   template <typename ConstBufferSequence, typename WriteHandler>
   NET_TS_INITFN_RESULT_TYPE(WriteHandler,
@@ -618,7 +618,7 @@ public:
    * @par Example
    * To receive into a single data buffer use the @ref buffer function as
    * follows:
-   * @code socket.receive(std::experimental::net::buffer(data, size)); @endcode
+   * @code socket.receive(std::experimental::net::v1::buffer(data, size)); @endcode
    * See the @ref buffer documentation for information on receiving into
    * multiple buffers in one go, and how to use it with arrays, boost::array or
    * std::vector.
@@ -629,7 +629,7 @@ public:
     std::error_code ec;
     std::size_t s = this->get_service().receive(
         this->get_implementation(), buffers, 0, ec);
-    std::experimental::net::detail::throw_error(ec, "receive");
+    std::experimental::net::v1::detail::throw_error(ec, "receive");
     return s;
   }
 
@@ -658,7 +658,7 @@ public:
     std::error_code ec;
     std::size_t s = this->get_service().receive(
         this->get_implementation(), buffers, flags, ec);
-    std::experimental::net::detail::throw_error(ec, "receive");
+    std::experimental::net::v1::detail::throw_error(ec, "receive");
     return s;
   }
 
@@ -708,7 +708,7 @@ public:
    * Regardless of whether the asynchronous operation completes immediately or
    * not, the handler will not be invoked from within this function. Invocation
    * of the handler will be performed in a manner equivalent to using
-   * std::experimental::net::io_context::post().
+   * std::experimental::net::v1::io_context::post().
    *
    * @note The async_receive operation can only be used with a connected socket.
    * Use the async_receive_from function to receive data on an unconnected
@@ -718,7 +718,7 @@ public:
    * To receive into a single data buffer use the @ref buffer function as
    * follows:
    * @code
-   * socket.async_receive(std::experimental::net::buffer(data, size), handler);
+   * socket.async_receive(std::experimental::net::v1::buffer(data, size), handler);
    * @endcode
    * See the @ref buffer documentation for information on receiving into
    * multiple buffers in one go, and how to use it with arrays, boost::array or
@@ -765,7 +765,7 @@ public:
    * Regardless of whether the asynchronous operation completes immediately or
    * not, the handler will not be invoked from within this function. Invocation
    * of the handler will be performed in a manner equivalent to using
-   * std::experimental::net::io_context::post().
+   * std::experimental::net::v1::io_context::post().
    *
    * @note The async_receive operation can only be used with a connected socket.
    * Use the async_receive_from function to receive data on an unconnected
@@ -809,9 +809,9 @@ public:
    * To receive into a single data buffer use the @ref buffer function as
    * follows:
    * @code
-   * std::experimental::net::ip::udp::endpoint sender_endpoint;
+   * std::experimental::net::v1::ip::udp::endpoint sender_endpoint;
    * socket.receive_from(
-   *     std::experimental::net::buffer(data, size), sender_endpoint);
+   *     std::experimental::net::v1::buffer(data, size), sender_endpoint);
    * @endcode
    * See the @ref buffer documentation for information on receiving into
    * multiple buffers in one go, and how to use it with arrays, boost::array or
@@ -824,7 +824,7 @@ public:
     std::error_code ec;
     std::size_t s = this->get_service().receive_from(
         this->get_implementation(), buffers, sender_endpoint, 0, ec);
-    std::experimental::net::detail::throw_error(ec, "receive_from");
+    std::experimental::net::v1::detail::throw_error(ec, "receive_from");
     return s;
   }
   
@@ -851,7 +851,7 @@ public:
     std::error_code ec;
     std::size_t s = this->get_service().receive_from(
         this->get_implementation(), buffers, sender_endpoint, flags, ec);
-    std::experimental::net::detail::throw_error(ec, "receive_from");
+    std::experimental::net::v1::detail::throw_error(ec, "receive_from");
     return s;
   }
   
@@ -905,13 +905,13 @@ public:
    * Regardless of whether the asynchronous operation completes immediately or
    * not, the handler will not be invoked from within this function. Invocation
    * of the handler will be performed in a manner equivalent to using
-   * std::experimental::net::io_context::post().
+   * std::experimental::net::v1::io_context::post().
    *
    * @par Example
    * To receive into a single data buffer use the @ref buffer function as
    * follows:
    * @code socket.async_receive_from(
-   *     std::experimental::net::buffer(data, size), sender_endpoint, handler); @endcode
+   *     std::experimental::net::v1::buffer(data, size), sender_endpoint, handler); @endcode
    * See the @ref buffer documentation for information on receiving into
    * multiple buffers in one go, and how to use it with arrays, boost::array or
    * std::vector.
@@ -964,7 +964,7 @@ public:
    * Regardless of whether the asynchronous operation completes immediately or
    * not, the handler will not be invoked from within this function. Invocation
    * of the handler will be performed in a manner equivalent to using
-   * std::experimental::net::io_context::post().
+   * std::experimental::net::v1::io_context::post().
    */
   template <typename MutableBufferSequence, typename ReadHandler>
   NET_TS_INITFN_RESULT_TYPE(ReadHandler,

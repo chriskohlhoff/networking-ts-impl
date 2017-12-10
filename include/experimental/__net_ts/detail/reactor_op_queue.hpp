@@ -75,7 +75,7 @@ public:
   // restarted.
   bool cancel_operations(iterator i, op_queue<operation>& ops,
       const std::error_code& ec =
-        std::experimental::net::error::operation_aborted)
+        std::experimental::net::v1::error::operation_aborted)
   {
     if (i != operations_.end())
     {
@@ -98,7 +98,7 @@ public:
   // demultiplexing function may need to be interrupted and restarted.
   bool cancel_operations(Descriptor descriptor, op_queue<operation>& ops,
       const std::error_code& ec =
-        std::experimental::net::error::operation_aborted)
+        std::experimental::net::v1::error::operation_aborted)
   {
     return this->cancel_operations(operations_.find(descriptor), ops, ec);
   }

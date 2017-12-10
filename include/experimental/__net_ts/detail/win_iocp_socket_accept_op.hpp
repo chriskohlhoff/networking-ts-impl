@@ -83,7 +83,7 @@ public:
 
     // Take ownership of the operation object.
     win_iocp_socket_accept_op* o(static_cast<win_iocp_socket_accept_op*>(base));
-    ptr p = { std::experimental::net::detail::addressof(o->handler_), o, o };
+    ptr p = { std::experimental::net::v1::detail::addressof(o->handler_), o, o };
     handler_work<Handler> w(o->handler_);
 
     if (owner)
@@ -97,7 +97,7 @@ public:
 
       // Restart the accept operation if we got the connection_aborted error
       // and the enable_connection_aborted socket option is not set.
-      if (ec == std::experimental::net::error::connection_aborted
+      if (ec == std::experimental::net::v1::error::connection_aborted
           && !o->enable_connection_aborted_)
       {
         o->reset();
@@ -135,7 +135,7 @@ public:
     // deallocated the memory here.
     detail::binder1<Handler, std::error_code>
       handler(o->handler_, ec);
-    p.h = std::experimental::net::detail::addressof(handler.handler_);
+    p.h = std::experimental::net::v1::detail::addressof(handler.handler_);
     p.reset();
 
     // Make the upcall if required.
@@ -170,7 +170,7 @@ public:
 
   win_iocp_socket_move_accept_op(
       win_iocp_socket_service_base& socket_service, socket_type socket,
-      const Protocol& protocol, std::experimental::net::io_context& peer_io_context,
+      const Protocol& protocol, std::experimental::net::v1::io_context& peer_io_context,
       typename Protocol::endpoint* peer_endpoint,
       bool enable_connection_aborted, Handler& handler)
     : operation(&win_iocp_socket_move_accept_op::do_complete),
@@ -209,7 +209,7 @@ public:
     // Take ownership of the operation object.
     win_iocp_socket_move_accept_op* o(
         static_cast<win_iocp_socket_move_accept_op*>(base));
-    ptr p = { std::experimental::net::detail::addressof(o->handler_), o, o };
+    ptr p = { std::experimental::net::v1::detail::addressof(o->handler_), o, o };
     handler_work<Handler> w(o->handler_);
 
     if (owner)
@@ -223,7 +223,7 @@ public:
 
       // Restart the accept operation if we got the connection_aborted error
       // and the enable_connection_aborted socket option is not set.
-      if (ec == std::experimental::net::error::connection_aborted
+      if (ec == std::experimental::net::v1::error::connection_aborted
           && !o->enable_connection_aborted_)
       {
         o->reset();
@@ -263,7 +263,7 @@ public:
       std::error_code, typename Protocol::socket>
         handler(0, NET_TS_MOVE_CAST(Handler)(o->handler_), ec,
           NET_TS_MOVE_CAST(typename Protocol::socket)(o->peer_));
-    p.h = std::experimental::net::detail::addressof(handler.handler_);
+    p.h = std::experimental::net::v1::detail::addressof(handler.handler_);
     p.reset();
 
     // Make the upcall if required.

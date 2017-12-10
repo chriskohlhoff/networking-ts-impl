@@ -56,7 +56,7 @@ public:
   {
     // Take ownership of the operation object.
     winrt_socket_send_op* o(static_cast<winrt_socket_send_op*>(base));
-    ptr p = { std::experimental::net::detail::addressof(o->handler_), o, o };
+    ptr p = { std::experimental::net::v1::detail::addressof(o->handler_), o, o };
     handler_work<Handler> w(o->handler_);
 
     NET_TS_HANDLER_COMPLETION((*o));
@@ -65,7 +65,7 @@ public:
     // Check whether buffers are still valid.
     if (owner)
     {
-      buffer_sequence_adapter<std::experimental::net::const_buffer,
+      buffer_sequence_adapter<std::experimental::net::v1::const_buffer,
           ConstBufferSequence>::validate(o->buffers_);
     }
 #endif // defined(NET_TS_ENABLE_BUFFER_DEBUGGING)
@@ -78,7 +78,7 @@ public:
     // deallocated the memory here.
     detail::binder2<Handler, std::error_code, std::size_t>
       handler(o->handler_, o->ec_, o->result_);
-    p.h = std::experimental::net::detail::addressof(handler.handler_);
+    p.h = std::experimental::net::v1::detail::addressof(handler.handler_);
     p.reset();
 
     // Make the upcall if required.

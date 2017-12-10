@@ -62,7 +62,7 @@ struct handler_tracking_timestamp
       boost::posix_time::microsec_clock::universal_time() - epoch;
 #elif defined(NET_TS_HAS_CHRONO)
     typedef chrono_time_traits<chrono::system_clock,
-        std::experimental::net::wait_traits<chrono::system_clock> > traits_helper;
+        std::experimental::net::v1::wait_traits<chrono::system_clock> > traits_helper;
     traits_helper::posix_time_duration now(
         chrono::system_clock::now().time_since_epoch());
 #endif

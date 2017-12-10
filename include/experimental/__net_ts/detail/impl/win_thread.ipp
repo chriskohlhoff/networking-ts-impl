@@ -74,8 +74,8 @@ void win_thread::start_thread(func_base* arg, unsigned int stack_size)
     DWORD last_error = ::GetLastError();
     delete arg;
     std::error_code ec(last_error,
-        std::experimental::net::error::get_system_category());
-    std::experimental::net::detail::throw_error(ec, "thread.entry_event");
+        std::experimental::net::v1::error::get_system_category());
+    std::experimental::net::v1::detail::throw_error(ec, "thread.entry_event");
   }
 
   arg->exit_event_ = exit_event_ = ::CreateEventW(0, true, false, 0);
@@ -84,8 +84,8 @@ void win_thread::start_thread(func_base* arg, unsigned int stack_size)
     DWORD last_error = ::GetLastError();
     delete arg;
     std::error_code ec(last_error,
-        std::experimental::net::error::get_system_category());
-    std::experimental::net::detail::throw_error(ec, "thread.exit_event");
+        std::experimental::net::v1::error::get_system_category());
+    std::experimental::net::v1::detail::throw_error(ec, "thread.exit_event");
   }
 
   unsigned int thread_id = 0;
@@ -100,8 +100,8 @@ void win_thread::start_thread(func_base* arg, unsigned int stack_size)
     if (exit_event_)
       ::CloseHandle(exit_event_);
     std::error_code ec(last_error,
-        std::experimental::net::error::get_system_category());
-    std::experimental::net::detail::throw_error(ec, "thread");
+        std::experimental::net::v1::error::get_system_category());
+    std::experimental::net::v1::detail::throw_error(ec, "thread");
   }
 
   if (entry_event)

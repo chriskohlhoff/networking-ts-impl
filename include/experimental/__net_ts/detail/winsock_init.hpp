@@ -84,7 +84,7 @@ public:
   //   #pragma warning(push)
   //   #pragma warning(disable:4073)
   //   #pragma init_seg(lib)
-  //   std::experimental::net::detail::winsock_init<>::manual manual_winsock_init;
+  //   std::experimental::net::v1::detail::winsock_init<>::manual manual_winsock_init;
   //   #pragma warning(pop)
   class manual
   {

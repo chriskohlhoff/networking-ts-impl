@@ -44,8 +44,8 @@ DWORD win_tss_ptr_create()
   {
     DWORD last_error = ::GetLastError();
     std::error_code ec(last_error,
-        std::experimental::net::error::get_system_category());
-    std::experimental::net::detail::throw_error(ec, "tss");
+        std::experimental::net::v1::error::get_system_category());
+    std::experimental::net::v1::detail::throw_error(ec, "tss");
   }
   return tss_key;
 }

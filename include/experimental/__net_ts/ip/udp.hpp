@@ -33,7 +33,7 @@ namespace ip {
 
 /// Encapsulates the flags needed for UDP.
 /**
- * The std::experimental::net::ip::udp class contains flags necessary for UDP sockets.
+ * The std::experimental::net::v1::ip::udp class contains flags necessary for UDP sockets.
  *
  * @par Thread Safety
  * @e Distinct @e objects: Safe.@n

@@ -49,13 +49,13 @@ public:
   typedef typename Protocol::endpoint endpoint_type;
 
   // The query type.
-  typedef std::experimental::net::ip::basic_resolver_query<Protocol> query_type;
+  typedef std::experimental::net::v1::ip::basic_resolver_query<Protocol> query_type;
 
   // The results type.
-  typedef std::experimental::net::ip::basic_resolver_results<Protocol> results_type;
+  typedef std::experimental::net::v1::ip::basic_resolver_results<Protocol> results_type;
 
   // Constructor.
-  resolver_service(std::experimental::net::io_context& io_context)
+  resolver_service(std::experimental::net::v1::io_context& io_context)
     : service_base<resolver_service<Protocol> >(io_context),
       resolver_service_base(io_context)
   {
@@ -68,7 +68,7 @@ public:
   }
 
   // Perform any fork-related housekeeping.
-  void notify_fork(std::experimental::net::io_context::fork_event fork_ev)
+  void notify_fork(std::experimental::net::v1::io_context::fork_event fork_ev)
   {
     this->base_notify_fork(fork_ev);
   }
@@ -77,7 +77,7 @@ public:
   results_type resolve(implementation_type&, const query_type& query,
       std::error_code& ec)
   {
-    std::experimental::net::detail::addrinfo_type* address_info = 0;
+    std::experimental::net::v1::detail::addrinfo_type* address_info = 0;
 
     socket_ops::getaddrinfo(query.host_name().c_str(),
         query.service_name().c_str(), query.hints(), &address_info, ec);
@@ -94,7 +94,7 @@ public:
   {
     // Allocate and construct an operation to wrap the handler.
     typedef resolve_query_op<Protocol, Handler> op;
-    typename op::ptr p = { std::experimental::net::detail::addressof(handler),
+    typename op::ptr p = { std::experimental::net::v1::detail::addressof(handler),
       op::ptr::allocate(handler), 0 };
     p.p = new (p.v) op(impl, query, io_context_impl_, handler);
 
@@ -126,7 +126,7 @@ public:
   {
     // Allocate and construct an operation to wrap the handler.
     typedef resolve_endpoint_op<Protocol, Handler> op;
-    typename op::ptr p = { std::experimental::net::detail::addressof(handler),
+    typename op::ptr p = { std::experimental::net::v1::detail::addressof(handler),
       op::ptr::allocate(handler), 0 };
     p.p = new (p.v) op(impl, endpoint, io_context_impl_, handler);
 

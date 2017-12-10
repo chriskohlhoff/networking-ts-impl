@@ -112,7 +112,7 @@ typename Protocol::endpoint connect(
 {
   std::error_code ec;
   typename Protocol::endpoint result = connect(s, endpoints, ec);
-  std::experimental::net::detail::throw_error(ec, "connect");
+  std::experimental::net::v1::detail::throw_error(ec, "connect");
   return result;
 }
 
@@ -134,7 +134,7 @@ Iterator connect(basic_socket<Protocol NET_TS_SVC_TARG>& s,
 {
   std::error_code ec;
   Iterator result = connect(s, begin, end, ec);
-  std::experimental::net::detail::throw_error(ec, "connect");
+  std::experimental::net::v1::detail::throw_error(ec, "connect");
   return result;
 }
 
@@ -156,7 +156,7 @@ typename Protocol::endpoint connect(
   std::error_code ec;
   typename Protocol::endpoint result = connect(
       s, endpoints, connect_condition, ec);
-  std::experimental::net::detail::throw_error(ec, "connect");
+  std::experimental::net::v1::detail::throw_error(ec, "connect");
   return result;
 }
 
@@ -181,7 +181,7 @@ Iterator connect(basic_socket<Protocol NET_TS_SVC_TARG>& s,
 {
   std::error_code ec;
   Iterator result = connect(s, begin, end, connect_condition, ec);
-  std::experimental::net::detail::throw_error(ec, "connect");
+  std::experimental::net::v1::detail::throw_error(ec, "connect");
   return result;
 }
 
@@ -208,7 +208,7 @@ Iterator connect(basic_socket<Protocol NET_TS_SVC_TARG>& s,
   }
 
   if (!ec)
-    ec = std::experimental::net::error::not_found;
+    ec = std::experimental::net::v1::error::not_found;
 
   return end;
 }
@@ -319,8 +319,8 @@ namespace detail
 
           if (start)
           {
-            ec = std::experimental::net::error::not_found;
-            std::experimental::net::post(socket_.get_executor(),
+            ec = std::experimental::net::v1::error::not_found;
+            std::experimental::net::v1::post(socket_.get_executor(),
                 detail::bind_handler(
                   NET_TS_MOVE_CAST(range_connect_op)(*this), ec));
             return;
@@ -333,7 +333,7 @@ namespace detail
 
           if (!socket_.is_open())
           {
-            ec = std::experimental::net::error::operation_aborted;
+            ec = std::experimental::net::v1::error::operation_aborted;
             break;
           }
 
@@ -472,8 +472,8 @@ namespace detail
 
           if (start)
           {
-            ec = std::experimental::net::error::not_found;
-            std::experimental::net::post(socket_.get_executor(),
+            ec = std::experimental::net::v1::error::not_found;
+            std::experimental::net::v1::post(socket_.get_executor(),
                 detail::bind_handler(
                   NET_TS_MOVE_CAST(iterator_connect_op)(*this), ec));
             return;
@@ -486,7 +486,7 @@ namespace detail
 
           if (!socket_.is_open())
           {
-            ec = std::experimental::net::error::operation_aborted;
+            ec = std::experimental::net::v1::error::operation_aborted;
             break;
           }
 

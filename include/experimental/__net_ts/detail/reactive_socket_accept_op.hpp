@@ -111,7 +111,7 @@ public:
   {
     // Take ownership of the handler object.
     reactive_socket_accept_op* o(static_cast<reactive_socket_accept_op*>(base));
-    ptr p = { std::experimental::net::detail::addressof(o->handler_), o, o };
+    ptr p = { std::experimental::net::v1::detail::addressof(o->handler_), o, o };
     handler_work<Handler> w(o->handler_);
 
     // On success, assign new connection to peer socket object.
@@ -128,7 +128,7 @@ public:
     // deallocated the memory here.
     detail::binder1<Handler, std::error_code>
       handler(o->handler_, o->ec_);
-    p.h = std::experimental::net::detail::addressof(handler.handler_);
+    p.h = std::experimental::net::v1::detail::addressof(handler.handler_);
     p.reset();
 
     // Make the upcall if required.
@@ -174,7 +174,7 @@ public:
     // Take ownership of the handler object.
     reactive_socket_move_accept_op* o(
         static_cast<reactive_socket_move_accept_op*>(base));
-    ptr p = { std::experimental::net::detail::addressof(o->handler_), o, o };
+    ptr p = { std::experimental::net::v1::detail::addressof(o->handler_), o, o };
     handler_work<Handler> w(o->handler_);
 
     // On success, assign new connection to peer socket object.
@@ -193,7 +193,7 @@ public:
       std::error_code, typename Protocol::socket>
         handler(0, NET_TS_MOVE_CAST(Handler)(o->handler_), o->ec_,
           NET_TS_MOVE_CAST(typename Protocol::socket)(*o));
-    p.h = std::experimental::net::detail::addressof(handler.handler_);
+    p.h = std::experimental::net::v1::detail::addressof(handler.handler_);
     p.reset();
 
     // Make the upcall if required.

@@ -43,7 +43,7 @@ public:
   typedef socket_ops::shared_cancel_token_type implementation_type;
 
   // Constructor.
-  NET_TS_DECL resolver_service_base(std::experimental::net::io_context& io_context);
+  NET_TS_DECL resolver_service_base(std::experimental::net::v1::io_context& io_context);
 
   // Destructor.
   NET_TS_DECL ~resolver_service_base();
@@ -53,7 +53,7 @@ public:
 
   // Perform any fork-related housekeeping.
   NET_TS_DECL void base_notify_fork(
-      std::experimental::net::io_context::fork_event fork_ev);
+      std::experimental::net::v1::io_context::fork_event fork_ev);
 
   // Construct a new resolver implementation.
   NET_TS_DECL void construct(implementation_type& impl);
@@ -80,10 +80,10 @@ protected:
 #if !defined(NET_TS_WINDOWS_RUNTIME)
   // Helper class to perform exception-safe cleanup of addrinfo objects.
   class auto_addrinfo
-    : private std::experimental::net::detail::noncopyable
+    : private std::experimental::net::v1::detail::noncopyable
   {
   public:
-    explicit auto_addrinfo(std::experimental::net::detail::addrinfo_type* ai)
+    explicit auto_addrinfo(std::experimental::net::v1::detail::addrinfo_type* ai)
       : ai_(ai)
     {
     }
@@ -94,13 +94,13 @@ protected:
         socket_ops::freeaddrinfo(ai_);
     }
 
-    operator std::experimental::net::detail::addrinfo_type*()
+    operator std::experimental::net::v1::detail::addrinfo_type*()
     {
       return ai_;
     }
 
   private:
-    std::experimental::net::detail::addrinfo_type* ai_;
+    std::experimental::net::v1::detail::addrinfo_type* ai_;
   };
 #endif // !defined(NET_TS_WINDOWS_RUNTIME)
 
@@ -115,20 +115,20 @@ protected:
 
 private:
   // Mutex to protect access to internal data.
-  std::experimental::net::detail::mutex mutex_;
+  std::experimental::net::v1::detail::mutex mutex_;
 
   // Private io_context used for performing asynchronous host resolution.
-  std::experimental::net::detail::scoped_ptr<std::experimental::net::io_context> work_io_context_;
+  std::experimental::net::v1::detail::scoped_ptr<std::experimental::net::v1::io_context> work_io_context_;
 
   // The work io_context implementation used to post completions.
   io_context_impl& work_io_context_impl_;
 
   // Work for the private io_context to perform.
-  std::experimental::net::executor_work_guard<
-      std::experimental::net::io_context::executor_type> work_;
+  std::experimental::net::v1::executor_work_guard<
+      std::experimental::net::v1::io_context::executor_type> work_;
 
   // Thread used for running the work io_context's run loop.
-  std::experimental::net::detail::scoped_ptr<std::experimental::net::detail::thread> work_thread_;
+  std::experimental::net::v1::detail::scoped_ptr<std::experimental::net::v1::detail::thread> work_thread_;
 };
 
 } // namespace detail

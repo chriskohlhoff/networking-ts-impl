@@ -42,8 +42,8 @@ class resolve_query_op : public resolve_op
 public:
   NET_TS_DEFINE_HANDLER_PTR(resolve_query_op);
 
-  typedef std::experimental::net::ip::basic_resolver_query<Protocol> query_type;
-  typedef std::experimental::net::ip::basic_resolver_results<Protocol> results_type;
+  typedef std::experimental::net::v1::ip::basic_resolver_query<Protocol> query_type;
+  typedef std::experimental::net::v1::ip::basic_resolver_results<Protocol> results_type;
 
   resolve_query_op(socket_ops::weak_cancel_token_type cancel_token,
       const query_type& query, io_context_impl& ioc, Handler& handler)
@@ -69,7 +69,7 @@ public:
   {
     // Take ownership of the operation object.
     resolve_query_op* o(static_cast<resolve_query_op*>(base));
-    ptr p = { std::experimental::net::detail::addressof(o->handler_), o, o };
+    ptr p = { std::experimental::net::v1::detail::addressof(o->handler_), o, o };
 
     if (owner && owner != &o->io_context_impl_)
     {
@@ -103,7 +103,7 @@ public:
       // after we have deallocated the memory here.
       detail::binder2<Handler, std::error_code, results_type>
         handler(o->handler_, o->ec_, results_type());
-      p.h = std::experimental::net::detail::addressof(handler.handler_);
+      p.h = std::experimental::net::v1::detail::addressof(handler.handler_);
       if (o->addrinfo_)
       {
         handler.arg2_ = results_type::create(o->addrinfo_,
@@ -126,7 +126,7 @@ private:
   query_type query_;
   io_context_impl& io_context_impl_;
   Handler handler_;
-  std::experimental::net::detail::addrinfo_type* addrinfo_;
+  std::experimental::net::v1::detail::addrinfo_type* addrinfo_;
 };
 
 } // namespace detail

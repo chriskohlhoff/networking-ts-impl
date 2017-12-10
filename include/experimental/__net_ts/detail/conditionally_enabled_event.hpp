@@ -104,7 +104,7 @@ public:
   }
 
 private:
-  std::experimental::net::detail::event event_;
+  std::experimental::net::v1::detail::event event_;
 };
 
 } // namespace detail

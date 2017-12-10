@@ -30,7 +30,7 @@ namespace ip {
 
 /// An query to be passed to a resolver.
 /**
- * The std::experimental::net::ip::basic_resolver_query class template describes a query
+ * The std::experimental::net::v1::ip::basic_resolver_query class template describes a query
  * that can be passed to a resolver.
  *
  * @par Thread Safety
@@ -216,7 +216,7 @@ public:
   }
 
   /// Get the hints associated with the query.
-  const std::experimental::net::detail::addrinfo_type& hints() const
+  const std::experimental::net::v1::detail::addrinfo_type& hints() const
   {
     return hints_;
   }
@@ -234,7 +234,7 @@ public:
   }
 
 private:
-  std::experimental::net::detail::addrinfo_type hints_;
+  std::experimental::net::v1::detail::addrinfo_type hints_;
   std::string host_name_;
   std::string service_name_;
 };

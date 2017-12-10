@@ -49,8 +49,8 @@ io_context::io_context(int concurrency_hint)
 
 io_context::impl_type& io_context::add_impl(io_context::impl_type* impl)
 {
-  std::experimental::net::detail::scoped_ptr<impl_type> scoped_impl(impl);
-  std::experimental::net::add_service<impl_type>(*this, scoped_impl.get());
+  std::experimental::net::v1::detail::scoped_ptr<impl_type> scoped_impl(impl);
+  std::experimental::net::v1::add_service<impl_type>(*this, scoped_impl.get());
   return *scoped_impl.release();
 }
 
@@ -62,7 +62,7 @@ io_context::count_type io_context::run()
 {
   std::error_code ec;
   count_type s = impl_.run(ec);
-  std::experimental::net::detail::throw_error(ec);
+  std::experimental::net::v1::detail::throw_error(ec);
   return s;
 }
 
@@ -70,7 +70,7 @@ io_context::count_type io_context::run_one()
 {
   std::error_code ec;
   count_type s = impl_.run_one(ec);
-  std::experimental::net::detail::throw_error(ec);
+  std::experimental::net::v1::detail::throw_error(ec);
   return s;
 }
 
@@ -78,7 +78,7 @@ io_context::count_type io_context::poll()
 {
   std::error_code ec;
   count_type s = impl_.poll(ec);
-  std::experimental::net::detail::throw_error(ec);
+  std::experimental::net::v1::detail::throw_error(ec);
   return s;
 }
 
@@ -86,7 +86,7 @@ io_context::count_type io_context::poll_one()
 {
   std::error_code ec;
   count_type s = impl_.poll_one(ec);
-  std::experimental::net::detail::throw_error(ec);
+  std::experimental::net::v1::detail::throw_error(ec);
   return s;
 }
 
@@ -105,7 +105,7 @@ void io_context::restart()
   impl_.restart();
 }
 
-io_context::service::service(std::experimental::net::io_context& owner)
+io_context::service::service(std::experimental::net::v1::io_context& owner)
   : execution_context::service(owner)
 {
 }

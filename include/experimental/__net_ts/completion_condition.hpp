@@ -122,9 +122,9 @@ private:
  * @code
  * boost::array<char, 128> buf;
  * std::error_code ec;
- * std::size_t n = std::experimental::net::read(
- *     sock, std::experimental::net::buffer(buf),
- *     std::experimental::net::transfer_all(), ec);
+ * std::size_t n = std::experimental::net::v1::read(
+ *     sock, std::experimental::net::v1::buffer(buf),
+ *     std::experimental::net::v1::transfer_all(), ec);
  * if (ec)
  * {
  *   // An error occurred.
@@ -156,9 +156,9 @@ inline detail::transfer_all_t transfer_all()
  * @code
  * boost::array<char, 128> buf;
  * std::error_code ec;
- * std::size_t n = std::experimental::net::read(
- *     sock, std::experimental::net::buffer(buf),
- *     std::experimental::net::transfer_at_least(64), ec);
+ * std::size_t n = std::experimental::net::v1::read(
+ *     sock, std::experimental::net::v1::buffer(buf),
+ *     std::experimental::net::v1::transfer_at_least(64), ec);
  * if (ec)
  * {
  *   // An error occurred.
@@ -190,9 +190,9 @@ inline detail::transfer_at_least_t transfer_at_least(std::size_t minimum)
  * @code
  * boost::array<char, 128> buf;
  * std::error_code ec;
- * std::size_t n = std::experimental::net::read(
- *     sock, std::experimental::net::buffer(buf),
- *     std::experimental::net::transfer_exactly(64), ec);
+ * std::size_t n = std::experimental::net::v1::read(
+ *     sock, std::experimental::net::v1::buffer(buf),
+ *     std::experimental::net::v1::transfer_exactly(64), ec);
  * if (ec)
  * {
  *   // An error occurred.

@@ -31,8 +31,8 @@ inline namespace v1 {
 namespace detail {
 
 winrt_timer_scheduler::winrt_timer_scheduler(
-    std::experimental::net::io_context& io_context)
-  : std::experimental::net::detail::service_base<winrt_timer_scheduler>(io_context),
+    std::experimental::net::v1::io_context& io_context)
+  : std::experimental::net::v1::detail::service_base<winrt_timer_scheduler>(io_context),
     io_context_(use_service<io_context_impl>(io_context)),
     mutex_(),
     event_(),
@@ -41,7 +41,7 @@ winrt_timer_scheduler::winrt_timer_scheduler(
     stop_thread_(false),
     shutdown_(false)
 {
-  thread_ = new std::experimental::net::detail::thread(
+  thread_ = new std::experimental::net::v1::detail::thread(
       bind_handler(&winrt_timer_scheduler::call_run_thread, this));
 }
 
@@ -52,7 +52,7 @@ winrt_timer_scheduler::~winrt_timer_scheduler()
 
 void winrt_timer_scheduler::shutdown()
 {
-  std::experimental::net::detail::mutex::scoped_lock lock(mutex_);
+  std::experimental::net::v1::detail::mutex::scoped_lock lock(mutex_);
   shutdown_ = true;
   stop_thread_ = true;
   event_.signal(lock);
@@ -70,7 +70,7 @@ void winrt_timer_scheduler::shutdown()
   io_context_.abandon_operations(ops);
 }
 
-void winrt_timer_scheduler::notify_fork(std::experimental::net::io_context::fork_event)
+void winrt_timer_scheduler::notify_fork(std::experimental::net::v1::io_context::fork_event)
 {
 }
 
@@ -80,7 +80,7 @@ void winrt_timer_scheduler::init_task()
 
 void winrt_timer_scheduler::run_thread()
 {
-  std::experimental::net::detail::mutex::scoped_lock lock(mutex_);
+  std::experimental::net::v1::detail::mutex::scoped_lock lock(mutex_);
   while (!stop_thread_)
   {
     const long max_wait_duration = 5 * 60 * 1000000;

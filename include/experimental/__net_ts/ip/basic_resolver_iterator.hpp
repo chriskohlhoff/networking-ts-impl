@@ -40,7 +40,7 @@ namespace ip {
 
 /// An iterator over the entries produced by a resolver.
 /**
- * The std::experimental::net::ip::basic_resolver_iterator class template is used to define
+ * The std::experimental::net::v1::ip::basic_resolver_iterator class template is used to define
  * iterators over the results returned by a resolver.
  *
  * The iterator's value_type, obtained when the iterator is dereferenced, is:
@@ -182,7 +182,7 @@ protected:
   }
 
   typedef std::vector<basic_resolver_entry<InternetProtocol> > values_type;
-  typedef std::experimental::net::detail::shared_ptr<values_type> values_ptr_type;
+  typedef std::experimental::net::v1::detail::shared_ptr<values_type> values_ptr_type;
   values_ptr_type values_;
   std::size_t index_;
 };

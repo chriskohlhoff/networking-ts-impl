@@ -31,7 +31,7 @@ namespace detail {
 
 struct win_static_mutex
 {
-  typedef std::experimental::net::detail::scoped_lock<win_static_mutex> scoped_lock;
+  typedef std::experimental::net::v1::detail::scoped_lock<win_static_mutex> scoped_lock;
 
   // Initialise the mutex.
   NET_TS_DECL void init();

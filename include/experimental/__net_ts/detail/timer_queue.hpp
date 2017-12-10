@@ -184,7 +184,7 @@ public:
       while (wait_op* op = (num_cancelled != max_cancelled)
           ? timer.op_queue_.front() : 0)
       {
-        op->ec_ = std::experimental::net::error::operation_aborted;
+        op->ec_ = std::experimental::net::v1::error::operation_aborted;
         timer.op_queue_.pop();
         ops.push(op);
         ++num_cancelled;

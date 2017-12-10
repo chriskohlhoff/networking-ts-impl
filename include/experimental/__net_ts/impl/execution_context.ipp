@@ -27,7 +27,7 @@ namespace net {
 inline namespace v1 {
 
 execution_context::execution_context()
-  : service_registry_(new std::experimental::net::detail::service_registry(*this))
+  : service_registry_(new std::experimental::net::v1::detail::service_registry(*this))
 {
 }
 
@@ -49,7 +49,7 @@ void execution_context::destroy()
 }
 
 void execution_context::notify_fork(
-    std::experimental::net::execution_context::fork_event event)
+    std::experimental::net::v1::execution_context::fork_event event)
 {
   service_registry_->notify_fork(event);
 }

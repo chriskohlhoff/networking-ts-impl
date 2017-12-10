@@ -32,7 +32,7 @@ namespace ip {
 
 /// Represents an IPv4 network.
 /**
- * The std::experimental::net::ip::network_v4 class provides the ability to use and
+ * The std::experimental::net::v1::ip::network_v4 class provides the ability to use and
  * manipulate IP version 4 networks.
  *
  * @par Thread Safety
@@ -243,7 +243,7 @@ NET_TS_DECL network_v4 make_network_v4(
  *
  * @return The output stream.
  *
- * @relates std::experimental::net::ip::address_v4
+ * @relates std::experimental::net::v1::ip::address_v4
  */
 template <typename Elem, typename Traits>
 std::basic_ostream<Elem, Traits>& operator<<(

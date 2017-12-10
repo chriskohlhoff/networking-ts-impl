@@ -50,13 +50,13 @@ public:
   typedef typename Protocol::endpoint endpoint_type;
 
   // The query type.
-  typedef std::experimental::net::ip::basic_resolver_query<Protocol> query_type;
+  typedef std::experimental::net::v1::ip::basic_resolver_query<Protocol> query_type;
 
   // The results type.
-  typedef std::experimental::net::ip::basic_resolver_results<Protocol> results_type;
+  typedef std::experimental::net::v1::ip::basic_resolver_results<Protocol> results_type;
 
   // Constructor.
-  winrt_resolver_service(std::experimental::net::io_context& io_context)
+  winrt_resolver_service(std::experimental::net::v1::io_context& io_context)
     : service_base<winrt_resolver_service<Protocol> >(io_context),
       io_context_(use_service<io_context_impl>(io_context)),
       async_manager_(use_service<winrt_async_manager>(io_context))
@@ -74,7 +74,7 @@ public:
   }
 
   // Perform any fork-related housekeeping.
-  void notify_fork(std::experimental::net::io_context::fork_event)
+  void notify_fork(std::experimental::net::v1::io_context::fork_event)
   {
   }
 
@@ -142,7 +142,7 @@ public:
 
     // Allocate and construct an operation to wrap the handler.
     typedef winrt_resolve_op<Protocol, Handler> op;
-    typename op::ptr p = { std::experimental::net::detail::addressof(handler),
+    typename op::ptr p = { std::experimental::net::v1::detail::addressof(handler),
       op::ptr::allocate(handler), 0 };
     p.p = new (p.v) op(query, handler);
 
@@ -171,7 +171,7 @@ public:
   results_type resolve(implementation_type&,
       const endpoint_type&, std::error_code& ec)
   {
-    ec = std::experimental::net::error::operation_not_supported;
+    ec = std::experimental::net::v1::error::operation_not_supported;
     return results_type();
   }
 
@@ -180,7 +180,7 @@ public:
   void async_resolve(implementation_type&,
       const endpoint_type&, Handler& handler)
   {
-    std::error_code ec = std::experimental::net::error::operation_not_supported;
+    std::error_code ec = std::experimental::net::v1::error::operation_not_supported;
     const results_type results;
     io_context_.get_io_context().post(
         detail::bind_handler(handler, ec, results));

@@ -65,7 +65,7 @@ struct win_iocp_io_context::timer_thread_function
 };
 
 win_iocp_io_context::win_iocp_io_context(
-    std::experimental::net::execution_context& ctx, int concurrency_hint)
+    std::experimental::net::v1::execution_context& ctx, int concurrency_hint)
   : execution_context_service_base<win_iocp_io_context>(ctx),
     iocp_(),
     outstanding_work_(0),
@@ -84,8 +84,8 @@ win_iocp_io_context::win_iocp_io_context(
   {
     DWORD last_error = ::GetLastError();
     std::error_code ec(last_error,
-        std::experimental::net::error::get_system_category());
-    std::experimental::net::detail::throw_error(ec, "iocp");
+        std::experimental::net::v1::error::get_system_category());
+    std::experimental::net::v1::detail::throw_error(ec, "iocp");
   }
 }
 
@@ -140,7 +140,7 @@ std::error_code win_iocp_io_context::register_handle(
   {
     DWORD last_error = ::GetLastError();
     ec = std::error_code(last_error,
-        std::experimental::net::error::get_system_category());
+        std::experimental::net::v1::error::get_system_category());
   }
   else
   {
@@ -242,8 +242,8 @@ void win_iocp_io_context::stop()
       {
         DWORD last_error = ::GetLastError();
         std::error_code ec(last_error,
-            std::experimental::net::error::get_system_category());
-        std::experimental::net::detail::throw_error(ec, "pqcs");
+            std::experimental::net::v1::error::get_system_category());
+        std::experimental::net::v1::detail::throw_error(ec, "pqcs");
       }
     }
   }
@@ -321,7 +321,7 @@ void win_iocp_io_context::on_completion(win_iocp_operation* op,
 
   // Store results in the OVERLAPPED structure.
   op->Internal = reinterpret_cast<ulong_ptr_t>(
-      &std::experimental::net::error::get_system_category());
+      &std::experimental::net::v1::error::get_system_category());
   op->Offset = last_error;
   op->OffsetHigh = bytes_transferred;
 
@@ -389,7 +389,7 @@ size_t win_iocp_io_context::do_one(DWORD msec, std::error_code& ec)
     {
       win_iocp_operation* op = static_cast<win_iocp_operation*>(overlapped);
       std::error_code result_ec(last_error,
-          std::experimental::net::error::get_system_category());
+          std::experimental::net::v1::error::get_system_category());
 
       // We may have been passed the last_error and bytes_transferred in the
       // OVERLAPPED structure itself.
@@ -429,7 +429,7 @@ size_t win_iocp_io_context::do_one(DWORD msec, std::error_code& ec)
       if (last_error != WAIT_TIMEOUT)
       {
         ec = std::error_code(last_error,
-            std::experimental::net::error::get_system_category());
+            std::experimental::net::v1::error::get_system_category());
         return 0;
       }
 
@@ -462,7 +462,7 @@ size_t win_iocp_io_context::do_one(DWORD msec, std::error_code& ec)
           {
             last_error = ::GetLastError();
             ec = std::error_code(last_error,
-                std::experimental::net::error::get_system_category());
+                std::experimental::net::v1::error::get_system_category());
             return 0;
           }
         }
@@ -503,8 +503,8 @@ void win_iocp_io_context::do_add_timer_queue(timer_queue_base& queue)
     {
       DWORD last_error = ::GetLastError();
       std::error_code ec(last_error,
-          std::experimental::net::error::get_system_category());
-      std::experimental::net::detail::throw_error(ec, "timer");
+          std::experimental::net::v1::error::get_system_category());
+      std::experimental::net::v1::detail::throw_error(ec, "timer");
     }
 
     LARGE_INTEGER timeout;

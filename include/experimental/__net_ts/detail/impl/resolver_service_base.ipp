@@ -29,20 +29,20 @@ namespace detail {
 class resolver_service_base::work_io_context_runner
 {
 public:
-  work_io_context_runner(std::experimental::net::io_context& io_context)
+  work_io_context_runner(std::experimental::net::v1::io_context& io_context)
     : io_context_(io_context) {}
   void operator()() { io_context_.run(); }
 private:
-  std::experimental::net::io_context& io_context_;
+  std::experimental::net::v1::io_context& io_context_;
 };
 
 resolver_service_base::resolver_service_base(
-    std::experimental::net::io_context& io_context)
-  : io_context_impl_(std::experimental::net::use_service<io_context_impl>(io_context)),
-    work_io_context_(new std::experimental::net::io_context(-1)),
-    work_io_context_impl_(std::experimental::net::use_service<
+    std::experimental::net::v1::io_context& io_context)
+  : io_context_impl_(std::experimental::net::v1::use_service<io_context_impl>(io_context)),
+    work_io_context_(new std::experimental::net::v1::io_context(-1)),
+    work_io_context_impl_(std::experimental::net::v1::use_service<
         io_context_impl>(*work_io_context_)),
-    work_(std::experimental::net::make_work_guard(*work_io_context_)),
+    work_(std::experimental::net::v1::make_work_guard(*work_io_context_)),
     work_thread_(0)
 {
 }
@@ -68,11 +68,11 @@ void resolver_service_base::base_shutdown()
 }
 
 void resolver_service_base::base_notify_fork(
-    std::experimental::net::io_context::fork_event fork_ev)
+    std::experimental::net::v1::io_context::fork_event fork_ev)
 {
   if (work_thread_.get())
   {
-    if (fork_ev == std::experimental::net::io_context::fork_prepare)
+    if (fork_ev == std::experimental::net::v1::io_context::fork_prepare)
     {
       work_io_context_->stop();
       work_thread_->join();
@@ -80,7 +80,7 @@ void resolver_service_base::base_notify_fork(
     else
     {
       work_io_context_->restart();
-      work_thread_.reset(new std::experimental::net::detail::thread(
+      work_thread_.reset(new std::experimental::net::v1::detail::thread(
             work_io_context_runner(*work_io_context_)));
     }
   }
@@ -134,17 +134,17 @@ void resolver_service_base::start_resolve_op(resolve_op* op)
   }
   else
   {
-    op->ec_ = std::experimental::net::error::operation_not_supported;
+    op->ec_ = std::experimental::net::v1::error::operation_not_supported;
     io_context_impl_.post_immediate_completion(op, false);
   }
 }
 
 void resolver_service_base::start_work_thread()
 {
-  std::experimental::net::detail::mutex::scoped_lock lock(mutex_);
+  std::experimental::net::v1::detail::mutex::scoped_lock lock(mutex_);
   if (!work_thread_.get())
   {
-    work_thread_.reset(new std::experimental::net::detail::thread(
+    work_thread_.reset(new std::experimental::net::v1::detail::thread(
           work_io_context_runner(*work_io_context_)));
   }
 }

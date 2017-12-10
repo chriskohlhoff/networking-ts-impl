@@ -50,14 +50,14 @@ endpoint::endpoint(int family, unsigned short port_num)
   {
     data_.v4.sin_family = NET_TS_OS_DEF(AF_INET);
     data_.v4.sin_port =
-      std::experimental::net::detail::socket_ops::host_to_network_short(port_num);
+      std::experimental::net::v1::detail::socket_ops::host_to_network_short(port_num);
     data_.v4.sin_addr.s_addr = NET_TS_OS_DEF(INADDR_ANY);
   }
   else
   {
     data_.v6.sin6_family = NET_TS_OS_DEF(AF_INET6);
     data_.v6.sin6_port =
-      std::experimental::net::detail::socket_ops::host_to_network_short(port_num);
+      std::experimental::net::v1::detail::socket_ops::host_to_network_short(port_num);
     data_.v6.sin6_flowinfo = 0;
     data_.v6.sin6_addr.s6_addr[0] = 0; data_.v6.sin6_addr.s6_addr[1] = 0;
     data_.v6.sin6_addr.s6_addr[2] = 0; data_.v6.sin6_addr.s6_addr[3] = 0;
@@ -71,7 +71,7 @@ endpoint::endpoint(int family, unsigned short port_num)
   }
 }
 
-endpoint::endpoint(const std::experimental::net::ip::address& addr,
+endpoint::endpoint(const std::experimental::net::v1::ip::address& addr,
     unsigned short port_num)
   : data_()
 {
@@ -80,32 +80,32 @@ endpoint::endpoint(const std::experimental::net::ip::address& addr,
   {
     data_.v4.sin_family = NET_TS_OS_DEF(AF_INET);
     data_.v4.sin_port =
-      std::experimental::net::detail::socket_ops::host_to_network_short(port_num);
+      std::experimental::net::v1::detail::socket_ops::host_to_network_short(port_num);
     data_.v4.sin_addr.s_addr =
-      std::experimental::net::detail::socket_ops::host_to_network_long(
+      std::experimental::net::v1::detail::socket_ops::host_to_network_long(
         addr.to_v4().to_uint());
   }
   else
   {
     data_.v6.sin6_family = NET_TS_OS_DEF(AF_INET6);
     data_.v6.sin6_port =
-      std::experimental::net::detail::socket_ops::host_to_network_short(port_num);
+      std::experimental::net::v1::detail::socket_ops::host_to_network_short(port_num);
     data_.v6.sin6_flowinfo = 0;
-    std::experimental::net::ip::address_v6 v6_addr = addr.to_v6();
-    std::experimental::net::ip::address_v6::bytes_type bytes = v6_addr.to_bytes();
+    std::experimental::net::v1::ip::address_v6 v6_addr = addr.to_v6();
+    std::experimental::net::v1::ip::address_v6::bytes_type bytes = v6_addr.to_bytes();
     memcpy(data_.v6.sin6_addr.s6_addr, bytes.data(), 16);
     data_.v6.sin6_scope_id =
-      static_cast<std::experimental::net::detail::u_long_type>(
+      static_cast<std::experimental::net::v1::detail::u_long_type>(
         v6_addr.scope_id());
   }
 }
 
 void endpoint::resize(std::size_t new_size)
 {
-  if (new_size > sizeof(std::experimental::net::detail::sockaddr_storage_type))
+  if (new_size > sizeof(std::experimental::net::v1::detail::sockaddr_storage_type))
   {
-    std::error_code ec(std::experimental::net::error::invalid_argument);
-    std::experimental::net::detail::throw_error(ec);
+    std::error_code ec(std::experimental::net::v1::error::invalid_argument);
+    std::experimental::net::v1::detail::throw_error(ec);
   }
 }
 
@@ -113,12 +113,12 @@ unsigned short endpoint::port() const
 {
   if (is_v4())
   {
-    return std::experimental::net::detail::socket_ops::network_to_host_short(
+    return std::experimental::net::v1::detail::socket_ops::network_to_host_short(
         data_.v4.sin_port);
   }
   else
   {
-    return std::experimental::net::detail::socket_ops::network_to_host_short(
+    return std::experimental::net::v1::detail::socket_ops::network_to_host_short(
         data_.v6.sin6_port);
   }
 }
@@ -128,37 +128,37 @@ void endpoint::port(unsigned short port_num)
   if (is_v4())
   {
     data_.v4.sin_port
-      = std::experimental::net::detail::socket_ops::host_to_network_short(port_num);
+      = std::experimental::net::v1::detail::socket_ops::host_to_network_short(port_num);
   }
   else
   {
     data_.v6.sin6_port
-      = std::experimental::net::detail::socket_ops::host_to_network_short(port_num);
+      = std::experimental::net::v1::detail::socket_ops::host_to_network_short(port_num);
   }
 }
 
-std::experimental::net::ip::address endpoint::address() const
+std::experimental::net::v1::ip::address endpoint::address() const
 {
   using namespace std; // For memcpy.
   if (is_v4())
   {
-    return std::experimental::net::ip::address_v4(
-        std::experimental::net::detail::socket_ops::network_to_host_long(
+    return std::experimental::net::v1::ip::address_v4(
+        std::experimental::net::v1::detail::socket_ops::network_to_host_long(
           data_.v4.sin_addr.s_addr));
   }
   else
   {
-    std::experimental::net::ip::address_v6::bytes_type bytes;
+    std::experimental::net::v1::ip::address_v6::bytes_type bytes;
 #if defined(NET_TS_HAS_STD_ARRAY)
     memcpy(bytes.data(), data_.v6.sin6_addr.s6_addr, 16);
 #else // defined(NET_TS_HAS_STD_ARRAY)
     memcpy(bytes.elems, data_.v6.sin6_addr.s6_addr, 16);
 #endif // defined(NET_TS_HAS_STD_ARRAY)
-    return std::experimental::net::ip::address_v6(bytes, data_.v6.sin6_scope_id);
+    return std::experimental::net::v1::ip::address_v6(bytes, data_.v6.sin6_scope_id);
   }
 }
 
-void endpoint::address(const std::experimental::net::ip::address& addr)
+void endpoint::address(const std::experimental::net::v1::ip::address& addr)
 {
   endpoint tmp_endpoint(addr, port());
   data_ = tmp_endpoint.data_;
