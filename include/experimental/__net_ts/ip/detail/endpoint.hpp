@@ -2,7 +2,7 @@
 // ip/detail/endpoint.hpp
 // ~~~~~~~~~~~~~~~~~~~~~~
 //
-// Copyright (c) 2003-2017 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2003-2019 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -36,42 +36,43 @@ class endpoint
 {
 public:
   // Default constructor.
-  NET_TS_DECL endpoint();
+  NET_TS_DECL endpoint() NET_TS_NOEXCEPT;
 
   // Construct an endpoint using a family and port number.
-  NET_TS_DECL endpoint(int family, unsigned short port_num);
+  NET_TS_DECL endpoint(int family,
+      unsigned short port_num) NET_TS_NOEXCEPT;
 
   // Construct an endpoint using an address and port number.
   NET_TS_DECL endpoint(const std::experimental::net::v1::ip::address& addr,
-      unsigned short port_num);
+      unsigned short port_num) NET_TS_NOEXCEPT;
 
   // Copy constructor.
-  endpoint(const endpoint& other)
+  endpoint(const endpoint& other) NET_TS_NOEXCEPT
     : data_(other.data_)
   {
   }
 
   // Assign from another endpoint.
-  endpoint& operator=(const endpoint& other)
+  endpoint& operator=(const endpoint& other) NET_TS_NOEXCEPT
   {
     data_ = other.data_;
     return *this;
   }
 
   // Get the underlying endpoint in the native type.
-  std::experimental::net::v1::detail::socket_addr_type* data()
+  std::experimental::net::v1::detail::socket_addr_type* data() NET_TS_NOEXCEPT
   {
     return &data_.base;
   }
 
   // Get the underlying endpoint in the native type.
-  const std::experimental::net::v1::detail::socket_addr_type* data() const
+  const std::experimental::net::v1::detail::socket_addr_type* data() const NET_TS_NOEXCEPT
   {
     return &data_.base;
   }
 
   // Get the underlying size of the endpoint in the native type.
-  std::size_t size() const
+  std::size_t size() const NET_TS_NOEXCEPT
   {
     if (is_v4())
       return sizeof(std::experimental::net::v1::detail::sockaddr_in4_type);
@@ -83,33 +84,34 @@ public:
   NET_TS_DECL void resize(std::size_t new_size);
 
   // Get the capacity of the endpoint in the native type.
-  std::size_t capacity() const
+  std::size_t capacity() const NET_TS_NOEXCEPT
   {
     return sizeof(data_);
   }
 
   // Get the port associated with the endpoint.
-  NET_TS_DECL unsigned short port() const;
+  NET_TS_DECL unsigned short port() const NET_TS_NOEXCEPT;
 
   // Set the port associated with the endpoint.
-  NET_TS_DECL void port(unsigned short port_num);
+  NET_TS_DECL void port(unsigned short port_num) NET_TS_NOEXCEPT;
 
   // Get the IP address associated with the endpoint.
-  NET_TS_DECL std::experimental::net::v1::ip::address address() const;
+  NET_TS_DECL std::experimental::net::v1::ip::address address() const NET_TS_NOEXCEPT;
 
   // Set the IP address associated with the endpoint.
-  NET_TS_DECL void address(const std::experimental::net::v1::ip::address& addr);
+  NET_TS_DECL void address(
+      const std::experimental::net::v1::ip::address& addr) NET_TS_NOEXCEPT;
 
   // Compare two endpoints for equality.
-  NET_TS_DECL friend bool operator==(
-      const endpoint& e1, const endpoint& e2);
+  NET_TS_DECL friend bool operator==(const endpoint& e1,
+      const endpoint& e2) NET_TS_NOEXCEPT;
 
   // Compare endpoints for ordering.
-  NET_TS_DECL friend bool operator<(
-      const endpoint& e1, const endpoint& e2);
+  NET_TS_DECL friend bool operator<(const endpoint& e1,
+      const endpoint& e2) NET_TS_NOEXCEPT;
 
   // Determine whether the endpoint is IPv4.
-  bool is_v4() const
+  bool is_v4() const NET_TS_NOEXCEPT
   {
     return data_.base.sa_family == NET_TS_OS_DEF(AF_INET);
   }

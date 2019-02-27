@@ -2,7 +2,7 @@
 // impl/write.hpp
 // ~~~~~~~~~~~~~~
 //
-// Copyright (c) 2003-2017 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2003-2019 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -114,7 +114,7 @@ std::size_t write(SyncWriteStream& s,
     NET_TS_MOVE_ARG(DynamicBuffer) buffers,
     CompletionCondition completion_condition, std::error_code& ec,
     typename enable_if<
-      is_dynamic_buffer<DynamicBuffer>::value
+      is_dynamic_buffer<typename decay<DynamicBuffer>::type>::value
     >::type*)
 {
   typename decay<DynamicBuffer>::type b(
@@ -129,7 +129,7 @@ template <typename SyncWriteStream, typename DynamicBuffer>
 inline std::size_t write(SyncWriteStream& s,
     NET_TS_MOVE_ARG(DynamicBuffer) buffers,
     typename enable_if<
-      is_dynamic_buffer<DynamicBuffer>::value
+      is_dynamic_buffer<typename decay<DynamicBuffer>::type>::value
     >::type*)
 {
   std::error_code ec;
@@ -145,7 +145,7 @@ inline std::size_t write(SyncWriteStream& s,
     NET_TS_MOVE_ARG(DynamicBuffer) buffers,
     std::error_code& ec,
     typename enable_if<
-      is_dynamic_buffer<DynamicBuffer>::value
+      is_dynamic_buffer<typename decay<DynamicBuffer>::type>::value
     >::type*)
 {
   return write(s, NET_TS_MOVE_CAST(DynamicBuffer)(buffers),
@@ -158,7 +158,7 @@ inline std::size_t write(SyncWriteStream& s,
     NET_TS_MOVE_ARG(DynamicBuffer) buffers,
     CompletionCondition completion_condition,
     typename enable_if<
-      is_dynamic_buffer<DynamicBuffer>::value
+      is_dynamic_buffer<typename decay<DynamicBuffer>::type>::value
     >::type*)
 {
   std::error_code ec;
@@ -563,7 +563,7 @@ async_write(AsyncWriteStream& s,
     NET_TS_MOVE_ARG(DynamicBuffer) buffers,
     NET_TS_MOVE_ARG(WriteHandler) handler,
     typename enable_if<
-      is_dynamic_buffer<DynamicBuffer>::value
+      is_dynamic_buffer<typename decay<DynamicBuffer>::type>::value
     >::type*)
 {
   return async_write(s,
@@ -580,7 +580,7 @@ async_write(AsyncWriteStream& s,
     CompletionCondition completion_condition,
     NET_TS_MOVE_ARG(WriteHandler) handler,
     typename enable_if<
-      is_dynamic_buffer<DynamicBuffer>::value
+      is_dynamic_buffer<typename decay<DynamicBuffer>::type>::value
     >::type*)
 {
   // If you get an error on the following line it means that your handler does

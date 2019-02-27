@@ -2,7 +2,7 @@
 // packaged_task.hpp
 // ~~~~~~~~~~~~~~~~~
 //
-// Copyright (c) 2003-2017 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2003-2019 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -16,11 +16,11 @@
 #endif // defined(_MSC_VER) && (_MSC_VER >= 1200)
 
 #include <experimental/__net_ts/detail/config.hpp>
+#include <experimental/__net_ts/detail/future.hpp>
 
-#if defined(NET_TS_HAS_STD_FUTURE) \
+#if defined(NET_TS_HAS_STD_FUTURE_CLASS) \
   || defined(GENERATING_DOCUMENTATION)
 
-#include <future>
 #include <experimental/__net_ts/async_result.hpp>
 #include <experimental/__net_ts/detail/type_traits.hpp>
 #include <experimental/__net_ts/detail/variadic_templates.hpp>
@@ -126,7 +126,7 @@ private:
 
 #include <experimental/__net_ts/detail/pop_options.hpp>
 
-#endif // defined(NET_TS_HAS_STD_FUTURE)
+#endif // defined(NET_TS_HAS_STD_FUTURE_CLASS)
        //   || defined(GENERATING_DOCUMENTATION)
 
 #endif // NET_TS_PACKAGED_TASK_HPP

@@ -2,7 +2,7 @@
 // detail/config.hpp
 // ~~~~~~~~~~~~~~~~~
 //
-// Copyright (c) 2003-2017 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2003-2019 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -71,7 +71,7 @@
       || (!defined(__MWERKS__) && !defined(__EDG_VERSION__)))
 #  define NET_TS_MSVC _MSC_VER
 # endif // defined(NET_TS_HAS_BOOST_CONFIG) && defined(BOOST_MSVC)
-#endif // defined(NET_TS_MSVC)
+#endif // !defined(NET_TS_MSVC)
 
 // Clang / libc++ detection.
 #if defined(__clang__)
@@ -110,6 +110,14 @@
 #    define NET_TS_HAS_MOVE 1
 #   endif // (_MSC_VER >= 1700)
 #  endif // defined(NET_TS_MSVC)
+#  if defined(__INTEL_CXX11_MODE__)
+#    if defined(__INTEL_COMPILER) && (__INTEL_COMPILER >= 1500)
+#      define BOOST_NET_TS_HAS_MOVE 1
+#    endif // defined(__INTEL_COMPILER) && (__INTEL_COMPILER >= 1500)
+#    if defined(__ICL) && (__ICL >= 1500)
+#      define BOOST_NET_TS_HAS_MOVE 1
+#    endif // defined(__ICL) && (__ICL >= 1500)
+#  endif // defined(__INTEL_CXX11_MODE__)
 # endif // !defined(NET_TS_DISABLE_MOVE)
 #endif // !defined(NET_TS_HAS_MOVE)
 
@@ -228,7 +236,7 @@
 // Support noexcept on compilers known to allow it.
 #if !defined(NET_TS_NOEXCEPT)
 # if !defined(NET_TS_DISABLE_NOEXCEPT)
-#  if (BOOST_VERSION >= 105300)
+#  if defined(NET_TS_HAS_BOOST_CONFIG) && (BOOST_VERSION >= 105300)
 #   define NET_TS_NOEXCEPT BOOST_NOEXCEPT
 #   define NET_TS_NOEXCEPT_OR_NOTHROW BOOST_NOEXCEPT_OR_NOTHROW
 #  elif defined(__clang__)
@@ -772,32 +780,77 @@
 # endif // !defined(NET_TS_DISABLE_STD_FUTURE)
 #endif // !defined(NET_TS_HAS_STD_FUTURE)
 
-// Standard library support for experimental::string_view.
+// Standard library support for std::string_view.
 #if !defined(NET_TS_HAS_STD_STRING_VIEW)
 # if !defined(NET_TS_DISABLE_STD_STRING_VIEW)
 #  if defined(__clang__)
-#   if (__cplusplus >= 201402)
-#    if __has_include(<experimental/string_view>)
+#   if defined(NET_TS_HAS_CLANG_LIBCXX)
+#    if (__cplusplus >= 201402)
+#     if __has_include(<string_view>)
+#      define NET_TS_HAS_STD_STRING_VIEW 1
+#     endif // __has_include(<string_view>)
+#    endif // (__cplusplus >= 201402)
+#   else // defined(NET_TS_HAS_CLANG_LIBCXX)
+#    if (__cplusplus >= 201703)
+#     if __has_include(<string_view>)
+#      define NET_TS_HAS_STD_STRING_VIEW 1
+#     endif // __has_include(<string_view>)
+#    endif // (__cplusplus >= 201703)
+#   endif // defined(NET_TS_HAS_CLANG_LIBCXX)
+#  elif defined(__GNUC__)
+#   if (__GNUC__ >= 7)
+#    if (__cplusplus >= 201703)
 #     define NET_TS_HAS_STD_STRING_VIEW 1
-#     define NET_TS_HAS_STD_EXPERIMENTAL_STRING_VIEW 1
-#    endif // __has_include(<experimental/string_view>)
-#   endif // (__cplusplus >= 201402)
+#    endif // (__cplusplus >= 201703)
+#   endif // (__GNUC__ >= 7)
+#  elif defined(NET_TS_MSVC)
+#   if (_MSC_VER >= 1910 && _MSVC_LANG >= 201703)
+#    define NET_TS_HAS_STD_STRING_VIEW 1
+#   endif // (_MSC_VER >= 1910 && _MSVC_LANG >= 201703)
+#  endif // defined(NET_TS_MSVC)
+# endif // !defined(NET_TS_DISABLE_STD_STRING_VIEW)
+#endif // !defined(NET_TS_HAS_STD_STRING_VIEW)
+
+// Standard library support for std::experimental::string_view.
+#if !defined(NET_TS_HAS_STD_EXPERIMENTAL_STRING_VIEW)
+# if !defined(NET_TS_DISABLE_STD_EXPERIMENTAL_STRING_VIEW)
+#  if defined(__clang__)
+#   if defined(NET_TS_HAS_CLANG_LIBCXX)
+#    if (_LIBCPP_VERSION < 7000)
+#     if (__cplusplus >= 201402)
+#      if __has_include(<experimental/string_view>)
+#       define NET_TS_HAS_STD_EXPERIMENTAL_STRING_VIEW 1
+#      endif // __has_include(<experimental/string_view>)
+#     endif // (__cplusplus >= 201402)
+#    endif // (_LIBCPP_VERSION < 7000)
+#   else // defined(NET_TS_HAS_CLANG_LIBCXX)
+#    if (__cplusplus >= 201402)
+#     if __has_include(<experimental/string_view>)
+#      define NET_TS_HAS_STD_EXPERIMENTAL_STRING_VIEW 1
+#     endif // __has_include(<experimental/string_view>)
+#    endif // (__cplusplus >= 201402)
+#   endif // // defined(NET_TS_HAS_CLANG_LIBCXX)
 #  endif // defined(__clang__)
 #  if defined(__GNUC__)
 #   if ((__GNUC__ == 4) && (__GNUC_MINOR__ >= 9)) || (__GNUC__ > 4)
 #    if (__cplusplus >= 201402)
-#     define NET_TS_HAS_STD_STRING_VIEW 1
 #     define NET_TS_HAS_STD_EXPERIMENTAL_STRING_VIEW 1
 #    endif // (__cplusplus >= 201402)
-#   endif // ((__GNUC__ == 4) && (__GNUC_MINOR__ >= 7)) || (__GNUC__ > 4)
+#   endif // ((__GNUC__ == 4) && (__GNUC_MINOR__ >= 9)) || (__GNUC__ > 4)
 #  endif // defined(__GNUC__)
-#  if defined(NET_TS_MSVC)
-#   if (_MSC_VER >= 1910 && _HAS_CXX17)
-#    define NET_TS_HAS_STD_STRING_VIEW
-#   endif // (_MSC_VER >= 1910)
-#  endif // defined(NET_TS_MSVC)
-# endif // !defined(NET_TS_DISABLE_STD_STRING_VIEW)
-#endif // !defined(NET_TS_HAS_STD_STRING_VIEW)
+# endif // !defined(NET_TS_DISABLE_STD_EXPERIMENTAL_STRING_VIEW)
+#endif // !defined(NET_TS_HAS_STD_EXPERIMENTAL_STRING_VIEW)
+
+// Standard library has a string_view that we can use.
+#if !defined(NET_TS_HAS_STRING_VIEW)
+# if !defined(NET_TS_DISABLE_STRING_VIEW)
+#  if defined(NET_TS_HAS_STD_STRING_VIEW)
+#   define NET_TS_HAS_STRING_VIEW 1
+#  elif defined(NET_TS_HAS_STD_EXPERIMENTAL_STRING_VIEW)
+#   define NET_TS_HAS_STRING_VIEW 1
+#  endif // defined(NET_TS_HAS_STD_EXPERIMENTAL_STRING_VIEW)
+# endif // !defined(NET_TS_DISABLE_STRING_VIEW)
+#endif // !defined(NET_TS_HAS_STRING_VIEW)
 
 // Standard library support for iostream move construction and assignment.
 #if !defined(NET_TS_HAS_STD_IOSTREAM_MOVE)
@@ -816,6 +869,17 @@
 #  endif // defined(NET_TS_MSVC)
 # endif // !defined(NET_TS_DISABLE_STD_IOSTREAM_MOVE)
 #endif // !defined(NET_TS_HAS_STD_IOSTREAM_MOVE)
+
+// Standard library has invoke_result (which supersedes result_of).
+#if !defined(NET_TS_HAS_STD_INVOKE_RESULT)
+# if !defined(NET_TS_DISABLE_STD_INVOKE_RESULT)
+#  if defined(NET_TS_MSVC)
+#   if (_MSC_VER >= 1911 && _MSVC_LANG >= 201703)
+#    define NET_TS_HAS_STD_INVOKE_RESULT 1
+#   endif // (_MSC_VER >= 1911 && _MSVC_LANG >= 201703)
+#  endif // defined(NET_TS_MSVC)
+# endif // !defined(NET_TS_DISABLE_STD_INVOKE_RESULT)
+#endif // !defined(NET_TS_HAS_STD_INVOKE_RESULT)
 
 // Windows App target. Windows but with a limited API.
 #if !defined(NET_TS_WINDOWS_APP)
@@ -1350,5 +1414,25 @@
 #if !defined(NET_TS_UNUSED_VARIABLE)
 # define NET_TS_UNUSED_VARIABLE
 #endif // !defined(NET_TS_UNUSED_VARIABLE)
+
+// Support co_await on compilers known to allow it.
+#if !defined(NET_TS_HAS_CO_AWAIT)
+# if !defined(NET_TS_DISABLE_CO_AWAIT)
+#  if defined(NET_TS_MSVC)
+#   if (_MSC_FULL_VER >= 190023506)
+#    if defined(_RESUMABLE_FUNCTIONS_SUPPORTED)
+#     define NET_TS_HAS_CO_AWAIT 1
+#    endif // defined(_RESUMABLE_FUNCTIONS_SUPPORTED)
+#   endif // (_MSC_FULL_VER >= 190023506)
+#  endif // defined(NET_TS_MSVC)
+# endif // !defined(NET_TS_DISABLE_CO_AWAIT)
+# if defined(__clang__)
+#  if (__cpp_coroutines >= 201703)
+#   if __has_include(<experimental/coroutine>)
+#    define NET_TS_HAS_CO_AWAIT 1
+#   endif // __has_include(<experimental/coroutine>)
+#  endif // (__cpp_coroutines >= 201703)
+# endif // defined(__clang__)
+#endif // !defined(NET_TS_HAS_CO_AWAIT)
 
 #endif // NET_TS_DETAIL_CONFIG_HPP

@@ -2,7 +2,7 @@
 // impl/io_context.hpp
 // ~~~~~~~~~~~~~~~~~~~
 //
-// Copyright (c) 2003-2017 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2003-2019 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -170,7 +170,7 @@ void io_context::executor_type::dispatch(
   p.p = new (p.v) op(NET_TS_MOVE_CAST(Function)(f), a);
 
   NET_TS_HANDLER_CREATION((this->context(), *p.p,
-        "io_context", &this->context(), 0, "post"));
+        "io_context", &this->context(), 0, "dispatch"));
 
   io_context_.impl_.post_immediate_completion(p.p, false);
   p.v = p.p = 0;

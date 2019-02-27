@@ -2,7 +2,7 @@
 // write.hpp
 // ~~~~~~~~~
 //
-// Copyright (c) 2003-2017 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2003-2019 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -31,7 +31,8 @@ inline namespace v1 {
 /**
  * @defgroup write std::experimental::net::v1::write
  *
- * @brief Write a certain amount of data to a stream before returning.
+ * @brief The @c write function is a composed operation that writes a certain
+ * amount of data to a stream before returning.
  */
 /*@{*/
 
@@ -252,7 +253,7 @@ template <typename SyncWriteStream, typename DynamicBuffer>
 std::size_t write(SyncWriteStream& s,
     NET_TS_MOVE_ARG(DynamicBuffer) buffers,
     typename enable_if<
-      is_dynamic_buffer<DynamicBuffer>::value
+      is_dynamic_buffer<typename decay<DynamicBuffer>::type>::value
     >::type* = 0);
 
 /// Write all of the supplied data to a stream before returning.
@@ -287,7 +288,7 @@ std::size_t write(SyncWriteStream& s,
     NET_TS_MOVE_ARG(DynamicBuffer) buffers,
     std::error_code& ec,
     typename enable_if<
-      is_dynamic_buffer<DynamicBuffer>::value
+      is_dynamic_buffer<typename decay<DynamicBuffer>::type>::value
     >::type* = 0);
 
 /// Write a certain amount of data to a stream before returning.
@@ -332,7 +333,7 @@ std::size_t write(SyncWriteStream& s,
     NET_TS_MOVE_ARG(DynamicBuffer) buffers,
     CompletionCondition completion_condition,
     typename enable_if<
-      is_dynamic_buffer<DynamicBuffer>::value
+      is_dynamic_buffer<typename decay<DynamicBuffer>::type>::value
     >::type* = 0);
 
 /// Write a certain amount of data to a stream before returning.
@@ -378,15 +379,15 @@ std::size_t write(SyncWriteStream& s,
     NET_TS_MOVE_ARG(DynamicBuffer) buffers,
     CompletionCondition completion_condition, std::error_code& ec,
     typename enable_if<
-      is_dynamic_buffer<DynamicBuffer>::value
+      is_dynamic_buffer<typename decay<DynamicBuffer>::type>::value
     >::type* = 0);
 
 /*@}*/
 /**
  * @defgroup async_write std::experimental::net::v1::async_write
  *
- * @brief Start an asynchronous operation to write a certain amount of data to a
- * stream.
+ * @brief The @c async_write function is a composed asynchronous operation that
+ * writes a certain amount of data to a stream before completion.
  */
 /*@{*/
 
@@ -581,7 +582,7 @@ async_write(AsyncWriteStream& s,
     NET_TS_MOVE_ARG(DynamicBuffer) buffers,
     NET_TS_MOVE_ARG(WriteHandler) handler,
     typename enable_if<
-      is_dynamic_buffer<DynamicBuffer>::value
+      is_dynamic_buffer<typename decay<DynamicBuffer>::type>::value
     >::type* = 0);
 
 /// Start an asynchronous operation to write a certain amount of data to a
@@ -650,7 +651,7 @@ async_write(AsyncWriteStream& s,
     CompletionCondition completion_condition,
     NET_TS_MOVE_ARG(WriteHandler) handler,
     typename enable_if<
-      is_dynamic_buffer<DynamicBuffer>::value
+      is_dynamic_buffer<typename decay<DynamicBuffer>::type>::value
     >::type* = 0);
 
 /*@}*/

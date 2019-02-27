@@ -2,7 +2,7 @@
 // read_until.hpp
 // ~~~~~~~~~~~~~~
 //
-// Copyright (c) 2003-2017 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2003-2019 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -66,9 +66,10 @@ struct is_match_condition
 /**
  * @defgroup read_until std::experimental::net::v1::read_until
  *
- * @brief Read data into a dynamic buffer sequence, or into a streambuf, until
- * it contains a delimiter, matches a regular expression, or a function object
- * indicates a match.
+ * @brief The @c read_until function is a composed operation that reads data
+ * into a dynamic buffer sequence, or into a streambuf, until it contains a
+ * delimiter, matches a regular expression, or a function object indicates a
+ * match.
  */
 /*@{*/
 
@@ -268,9 +269,10 @@ std::size_t read_until(SyncReadStream& s,
 /**
  * @defgroup async_read_until std::experimental::net::v1::async_read_until
  *
- * @brief Start an asynchronous operation to read data into a dynamic buffer
- * sequence, or into a streambuf, until it contains a delimiter, matches a
- * regular expression, or a function object indicates a match.
+ * @brief The @c async_read_until function is a composed asynchronous operation
+ * that reads data into a dynamic buffer sequence, or into a streambuf, until
+ * it contains a delimiter, matches a regular expression, or a function object
+ * indicates a match.
  */
 /*@{*/
 

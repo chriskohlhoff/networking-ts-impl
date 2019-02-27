@@ -2,7 +2,7 @@
 // ip/detail/impl/endpoint.ipp
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //
-// Copyright (c) 2003-2017 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2003-2019 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -34,7 +34,7 @@ inline namespace v1 {
 namespace ip {
 namespace detail {
 
-endpoint::endpoint()
+endpoint::endpoint() NET_TS_NOEXCEPT
   : data_()
 {
   data_.v4.sin_family = NET_TS_OS_DEF(AF_INET);
@@ -42,7 +42,7 @@ endpoint::endpoint()
   data_.v4.sin_addr.s_addr = NET_TS_OS_DEF(INADDR_ANY);
 }
 
-endpoint::endpoint(int family, unsigned short port_num)
+endpoint::endpoint(int family, unsigned short port_num) NET_TS_NOEXCEPT
   : data_()
 {
   using namespace std; // For memcpy.
@@ -72,7 +72,7 @@ endpoint::endpoint(int family, unsigned short port_num)
 }
 
 endpoint::endpoint(const std::experimental::net::v1::ip::address& addr,
-    unsigned short port_num)
+    unsigned short port_num) NET_TS_NOEXCEPT
   : data_()
 {
   using namespace std; // For memcpy.
@@ -109,7 +109,7 @@ void endpoint::resize(std::size_t new_size)
   }
 }
 
-unsigned short endpoint::port() const
+unsigned short endpoint::port() const NET_TS_NOEXCEPT
 {
   if (is_v4())
   {
@@ -123,7 +123,7 @@ unsigned short endpoint::port() const
   }
 }
 
-void endpoint::port(unsigned short port_num)
+void endpoint::port(unsigned short port_num) NET_TS_NOEXCEPT
 {
   if (is_v4())
   {
@@ -137,7 +137,7 @@ void endpoint::port(unsigned short port_num)
   }
 }
 
-std::experimental::net::v1::ip::address endpoint::address() const
+std::experimental::net::v1::ip::address endpoint::address() const NET_TS_NOEXCEPT
 {
   using namespace std; // For memcpy.
   if (is_v4())
@@ -158,18 +158,18 @@ std::experimental::net::v1::ip::address endpoint::address() const
   }
 }
 
-void endpoint::address(const std::experimental::net::v1::ip::address& addr)
+void endpoint::address(const std::experimental::net::v1::ip::address& addr) NET_TS_NOEXCEPT
 {
   endpoint tmp_endpoint(addr, port());
   data_ = tmp_endpoint.data_;
 }
 
-bool operator==(const endpoint& e1, const endpoint& e2)
+bool operator==(const endpoint& e1, const endpoint& e2) NET_TS_NOEXCEPT
 {
   return e1.address() == e2.address() && e1.port() == e2.port();
 }
 
-bool operator<(const endpoint& e1, const endpoint& e2)
+bool operator<(const endpoint& e1, const endpoint& e2) NET_TS_NOEXCEPT
 {
   if (e1.address() < e2.address())
     return true;

@@ -2,7 +2,7 @@
 // ip/address.hpp
 // ~~~~~~~~~~~~~~
 //
-// Copyright (c) 2003-2017 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2003-2019 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -50,46 +50,48 @@ class address
 {
 public:
   /// Default constructor.
-  NET_TS_DECL address();
+  NET_TS_DECL address() NET_TS_NOEXCEPT;
 
   /// Construct an address from an IPv4 address.
-  NET_TS_DECL address(const std::experimental::net::v1::ip::address_v4& ipv4_address);
+  NET_TS_DECL address(
+      const std::experimental::net::v1::ip::address_v4& ipv4_address) NET_TS_NOEXCEPT;
 
   /// Construct an address from an IPv6 address.
-  NET_TS_DECL address(const std::experimental::net::v1::ip::address_v6& ipv6_address);
+  NET_TS_DECL address(
+      const std::experimental::net::v1::ip::address_v6& ipv6_address) NET_TS_NOEXCEPT;
 
   /// Copy constructor.
-  NET_TS_DECL address(const address& other);
+  NET_TS_DECL address(const address& other) NET_TS_NOEXCEPT;
 
 #if defined(NET_TS_HAS_MOVE)
   /// Move constructor.
-  NET_TS_DECL address(address&& other);
+  NET_TS_DECL address(address&& other) NET_TS_NOEXCEPT;
 #endif // defined(NET_TS_HAS_MOVE)
 
   /// Assign from another address.
-  NET_TS_DECL address& operator=(const address& other);
+  NET_TS_DECL address& operator=(const address& other) NET_TS_NOEXCEPT;
 
 #if defined(NET_TS_HAS_MOVE)
   /// Move-assign from another address.
-  NET_TS_DECL address& operator=(address&& other);
+  NET_TS_DECL address& operator=(address&& other) NET_TS_NOEXCEPT;
 #endif // defined(NET_TS_HAS_MOVE)
 
   /// Assign from an IPv4 address.
   NET_TS_DECL address& operator=(
-      const std::experimental::net::v1::ip::address_v4& ipv4_address);
+      const std::experimental::net::v1::ip::address_v4& ipv4_address) NET_TS_NOEXCEPT;
 
   /// Assign from an IPv6 address.
   NET_TS_DECL address& operator=(
-      const std::experimental::net::v1::ip::address_v6& ipv6_address);
+      const std::experimental::net::v1::ip::address_v6& ipv6_address) NET_TS_NOEXCEPT;
 
   /// Get whether the address is an IP version 4 address.
-  bool is_v4() const
+  bool is_v4() const NET_TS_NOEXCEPT
   {
     return type_ == ipv4;
   }
 
   /// Get whether the address is an IP version 6 address.
-  bool is_v6() const
+  bool is_v6() const NET_TS_NOEXCEPT
   {
     return type_ == ipv6;
   }
@@ -104,40 +106,46 @@ public:
   NET_TS_DECL std::string to_string() const;
 
   /// Determine whether the address is a loopback address.
-  NET_TS_DECL bool is_loopback() const;
+  NET_TS_DECL bool is_loopback() const NET_TS_NOEXCEPT;
 
   /// Determine whether the address is unspecified.
-  NET_TS_DECL bool is_unspecified() const;
+  NET_TS_DECL bool is_unspecified() const NET_TS_NOEXCEPT;
 
   /// Determine whether the address is a multicast address.
-  NET_TS_DECL bool is_multicast() const;
+  NET_TS_DECL bool is_multicast() const NET_TS_NOEXCEPT;
 
   /// Compare two addresses for equality.
-  NET_TS_DECL friend bool operator==(const address& a1, const address& a2);
+  NET_TS_DECL friend bool operator==(const address& a1,
+      const address& a2) NET_TS_NOEXCEPT;
 
   /// Compare two addresses for inequality.
-  friend bool operator!=(const address& a1, const address& a2)
+  friend bool operator!=(const address& a1,
+      const address& a2) NET_TS_NOEXCEPT
   {
     return !(a1 == a2);
   }
 
   /// Compare addresses for ordering.
-  NET_TS_DECL friend bool operator<(const address& a1, const address& a2);
+  NET_TS_DECL friend bool operator<(const address& a1,
+      const address& a2) NET_TS_NOEXCEPT;
 
   /// Compare addresses for ordering.
-  friend bool operator>(const address& a1, const address& a2)
+  friend bool operator>(const address& a1,
+      const address& a2) NET_TS_NOEXCEPT
   {
     return a2 < a1;
   }
 
   /// Compare addresses for ordering.
-  friend bool operator<=(const address& a1, const address& a2)
+  friend bool operator<=(const address& a1,
+      const address& a2) NET_TS_NOEXCEPT
   {
     return !(a2 < a1);
   }
 
   /// Compare addresses for ordering.
-  friend bool operator>=(const address& a1, const address& a2)
+  friend bool operator>=(const address& a1,
+      const address& a2) NET_TS_NOEXCEPT
   {
     return !(a1 < a2);
   }
@@ -165,8 +173,8 @@ NET_TS_DECL address make_address(const char* str);
 /**
  * @relates address
  */
-NET_TS_DECL address make_address(
-    const char* str, std::error_code& ec);
+NET_TS_DECL address make_address(const char* str,
+    std::error_code& ec) NET_TS_NOEXCEPT;
 
 /// Create an address from an IPv4 address string in dotted decimal form,
 /// or from an IPv6 address in hexadecimal notation.
@@ -180,10 +188,10 @@ NET_TS_DECL address make_address(const std::string& str);
 /**
  * @relates address
  */
-NET_TS_DECL address make_address(
-    const std::string& str, std::error_code& ec);
+NET_TS_DECL address make_address(const std::string& str,
+    std::error_code& ec) NET_TS_NOEXCEPT;
 
-#if defined(NET_TS_HAS_STD_STRING_VIEW) \
+#if defined(NET_TS_HAS_STRING_VIEW) \
   || defined(GENERATING_DOCUMENTATION)
 
 /// Create an address from an IPv4 address string in dotted decimal form,
@@ -198,10 +206,10 @@ NET_TS_DECL address make_address(string_view str);
 /**
  * @relates address
  */
-NET_TS_DECL address make_address(
-    string_view str, std::error_code& ec);
+NET_TS_DECL address make_address(string_view str,
+    std::error_code& ec) NET_TS_NOEXCEPT;
 
-#endif // defined(NET_TS_HAS_STD_STRING_VIEW)
+#endif // defined(NET_TS_HAS_STRING_VIEW)
        //  || defined(GENERATING_DOCUMENTATION)
 
 #if !defined(NET_TS_NO_IOSTREAM)

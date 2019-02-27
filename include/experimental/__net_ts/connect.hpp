@@ -2,7 +2,7 @@
 // connect.hpp
 // ~~~~~~~~~~~
 //
-// Copyright (c) 2003-2017 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2003-2019 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -61,7 +61,8 @@ struct is_endpoint_sequence
 /**
  * @defgroup connect std::experimental::net::v1::connect
  *
- * @brief Establishes a socket connection by trying each endpoint in a sequence.
+ * @brief The @c connect function is a composed operation that establishes a
+ * socket connection by trying each endpoint in a sequence.
  */
 /*@{*/
 
@@ -462,8 +463,8 @@ Iterator connect(basic_socket<Protocol NET_TS_SVC_TARG>& s,
 /**
  * @defgroup async_connect std::experimental::net::v1::async_connect
  *
- * @brief Asynchronously establishes a socket connection by trying each
- * endpoint in a sequence.
+ * @brief The @c async_connect function is a composed asynchronous operation
+ * that establishes a socket connection by trying each endpoint in a sequence.
  */
 /*@{*/
 

@@ -2,7 +2,7 @@
 // detail/epoll_reactor.hpp
 // ~~~~~~~~~~~~~~~~~~~~~~~~
 //
-// Copyright (c) 2003-2017 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2003-2019 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -31,6 +31,10 @@
 #include <experimental/__net_ts/detail/timer_queue_set.hpp>
 #include <experimental/__net_ts/detail/wait_op.hpp>
 #include <experimental/__net_ts/execution_context.hpp>
+
+#if defined(NET_TS_HAS_TIMERFD)
+# include <sys/timerfd.h>
+#endif // defined(NET_TS_HAS_TIMERFD)
 
 #include <experimental/__net_ts/detail/push_options.hpp>
 

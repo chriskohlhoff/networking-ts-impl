@@ -2,7 +2,7 @@
 // buffer.hpp
 // ~~~~~~~~~~
 //
-// Copyright (c) 2003-2017 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2003-2019 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -23,7 +23,6 @@
 #include <string>
 #include <vector>
 #include <experimental/__net_ts/detail/array_fwd.hpp>
-#include <experimental/__net_ts/detail/is_buffer_sequence.hpp>
 #include <experimental/__net_ts/detail/string_view.hpp>
 #include <experimental/__net_ts/detail/throw_exception.hpp>
 #include <experimental/__net_ts/detail/type_traits.hpp>
@@ -249,41 +248,6 @@ private:
 #if defined(NET_TS_ENABLE_BUFFER_DEBUGGING)
   std::experimental::net::v1::detail::function<void()> debug_check_;
 #endif // NET_TS_ENABLE_BUFFER_DEBUGGING
-};
-
-/// Trait to determine whether a type satisfies the MutableBufferSequence
-/// requirements.
-template <typename T>
-struct is_mutable_buffer_sequence
-#if defined(GENERATING_DOCUMENTATION)
-  : integral_constant<bool, automatically_determined>
-#else // defined(GENERATING_DOCUMENTATION)
-  : std::experimental::net::v1::detail::is_buffer_sequence<T, mutable_buffer>
-#endif // defined(GENERATING_DOCUMENTATION)
-{
-};
-
-/// Trait to determine whether a type satisfies the ConstBufferSequence
-/// requirements.
-template <typename T>
-struct is_const_buffer_sequence
-#if defined(GENERATING_DOCUMENTATION)
-  : integral_constant<bool, automatically_determined>
-#else // defined(GENERATING_DOCUMENTATION)
-  : std::experimental::net::v1::detail::is_buffer_sequence<T, const_buffer>
-#endif // defined(GENERATING_DOCUMENTATION)
-{
-};
-
-/// Trait to determine whether a type satisfies the DynamicBuffer requirements.
-template <typename T>
-struct is_dynamic_buffer
-#if defined(GENERATING_DOCUMENTATION)
-  : integral_constant<bool, automatically_determined>
-#else // defined(GENERATING_DOCUMENTATION)
-  : std::experimental::net::v1::detail::is_dynamic_buffer<T>
-#endif // defined(GENERATING_DOCUMENTATION)
-{
 };
 
 /// (Deprecated: Use the socket/descriptor wait() and async_wait() member
@@ -564,7 +528,7 @@ public:
 
   void operator()()
   {
-    *iter_;
+    (void)*iter_;
   }
 
 private:
@@ -1255,7 +1219,7 @@ inline NET_TS_MUTABLE_BUFFER buffer(
       );
 }
 
-/// Create a new non-modifiable buffer that represents the given string.
+/// Create a new modifiable buffer that represents the given string.
 /**
  * @returns A mutable_buffer value equivalent to:
  * @code mutable_buffer(
@@ -1327,7 +1291,7 @@ inline NET_TS_CONST_BUFFER buffer(
       );
 }
 
-#if defined(NET_TS_HAS_STD_STRING_VIEW) \
+#if defined(NET_TS_HAS_STRING_VIEW) \
   || defined(GENERATING_DOCUMENTATION)
 
 /// Create a new modifiable buffer that represents the given string_view.
@@ -1372,7 +1336,7 @@ inline NET_TS_CONST_BUFFER buffer(
       );
 }
 
-#endif // defined(NET_TS_HAS_STD_STRING_VIEW)
+#endif // defined(NET_TS_HAS_STRING_VIEW)
        //  || defined(GENERATING_DOCUMENTATION)
 
 /*@}*/
@@ -2006,6 +1970,55 @@ inline std::size_t buffer_copy(const MutableBufferSequence& target,
 }
 
 /*@}*/
+
+} // inline namespace v1
+} // namespace net
+} // namespace experimental
+} // namespace std
+
+#include <experimental/__net_ts/detail/pop_options.hpp>
+#include <experimental/__net_ts/detail/is_buffer_sequence.hpp>
+#include <experimental/__net_ts/detail/push_options.hpp>
+
+namespace std {
+namespace experimental {
+namespace net {
+inline namespace v1 {
+
+/// Trait to determine whether a type satisfies the MutableBufferSequence
+/// requirements.
+template <typename T>
+struct is_mutable_buffer_sequence
+#if defined(GENERATING_DOCUMENTATION)
+  : integral_constant<bool, automatically_determined>
+#else // defined(GENERATING_DOCUMENTATION)
+  : std::experimental::net::v1::detail::is_buffer_sequence<T, mutable_buffer>
+#endif // defined(GENERATING_DOCUMENTATION)
+{
+};
+
+/// Trait to determine whether a type satisfies the ConstBufferSequence
+/// requirements.
+template <typename T>
+struct is_const_buffer_sequence
+#if defined(GENERATING_DOCUMENTATION)
+  : integral_constant<bool, automatically_determined>
+#else // defined(GENERATING_DOCUMENTATION)
+  : std::experimental::net::v1::detail::is_buffer_sequence<T, const_buffer>
+#endif // defined(GENERATING_DOCUMENTATION)
+{
+};
+
+/// Trait to determine whether a type satisfies the DynamicBuffer requirements.
+template <typename T>
+struct is_dynamic_buffer
+#if defined(GENERATING_DOCUMENTATION)
+  : integral_constant<bool, automatically_determined>
+#else // defined(GENERATING_DOCUMENTATION)
+  : std::experimental::net::v1::detail::is_dynamic_buffer<T>
+#endif // defined(GENERATING_DOCUMENTATION)
+{
+};
 
 } // inline namespace v1
 } // namespace net

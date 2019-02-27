@@ -2,7 +2,7 @@
 // impl/executor.hpp
 // ~~~~~~~~~~~~~~~~~
 //
-// Copyright (c) 2003-2017 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2003-2019 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -17,7 +17,7 @@
 
 #include <experimental/__net_ts/detail/config.hpp>
 #include <experimental/__net_ts/detail/atomic_count.hpp>
-#include <experimental/__net_ts/detail/executor_op.hpp>
+#include <experimental/__net_ts/detail/executor_function.hpp>
 #include <experimental/__net_ts/detail/global.hpp>
 #include <experimental/__net_ts/detail/memory.hpp>
 #include <experimental/__net_ts/detail/recycling_allocator.hpp>
@@ -43,36 +43,37 @@ public:
   explicit function(F f, const Alloc& a)
   {
     // Allocate and construct an operation to wrap the function.
-    typedef detail::executor_op<F, Alloc> op;
-    typename op::ptr p = { detail::addressof(a), op::ptr::allocate(a), 0 };
-    op_ = new (p.v) op(NET_TS_MOVE_CAST(F)(f), a);
+    typedef detail::executor_function<F, Alloc> func_type;
+    typename func_type::ptr p = {
+      detail::addressof(a), func_type::ptr::allocate(a), 0 };
+    func_ = new (p.v) func_type(NET_TS_MOVE_CAST(F)(f), a);
     p.v = 0;
   }
 
-  function(function&& other)
-    : op_(other.op_)
+  function(function&& other) NET_TS_NOEXCEPT
+    : func_(other.func_)
   {
-    other.op_ = 0;
+    other.func_ = 0;
   }
 
   ~function()
   {
-    if (op_)
-      op_->destroy();
+    if (func_)
+      func_->destroy();
   }
 
   void operator()()
   {
-    if (op_)
+    if (func_)
     {
-      detail::scheduler_operation* op = op_;
-      op_ = 0;
-      op->complete(this, std::error_code(), 0);
+      detail::executor_function_base* func = func_;
+      func_ = 0;
+      func->complete();
     }
   }
 
 private:
-  detail::scheduler_operation* op_;
+  detail::executor_function_base* func_;
 };
 
 #else // defined(NET_TS_HAS_MOVE)

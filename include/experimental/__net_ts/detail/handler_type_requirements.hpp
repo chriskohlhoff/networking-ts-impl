@@ -2,7 +2,7 @@
 // detail/handler_type_requirements.hpp
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //
-// Copyright (c) 2003-2017 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2003-2019 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -130,7 +130,7 @@ struct handler_type_requirements
 {
 };
 
-#define NET_TS_COMPLETION_HANDLER_CHECK( \
+#define NET_TS_LEGACY_COMPLETION_HANDLER_CHECK( \
     handler_type, handler) \
   \
   typedef NET_TS_HANDLER_TYPE(handler_type, \
@@ -495,7 +495,7 @@ struct handler_type_requirements
 
 #else // !defined(NET_TS_ENABLE_HANDLER_TYPE_REQUIREMENTS)
 
-#define NET_TS_COMPLETION_HANDLER_CHECK( \
+#define NET_TS_LEGACY_COMPLETION_HANDLER_CHECK( \
     handler_type, handler) \
   typedef int NET_TS_UNUSED_TYPEDEF
 

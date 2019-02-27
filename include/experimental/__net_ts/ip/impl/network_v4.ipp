@@ -2,7 +2,7 @@
 // ip/impl/network_v4.ipp
 // ~~~~~~~~~~~~~~~~~~~~~~
 //
-// Copyright (c) 2003-2017 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2003-2019 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 // Copyright (c) 2014 Oliver Kowalke (oliver dot kowalke at gmail dot com)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -129,6 +129,7 @@ std::string network_v4::to_string() const
 
 std::string network_v4::to_string(std::error_code& ec) const
 {
+  using namespace std; // For sprintf.
   ec = std::error_code();
   char prefix_len[16];
 #if defined(NET_TS_HAS_SECURE_RTL)
@@ -195,7 +196,7 @@ network_v4 make_network_v4(const std::string& str,
   return network_v4(addr, static_cast<unsigned short>(prefix_len));
 }
 
-#if defined(NET_TS_HAS_STD_STRING_VIEW)
+#if defined(NET_TS_HAS_STRING_VIEW)
 
 network_v4 make_network_v4(string_view str)
 {
@@ -208,7 +209,7 @@ network_v4 make_network_v4(string_view str,
   return make_network_v4(static_cast<std::string>(str), ec);
 }
 
-#endif // defined(NET_TS_HAS_STD_STRING_VIEW)
+#endif // defined(NET_TS_HAS_STRING_VIEW)
 
 } // namespace ip
 } // inline namespace v1
